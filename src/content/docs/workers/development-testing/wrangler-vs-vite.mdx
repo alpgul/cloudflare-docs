@@ -1,42 +1,42 @@
 ---
 pcx_content_type: navigation
-title: Choosing between Wrangler & Vite
+title: Wrangler ve Vite arasında seçim yapma
 sidebar:
   order: 3
 head: []
-description: Choosing between Wrangler and Vite for local development
+description: Yerel geliştirme için Wrangler ve Vite arasında seçim yapma
 ---
 
-# When to use Wrangler vs Vite
+# Wrangler vs Vite ne zaman kullanılır
 
-Deciding between Wrangler and the Cloudflare Vite plugin depends on your project's focus and development workflow. Here are some quick guidelines to help you choose:
+Wrangler ve Cloudflare Vite plugin'i arasında karar vermek, projenizin odak noktasına ve geliştirme iş akışına bağlıdır. Seçim yapmanıza yardımcı olacak bazı hızlı yönergeler:
 
-## When to use Wrangler
+## Wrangler ne zaman kullanılır
 
-- **Backend & Workers-focused:**
-  If you're primarily building APIs, serverless functions, or background tasks, use Wrangler.
+- **Backend ve Worker odaklı:**
+  Öncelikle API'ler, sunucusuz fonksiyonlar veya arka plan görevleri oluşturuyorsanız, Wrangler'ı kullanın.
 
-- **Remote development:**
-  If your project needs the ability to run your worker remotely on Cloudflare's network, use Wrangler's `--remote` flag.
+- **Uzak geliştirme:**
+  Projenizin Worker'ınızı Cloudflare'in ağında uzaktan çalıştırma yeteneğine ihtiyacı varsa, Wrangler'ın `--remote` bayrağını kullanın.
 
-- **Simple frontends:**
-  If you have minimal frontend requirements and don’t need hot reloading or advanced bundling, Wrangler may be sufficient.
+- **Basit frontend'ler:**
+  Minimal frontend gereksinimleriniz varsa ve hot reloading veya gelişmiş bundling'e ihtiyacınız yoksa, Wrangler yeterli olabilir.
 
-## When to use the Cloudflare Vite Plugin
+## Cloudflare Vite Plugin ne zaman kullanılır
 
-Use the [Vite plugin](/workers/vite-plugin/) for:
+[Vite plugin'ini](/workers/vite-plugin/) şu durumlarda kullanın:
 
-- **Frontend-centric development:**
-  If you already use Vite with modern frontend frameworks like React, Vue, Svelte, or Solid, the Vite plugin integrates into your development workflow.
+- **Frontend odaklı geliştirme:**
+  Zaten React, Vue, Svelte veya Solid gibi modern frontend framework'leri ile Vite kullanıyorsanız, Vite plugin'i geliştirme iş akışınıza entegre olur.
 
 - **React Router v7:**
-  If you are using [React Router v7](https://reactrouter.com/) (the successor to Remix), it is officially supported by the Vite plugin as a full-stack SSR framework.
+  [React Router v7](https://reactrouter.com/) (Remix'in halefi) kullanıyorsanız, Vite plugin'i tarafından tam yığın SSR framework'ü olarak resmi olarak desteklenir.
 
-- **Rapid iteration (HMR):**
-  If you need near-instant updates in the browser, the Vite plugin provides [Hot Module Replacement (HMR)](https://vite.dev/guide/features.html#hot-module-replacement) during local development.
+- **Hızlı yineleme (HMR):**
+  Tarayıcıda neredeyse anında güncellemelere ihtiyacınız varsa, Vite plugin'i yerel geliştirme sırasında [Hot Module Replacement (HMR)](https://vite.dev/guide/features.html#hot-module-replacement) sağlar.
 
-- **Advanced optimizations:**
-  If you require more advanced optimizations (code splitting, efficient bundling, CSS handling, build time transformations, etc.), Vite is a strong fit.
+- **Gelişmiş optimizasyonlar:**
+  Daha gelişmiş optimizasyonlara (kod bölme, verimli bundling, CSS işleme, build zamanı dönüşümleri, vb.) ihtiyacınız varsa, Vite güçlü bir seçimdir.
 
-- **Greater flexibility:**
-  Due to Vite's advanced configuration options and large ecosystem of plugins, there is more flexibility to customize your development experience and build output.
+- **Daha fazla esneklik:**
+  Vite'ın gelişmiş yapılandırma seçenekleri ve büyük plugin ekosistemi nedeniyle, geliştirme deneyiminizi ve build çıktınızı özelleştirmek için daha fazla esneklik vardır.

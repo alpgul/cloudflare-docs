@@ -1,25 +1,25 @@
 ---
 pcx_content_type: navigation
-title: Environment variables and secrets
+title: Ortam değişkenleri ve gizli anahtarlar
 sidebar:
   order: 1
 head: []
-description: Configuring environment variables and secrets for local development
+description: Yerel geliştirme için ortam değişkenleri ve gizli anahtarları yapılandırma
 ---
 
 import { PackageManagers, Render, Steps } from "~/components";
 
 <Render file="secrets-in-dev" product="workers" />
 
-### Basic setup
+### Temel kurulum
 
-Here are steps to set up environment variables for local development using either `.dev.vars` or `.env` files.
+İşte `.dev.vars` veya `.env` dosyalarını kullanarak yerel geliştirme için ortam değişkenlerini ayarlama adımları.
 
 <Steps>
 
-1.  Create a `.dev.vars` / `.env` file in your project root.
+1.  Proje kök dizininizde `.dev.vars` / `.env` dosyası oluşturun.
 
-2.  Add key-value pairs:
+2.  Anahtar-değer çiftleri ekleyin:
 
     ```ini title=".dev.vars/.env"
     API_HOST="localhost:3000"
@@ -27,7 +27,7 @@ Here are steps to set up environment variables for local development using eithe
     SECRET_TOKEN="my-local-secret-token"
     ```
 
-3.  Run your `dev` command
+3.  `dev` komutunuzu çalıştırın
 
         **Wrangler**
         <PackageManagers type="exec" pkg="wrangler" args="dev" />
@@ -38,16 +38,16 @@ Here are steps to set up environment variables for local development using eithe
 
 </Steps>
 
-## Multiple local environments
+## Birden fazla yerel ortam
 
-To simulate different local environments, you can provide environment-specific files.
-For example, you might have a `staging` environment that requires different settings than your development environment.
+Farklı yerel ortamları simüle etmek için ortama özel dosyalar sağlayabilirsiniz.
+Örneğin, geliştirme ortamınızdan farklı ayarlar gerektiren bir `staging` ortamınız olabilir.
 
 <Steps>
 
-1.  Create a file named `.dev.vars.<environment-name>`/`.env.<environment-name>`. For example, we can use `.dev.vars.staging`/`.env.staging`.
+1.  `.dev.vars.<environment-name>`/`.env.<environment-name>` adında bir dosya oluşturun. Örneğin, `.dev.vars.staging`/`.env.staging` kullanabiliriz.
 
-2.  Add key-value pairs:
+2.  Anahtar-değer çiftleri ekleyin:
 
     ```ini title=".dev.vars.staging/.env.staging"
     API_HOST="staging.localhost:3000"
@@ -55,7 +55,7 @@ For example, you might have a `staging` environment that requires different sett
     SECRET_TOKEN="staging-token"
     ```
 
-3.  Specify the environment when running the `dev` command:
+3.  `dev` komutunu çalıştırırken ortamı belirtin:
 
         **Wrangler**
 
@@ -65,12 +65,12 @@ For example, you might have a `staging` environment that requires different sett
 
         <PackageManagers type="exec" pkg="vite" args="dev" prefix="CLOUDFLARE_ENV=staging" />
 
-        - If using `.dev.vars.staging`, only the values from that file will be applied instead of `.dev.vars`.
-        - If using `.env.staging`, the values will be merged with `.env` files, with the most specific file taking precedence.
+        - `.dev.vars.staging` kullanıyorsanız, `.dev.vars` yerine yalnızca o dosyadaki değerler uygulanacaktır.
+        - `.env.staging` kullanıyorsanız, değerler `.env` dosyalarıyla birleştirilecek ve en spesifik dosya öncelik alacaktır.
 
 </Steps>
 
-## Learn more
+## Daha fazla bilgi edinin
 
-- To learn how to configure multiple environments in Wrangler configuration, [read the documentation](/workers/wrangler/environments/#_top).
-- To learn how to use Wrangler environments and Vite environments together, [read the Vite plugin documentation](/workers/vite-plugin/reference/cloudflare-environments/)
+- Wrangler yapılandırmasında birden fazla ortamı nasıl yapılandıracağınızı öğrenmek için [dokümantasyonu okuyun](/workers/wrangler/environments/#_top).
+- Wrangler ortamları ve Vite ortamlarını birlikte nasıl kullanacağınızı öğrenmek için [Vite plugin dokümantasyonunu okuyun](/workers/vite-plugin/reference/cloudflare-environments/)

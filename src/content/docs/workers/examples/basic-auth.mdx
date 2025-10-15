@@ -1,6 +1,6 @@
 ---
 
-summary: Shows how to restrict access using the HTTP Basic schema.
+summary: HTTP Basic şemasını kullanarak erişimi nasıl kısıtlayacağınızı gösterir.
 tags:
   - Security
   - Authentication
@@ -10,23 +10,23 @@ tags:
 preview:
   - true
 pcx_content_type: example
-title: HTTP Basic Authentication
+title: HTTP Basic Kimlik Doğrulama
 reviewed: 2024-01-11
 sidebar:
   order: 1001
-description: Shows how to restrict access using the HTTP Basic schema.
+description: HTTP Basic şemasını kullanarak erişimi nasıl kısıtlayacağınızı gösterir.
 ---
 
 import { TabItem, Tabs } from "~/components";
 
 :::note
 
-This example Worker makes use of the [Node.js Buffer API](/workers/runtime-apis/nodejs/buffer/), which is available as part of the Workers runtime [Node.js compatibility mode](/workers/runtime-apis/nodejs/). To run this Worker, you will need to [enable the `nodejs_compat` compatibility flag](/workers/configuration/compatibility-flags/#nodejs-compatibility-flag).
+Bu örnek Worker, Workers runtime [Node.js uyumluluk modunun](/workers/runtime-apis/nodejs/) bir parçası olarak mevcut olan [Node.js Buffer API](/workers/runtime-apis/nodejs/buffer/)'sini kullanır. Bu Worker'ı çalıştırmak için [`nodejs_compat` uyumluluk bayrağını](/workers/configuration/compatibility-flags/#nodejs-compatibility-flag) etkinleştirmeniz gerekir.
 :::
 
-:::caution[Caution when using in production]
+:::caution[Üretimde kullanırken dikkat]
 
-This code is provided as a sample, and is not suitable for production use. Basic Authentication sends credentials unencrypted, and must be used with an HTTPS connection to be considered secure. For a production-ready authentication system, consider using [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/applications/configure-apps/self-hosted-public-app/).
+Bu kod örnek olarak sağlanmıştır ve üretim kullanımı için uygun değildir. Basic Authentication kimlik bilgilerini şifrelenmemiş olarak gönderir ve güvenli kabul edilmek için HTTPS bağlantısı ile kullanılmalıdır. Üretim hazır kimlik doğrulama sistemi için [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/applications/configure-apps/self-hosted-public-app/) kullanmayı düşünün.
 
 :::
 
@@ -34,7 +34,7 @@ This code is provided as a sample, and is not suitable for production use. Basic
 
 ```js
 /**
- * Shows how to restrict access using the HTTP Basic schema.
+ * HTTP Basic şemasını kullanarak erişimi nasıl kısıtlayacağınızı gösterir.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication
  * @see https://tools.ietf.org/html/rfc7617
  *
@@ -45,8 +45,8 @@ import { Buffer } from "node:buffer";
 const encoder = new TextEncoder();
 
 /**
- * Protect against timing attacks by safely comparing values using `timingSafeEqual`.
- * Refer to https://developers.cloudflare.com/workers/runtime-apis/web-crypto/#timingsafeequal for more details
+ * `timingSafeEqual` kullanarak değerleri güvenli bir şekilde karşılaştırarak timing saldırılarına karşı koruma sağlar.
+ * Daha fazla ayrıntı için https://developers.cloudflare.com/workers/runtime-apis/web-crypto/#timingsafeequal adresine bakın
  * @param {string} a
  * @param {string} b
  * @returns {boolean}
@@ -56,8 +56,8 @@ function timingSafeEqual(a, b) {
 	const bBytes = encoder.encode(b);
 
 	if (aBytes.byteLength !== bBytes.byteLength) {
-		// Strings must be the same length in order to compare
-		// with crypto.subtle.timingSafeEqual
+		// Dizeler crypto.subtle.timingSafeEqual ile karşılaştırılabilmesi için
+		// aynı uzunlukta olmalıdır
 		return false;
 	}
 
@@ -74,48 +74,48 @@ export default {
 	async fetch(request, env) {
 		const BASIC_USER = "admin";
 
-		// You will need an admin password. This should be
-		// attached to your Worker as an encrypted secret.
-		// Refer to https://developers.cloudflare.com/workers/configuration/secrets/
+		// Bir admin şifresine ihtiyacınız olacak. Bu,
+		// Worker'ınıza şifrelenmiş gizli anahtar olarak eklenmelidir.
+		// Daha fazla bilgi için https://developers.cloudflare.com/workers/configuration/secrets/ adresine bakın
 		const BASIC_PASS = env.PASSWORD ?? "password";
 
 		const url = new URL(request.url);
 
 		switch (url.pathname) {
 			case "/":
-				return new Response("Anyone can access the homepage.");
+				return new Response("Herkes ana sayfaya erişebilir.");
 
 			case "/logout":
-				// Invalidate the "Authorization" header by returning a HTTP 401.
-				// We do not send a "WWW-Authenticate" header, as this would trigger
-				// a popup in the browser, immediately asking for credentials again.
-				return new Response("Logged out.", { status: 401 });
+				// HTTP 401 döndürerek "Authorization" başlığını geçersiz kılın.
+				// Bu, tarayıcıda hemen kimlik bilgilerini tekrar isteyecek bir popup tetikleyeceği için
+				// "WWW-Authenticate" başlığı göndermiyoruz.
+				return new Response("Çıkış yapıldı.", { status: 401 });
 
 			case "/admin": {
-				// The "Authorization" header is sent when authenticated.
+				// Kimlik doğrulandığında "Authorization" başlığı gönderilir.
 				const authorization = request.headers.get("Authorization");
 				if (!authorization) {
-					return new Response("You need to login.", {
+					return new Response("Giriş yapmanız gerekiyor.", {
 						status: 401,
 						headers: {
-							// Prompts the user for credentials.
+							// Kullanıcıyı kimlik bilgileri için uyarır.
 							"WWW-Authenticate": 'Basic realm="my scope", charset="UTF-8"',
 						},
 					});
 				}
 				const [scheme, encoded] = authorization.split(" ");
 
-				// The Authorization header must start with Basic, followed by a space.
+				// Authorization başlığı Basic ile başlamalı, ardından bir boşluk gelmelidir.
 				if (!encoded || scheme !== "Basic") {
-					return new Response("Malformed authorization header.", {
+					return new Response("Bozuk authorization başlığı.", {
 						status: 400,
 					});
 				}
 
 				const credentials = Buffer.from(encoded, "base64").toString();
 
-				// The username & password are split by the first colon.
-				//=> example: "username:password"
+				// Kullanıcı adı ve şifre ilk iki nokta üst üste ile ayrılır.
+				//=> örnek: "kullanıcı_adı:şifre"
 				const index = credentials.indexOf(":");
 				const user = credentials.substring(0, index);
 				const pass = credentials.substring(index + 1);
@@ -124,16 +124,16 @@ export default {
 					!timingSafeEqual(BASIC_USER, user) ||
 					!timingSafeEqual(BASIC_PASS, pass)
 				) {
-					return new Response("You need to login.", {
+					return new Response("Giriş yapmanız gerekiyor.", {
 						status: 401,
 						headers: {
-							// Prompts the user for credentials.
+							// Kullanıcıyı kimlik bilgileri için uyarır.
 							"WWW-Authenticate": 'Basic realm="my scope", charset="UTF-8"',
 						},
 					});
 				}
 
-				return new Response("🎉 You have private access!", {
+				return new Response("🎉 Özel erişiminiz var!", {
 					status: 200,
 					headers: {
 						"Cache-Control": "no-store",
@@ -142,7 +142,7 @@ export default {
 			}
 		}
 
-		return new Response("Not Found.", { status: 404 });
+		return new Response("Bulunamadı.", { status: 404 });
 	},
 };
 ```
@@ -151,7 +151,7 @@ export default {
 
 ```ts
 /**
- * Shows how to restrict access using the HTTP Basic schema.
+ * HTTP Basic şemasını kullanarak erişimi nasıl kısıtlayacağınızı gösterir.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication
  * @see https://tools.ietf.org/html/rfc7617
  *
@@ -162,16 +162,16 @@ import { Buffer } from "node:buffer";
 const encoder = new TextEncoder();
 
 /**
- * Protect against timing attacks by safely comparing values using `timingSafeEqual`.
- * Refer to https://developers.cloudflare.com/workers/runtime-apis/web-crypto/#timingsafeequal for more details
+ * `timingSafeEqual` kullanarak değerleri güvenli bir şekilde karşılaştırarak timing saldırılarına karşı koruma sağlar.
+ * Daha fazla ayrıntı için https://developers.cloudflare.com/workers/runtime-apis/web-crypto/#timingsafeequal adresine bakın
  */
 function timingSafeEqual(a: string, b: string) {
 	const aBytes = encoder.encode(a);
 	const bBytes = encoder.encode(b);
 
 	if (aBytes.byteLength !== bBytes.byteLength) {
-		// Strings must be the same length in order to compare
-		// with crypto.subtle.timingSafeEqual
+		// Dizeler crypto.subtle.timingSafeEqual ile karşılaştırılabilmesi için
+		// aynı uzunlukta olmalıdır
 		return false;
 	}
 
@@ -185,48 +185,48 @@ export default {
 	async fetch(request, env): Promise<Response> {
 		const BASIC_USER = "admin";
 
-		// You will need an admin password. This should be
-		// attached to your Worker as an encrypted secret.
-		// Refer to https://developers.cloudflare.com/workers/configuration/secrets/
+		// Bir admin şifresine ihtiyacınız olacak. Bu,
+		// Worker'ınıza şifrelenmiş gizli anahtar olarak eklenmelidir.
+		// Daha fazla bilgi için https://developers.cloudflare.com/workers/configuration/secrets/ adresine bakın
 		const BASIC_PASS = env.PASSWORD ?? "password";
 
 		const url = new URL(request.url);
 
 		switch (url.pathname) {
 			case "/":
-				return new Response("Anyone can access the homepage.");
+				return new Response("Herkes ana sayfaya erişebilir.");
 
 			case "/logout":
-				// Invalidate the "Authorization" header by returning a HTTP 401.
-				// We do not send a "WWW-Authenticate" header, as this would trigger
-				// a popup in the browser, immediately asking for credentials again.
-				return new Response("Logged out.", { status: 401 });
+				// HTTP 401 döndürerek "Authorization" başlığını geçersiz kılın.
+				// Bu, tarayıcıda hemen kimlik bilgilerini tekrar isteyecek bir popup tetikleyeceği için
+				// "WWW-Authenticate" başlığı göndermiyoruz.
+				return new Response("Çıkış yapıldı.", { status: 401 });
 
 			case "/admin": {
-				// The "Authorization" header is sent when authenticated.
+				// Kimlik doğrulandığında "Authorization" başlığı gönderilir.
 				const authorization = request.headers.get("Authorization");
 				if (!authorization) {
-					return new Response("You need to login.", {
+					return new Response("Giriş yapmanız gerekiyor.", {
 						status: 401,
 						headers: {
-							// Prompts the user for credentials.
+							// Kullanıcıyı kimlik bilgileri için uyarır.
 							"WWW-Authenticate": 'Basic realm="my scope", charset="UTF-8"',
 						},
 					});
 				}
 				const [scheme, encoded] = authorization.split(" ");
 
-				// The Authorization header must start with Basic, followed by a space.
+				// Authorization başlığı Basic ile başlamalı, ardından bir boşluk gelmelidir.
 				if (!encoded || scheme !== "Basic") {
-					return new Response("Malformed authorization header.", {
+					return new Response("Bozuk authorization başlığı.", {
 						status: 400,
 					});
 				}
 
 				const credentials = Buffer.from(encoded, "base64").toString();
 
-				// The username and password are split by the first colon.
-				//=> example: "username:password"
+				// Kullanıcı adı ve şifre ilk iki nokta üst üste ile ayrılır.
+				//=> örnek: "kullanıcı_adı:şifre"
 				const index = credentials.indexOf(":");
 				const user = credentials.substring(0, index);
 				const pass = credentials.substring(index + 1);
@@ -235,16 +235,16 @@ export default {
 					!timingSafeEqual(BASIC_USER, user) ||
 					!timingSafeEqual(BASIC_PASS, pass)
 				) {
-					return new Response("You need to login.", {
+					return new Response("Giriş yapmanız gerekiyor.", {
 						status: 401,
 						headers: {
-							// Prompts the user for credentials.
+							// Kullanıcıyı kimlik bilgileri için uyarır.
 							"WWW-Authenticate": 'Basic realm="my scope", charset="UTF-8"',
 						},
 					});
 				}
 
-				return new Response("🎉 You have private access!", {
+				return new Response("🎉 Özel erişiminiz var!", {
 					status: 200,
 					headers: {
 						"Cache-Control": "no-store",
@@ -253,7 +253,7 @@ export default {
 			}
 		}
 
-		return new Response("Not Found.", { status: 404 });
+		return new Response("Bulunamadı.", { status: 404 });
 	},
 } satisfies ExportedHandler<Env>;
 ```
@@ -267,9 +267,9 @@ use worker::*;
 #[event(fetch)]
 async fn fetch(req: Request, env: Env, _ctx: Context) -> Result<Response> {
     let basic_user = "admin";
-    // You will need an admin password. This should be
-    // attached to your Worker as an encrypted secret.
-    // Refer to https://developers.cloudflare.com/workers/configuration/secrets/
+    // Bir admin şifresine ihtiyacınız olacak. Bu,
+    // Worker'ınıza şifrelenmiş gizli anahtar olarak eklenmelidir.
+    // Daha fazla bilgi için https://developers.cloudflare.com/workers/configuration/secrets/ adresine bakın
     let basic_pass = match env.secret("PASSWORD") {
         Ok(s) => s.to_string(),
         Err(_) => "password".to_string(),
@@ -277,56 +277,56 @@ async fn fetch(req: Request, env: Env, _ctx: Context) -> Result<Response> {
     let url = req.url()?;
 
     match url.path() {
-        "/" => Response::ok("Anyone can access the homepage."),
-        // Invalidate the "Authorization" header by returning a HTTP 401.
-        // We do not send a "WWW-Authenticate" header, as this would trigger
-        // a popup in the browser, immediately asking for credentials again.
-        "/logout" => Response::error("Logged out.", 401),
+        "/" => Response::ok("Herkes ana sayfaya erişebilir."),
+        // HTTP 401 döndürerek "Authorization" başlığını geçersiz kılın.
+        // Bu, tarayıcıda hemen kimlik bilgilerini tekrar isteyecek bir popup tetikleyeceği için
+        // "WWW-Authenticate" başlığı göndermiyoruz.
+        "/logout" => Response::error("Çıkış yapıldı.", 401),
         "/admin" => {
-            // The "Authorization" header is sent when authenticated.
+            // Kimlik doğrulandığında "Authorization" başlığı gönderilir.
             let authorization = req.headers().get("Authorization")?;
             if authorization == None {
                 let mut headers = Headers::new();
-                // Prompts the user for credentials.
+                // Kullanıcıyı kimlik bilgileri için uyarır.
                 headers.set(
                     "WWW-Authenticate",
                     "Basic realm='my scope', charset='UTF-8'",
                 )?;
-                return Ok(Response::error("You need to login.", 401)?.with_headers(headers));
+                return Ok(Response::error("Giriş yapmanız gerekiyor.", 401)?.with_headers(headers));
             }
             let authorization = authorization.unwrap();
             let auth: Vec<&str> = authorization.split(" ").collect();
             let scheme = auth[0];
             let encoded = auth[1];
 
-            // The Authorization header must start with Basic, followed by a space.
+            // Authorization başlığı Basic ile başlamalı, ardından bir boşluk gelmelidir.
             if encoded == "" || scheme != "Basic" {
-                return Response::error("Malformed authorization header.", 400);
+                return Response::error("Bozuk authorization başlığı.", 400);
             }
 
             let buff = BASE64_STANDARD.decode(encoded).unwrap();
             let credentials = String::from_utf8_lossy(&buff);
-            // The username & password are split by the first colon.
-            //=> example: "username:password"
+            // Kullanıcı adı ve şifre ilk iki nokta üst üste ile ayrılır.
+            //=> örnek: "kullanıcı_adı:şifre"
             let credentials: Vec<&str> = credentials.split(':').collect();
             let user = credentials[0];
             let pass = credentials[1];
 
             if user != basic_user || pass != basic_pass {
                 let mut headers = Headers::new();
-                // Prompts the user for credentials.
+                // Kullanıcıyı kimlik bilgileri için uyarır.
                 headers.set(
                     "WWW-Authenticate",
                     "Basic realm='my scope', charset='UTF-8'",
                 )?;
-                return Ok(Response::error("You need to login.", 401)?.with_headers(headers));
+                return Ok(Response::error("Giriş yapmanız gerekiyor.", 401)?.with_headers(headers));
             }
 
             let mut headers = Headers::new();
             headers.set("Cache-Control", "no-store")?;
-            Ok(Response::ok("🎉 You have private access!")?.with_headers(headers))
+            Ok(Response::ok("🎉 Özel erişiminiz var!")?.with_headers(headers))
         }
-        _ => Response::error("Not Found.", 404),
+        _ => Response::error("Bulunamadı.", 404),
     }
 }
 
@@ -336,7 +336,7 @@ async fn fetch(req: Request, env: Env, _ctx: Context) -> Result<Response> {
 
 ```ts
 /**
- * Shows how to restrict access using the HTTP Basic schema with Hono.
+ * Hono ile HTTP Basic şemasını kullanarak erişimi nasıl kısıtlayacağınızı gösterir.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication
  * @see https://tools.ietf.org/html/rfc7617
  */
@@ -344,7 +344,7 @@ async fn fetch(req: Request, env: Env, _ctx: Context) -> Result<Response> {
 import { Hono } from "hono";
 import { basicAuth } from "hono/basic-auth";
 
-// Define environment interface
+// Ortam arayüzünü tanımlayın
 interface Env {
 	Bindings: {
 		USERNAME: string;
@@ -354,12 +354,12 @@ interface Env {
 
 const app = new Hono<Env>();
 
-// Public homepage - accessible to everyone
+// Herkese açık ana sayfa - herkes erişebilir
 app.get("/", (c) => {
-	return c.text("Anyone can access the homepage.");
+	return c.text("Herkes ana sayfaya erişebilir.");
 });
 
-// Admin route - protected with Basic Auth
+// Admin rotası - Basic Auth ile korunmuş
 app.get(
 	"/admin",
 	async (c, next) => {
@@ -371,7 +371,7 @@ app.get(
 		return await auth(c, next);
 	},
 	(c) => {
-		return c.text("🎉 You have private access!", 200, {
+		return c.text("🎉 Özel erişiminiz var!", 200, {
 			"Cache-Control": "no-store",
 		});
 	},

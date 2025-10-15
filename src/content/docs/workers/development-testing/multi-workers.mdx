@@ -1,25 +1,25 @@
 ---
 pcx_content_type: concept
-title: Developing with multiple Workers
+title: Birden fazla Worker ile geliştirme
 sidebar:
   order: 3
 head: []
-description: Learn how to develop with multiple Workers using different approaches and configurations.
+description: Farklı yaklaşımlar ve yapılandırmalar kullanarak birden fazla Worker ile nasıl geliştirileceğini öğrenin.
 ---
 
 import { PackageManagers, Steps, WranglerConfig } from "~/components";
 
-When building complex applications, you may want to run multiple Workers during development. This guide covers the different approaches for running multiple Workers locally and when to use each approach.
+Karmaşık uygulamalar oluştururken, geliştirme sırasında birden fazla Worker çalıştırmak isteyebilirsiniz. Bu rehber, birden fazla Worker'ı yerel olarak çalıştırmanın farklı yaklaşımlarını ve her yaklaşımın ne zaman kullanılacağını kapsar.
 
-## Single dev command
+## Tek dev komutu
 
 :::note
-We recommend this approach as the default for most development workflows as it ensures the best compatibility with bindings.
+Bu yaklaşımı çoğu geliştirme iş akışı için varsayılan olarak öneriyoruz çünkü bağlamalarla en iyi uyumluluğu sağlar.
 :::
 
-You can run multiple Workers in a single dev command by passing multiple configuration files to your dev server:
+Birden fazla Worker'ı tek bir dev komutunda çalıştırabilirsiniz, bunun için dev sunucunuza birden fazla yapılandırma dosyası geçirmeniz gerekir:
 
-**Using Wrangler**
+**Wrangler kullanma**
    
 <PackageManagers
   type="exec"
@@ -27,11 +27,11 @@ You can run multiple Workers in a single dev command by passing multiple configu
   args="dev -c ./app/wrangler.jsonc -c ./api/wrangler.jsonc"
 />
 
-The first config (`./app/wrangler.jsonc`) is treated as the primary Worker, exposed at `http://localhost:8787`. Additional configs (e.g. `./api/wrangler.jsonc`) run as auxiliary Workers, available via service bindings or tail consumers from the primary Worker.
+İlk yapılandırma (`./app/wrangler.jsonc`) birincil Worker olarak kabul edilir ve `http://localhost:8787` adresinde açığa çıkarılır. Ek yapılandırmalar (örneğin `./api/wrangler.jsonc`) yardımcı Worker'lar olarak çalışır ve birincil Worker'dan hizmet bağlamaları veya tail consumer'lar aracılığıyla erişilebilir.
 
-**Using the Vite plugin**
+**Vite plugin'ini kullanma**
 
-Configure `auxiliaryWorkers` in your Vite configuration:
+Vite yapılandırmanızda `auxiliaryWorkers`'ı yapılandırın:
 
 ```js title="vite.config.js"
 import { defineConfig } from "vite";
@@ -51,19 +51,19 @@ export default defineConfig({
 });
 ```
 
-Then run:
+Sonra çalıştırın:
 
 <PackageManagers type="exec" pkg="vite" args="dev" />
 
-**Use this approach when:**
+**Bu yaklaşımı şu durumlarda kullanın:**
 
-- You want the simplest setup for development
-- Workers are part of the same application or codebase
-- You need to access a Durable Object namespace from another Worker using `script_name`, or setup Queues where the producer and consumer Workers are seperated.
+- Geliştirme için en basit kurulumu istiyorsanız
+- Worker'lar aynı uygulamanın veya kod tabanının parçasıysa
+- `script_name` kullanarak başka bir Worker'dan Durable Object namespace'ine erişmeniz gerekiyorsa veya üretici ve tüketici Worker'ların ayrı olduğu Queue'lar kurmanız gerekiyorsa
 
-## Multiple dev commands
+## Birden fazla dev komutu
 
-You can also run each Worker in a separate dev commands, each with its own terminal and configuration.
+Her Worker'ı ayrı dev komutlarında, her biri kendi terminali ve yapılandırması ile çalıştırabilirsiniz.
 
 <PackageManagers
   comment="Terminal 1"
@@ -79,16 +79,16 @@ You can also run each Worker in a separate dev commands, each with its own termi
   args="dev -c ./api/wrangler.jsonc"
 />
 
-These Workers run in different dev commands but can still communicate with each other via service bindings or tail consumers **regardless of whether they are started with `wrangler dev` or `vite dev`**.
+Bu Worker'lar farklı dev komutlarında çalışır ancak hizmet bağlamaları veya tail consumer'lar aracılığıyla **`wrangler dev` veya `vite dev` ile başlatılmış olup olmadıklarına bakılmaksızın** birbirleriyle iletişim kurabilirler.
 
 :::note
-You can also combine both approaches — for example, run a group of Workers together through `vite dev` using `auxiliaryWorkers`, while running another Worker separately with `wrangler dev`. This allows you to keep tightly coupled Workers running under a single dev command, while keeping independent or shared Workers in separate ones.
+Her iki yaklaşımı da birleştirebilirsiniz — örneğin, `auxiliaryWorkers` kullanarak `vite dev` ile bir grup Worker'ı birlikte çalıştırırken, başka bir Worker'ı `wrangler dev` ile ayrı olarak çalıştırabilirsiniz. Bu, sıkıca bağlı Worker'ları tek bir dev komutu altında çalıştırmanıza olanak tanırken, bağımsız veya paylaşılan Worker'ları ayrı olanlarda tutmanıza olanak tanır.
 :::
 
-**Use this approach when:**
+**Bu yaklaşımı şu durumlarda kullanın:**
 
-- You want each Worker to be accessible on its own local URL during development, since only the primary Worker is exposed when using a single dev command
-- Each Worker has its own build setup or tooling — for example, one uses Vite with custom plugins while another is a vanilla Wrangler project
-- You need the flexibility to run and develop Workers independently without restructuring your project or consolidating configs
+- Her Worker'ın geliştirme sırasında kendi yerel URL'sinde erişilebilir olmasını istiyorsanız, çünkü tek dev komutu kullanırken yalnızca birincil Worker açığa çıkarılır
+- Her Worker'ın kendi build kurulumu veya araçları var — örneğin, biri özel plugin'lerle Vite kullanırken diğeri vanilla Wrangler projesi
+- Projenizi yeniden yapılandırmadan veya yapılandırmaları birleştirmeden Worker'ları bağımsız olarak çalıştırma ve geliştirme esnekliğine ihtiyacınız var
 
-This setup is especially useful in larger projects where each team maintains a subset of Workers. Running everything in a single dev command might require significant restructuring or build integration that isn't always practical.
+Bu kurulum, her ekibin Worker'ların bir alt kümesini sürdürdüğü daha büyük projelerde özellikle yararlıdır. Her şeyi tek bir dev komutunda çalıştırmak, her zaman pratik olmayan önemli yeniden yapılandırma veya build entegrasyonu gerektirebilir.

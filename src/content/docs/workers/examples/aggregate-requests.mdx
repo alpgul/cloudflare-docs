@@ -1,24 +1,22 @@
 ---
 
-summary: Send two GET request to two urls and aggregates the responses into one
-  response.
+summary: İki URL'ye iki GET isteği gönderin ve yanıtları tek bir yanıtta birleştirin.
 tags:
   - JavaScript
   - TypeScript
   - Python
 pcx_content_type: example
-title: Aggregate requests
+title: İstekleri birleştirme
 sidebar:
   order: 1001
-description: Send two GET request to two urls and aggregates the responses into
-  one response.
+description: İki URL'ye iki GET isteği gönderin ve yanıtları tek bir yanıtta birleştirin.
 ---
 
-If you want to get started quickly, click on the button below.
+Hızlıca başlamak istiyorsanız, aşağıdaki düğmeye tıklayın.
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/docs-examples/tree/main/workers/aggregate-requests)
 
-This creates a repository in your GitHub account and deploys the application to Cloudflare Workers.
+Bu, GitHub hesabınızda bir depo oluşturur ve uygulamayı Cloudflare Workers'a dağıtır.
 
 import { TabItem, Tabs } from "~/components";
 
@@ -27,7 +25,7 @@ import { TabItem, Tabs } from "~/components";
 ```js
 export default {
 	async fetch(request) {
-		// someHost is set up to return JSON responses
+		// someHost JSON yanıtları döndürecek şekilde ayarlanmıştır
 		const someHost = "https://jsonplaceholder.typicode.com";
 		const url1 = someHost + "/todos/1";
 		const url2 = someHost + "/todos/2";
@@ -48,7 +46,7 @@ export default {
 ```ts
 export default {
 	async fetch(request) {
-		// someHost is set up to return JSON responses
+		// someHost JSON yanıtları döndürecek şekilde ayarlanmıştır
 		const someHost = "https://jsonplaceholder.typicode.com";
 		const url1 = someHost + "/todos/1";
 		const url2 = someHost + "/todos/2";
@@ -72,18 +70,18 @@ import { Hono } from "hono";
 const app = new Hono();
 
 app.get("*", async (c) => {
-	// someHost is set up to return JSON responses
+	// someHost JSON yanıtları döndürecek şekilde ayarlanmıştır
 	const someHost = "https://jsonplaceholder.typicode.com";
 	const url1 = someHost + "/todos/1";
 	const url2 = someHost + "/todos/2";
 
-	// Fetch both URLs concurrently
+	// Her iki URL'yi eşzamanlı olarak getirin
 	const responses = await Promise.all([fetch(url1), fetch(url2)]);
 
-	// Parse JSON responses concurrently
+	// JSON yanıtlarını eşzamanlı olarak ayrıştırın
 	const results = await Promise.all(responses.map((r) => r.json()));
 
-	// Return aggregated results
+	// Birleştirilmiş sonuçları döndürün
 	return c.json(results);
 });
 
@@ -99,7 +97,7 @@ import json
 
 class Default(WorkerEntrypoint):
 	async def fetch(self, request):
-		# some_host is set up to return JSON responses
+		# some_host JSON yanıtları döndürecek şekilde ayarlanmıştır
 		some_host = "https://jsonplaceholder.typicode.com"
 		url1 = some_host + "/todos/1"
 		url2 = some_host + "/todos/2"

@@ -1,7 +1,6 @@
 ---
 
-summary: Allow or deny a request based on a known pre-shared key in a header.
-  This is not meant to replace the WebCrypto API.
+summary: Bilinen önceden paylaşılan bir anahtara dayalı olarak bir isteği izin verin veya reddedin. Bu, WebCrypto API'sinin yerini almak için tasarlanmamıştır.
 tags:
   - Authentication
   - WebCrypto
@@ -9,18 +8,17 @@ tags:
   - TypeScript
   - Python
 pcx_content_type: example
-title: Auth with headers
+title: Başlıklarla kimlik doğrulama
 sidebar:
   order: 1001
-description: Allow or deny a request based on a known pre-shared key in a
-  header. This is not meant to replace the WebCrypto API.
+description: Bilinen önceden paylaşılan bir anahtara dayalı olarak bir isteği izin verin veya reddedin. Bu, WebCrypto API'sinin yerini almak için tasarlanmamıştır.
 ---
 
 import { TabItem, Tabs } from "~/components";
 
-:::caution[Caution when using in production]
+:::caution[Üretimde kullanırken dikkat]
 
-The example code contains a generic header key and value of `X-Custom-PSK` and `mypresharedkey`. To best protect your resources, change the header key and value in the Workers editor before saving your code.
+Örnek kod, `X-Custom-PSK` ve `mypresharedkey` olan genel başlık anahtarı ve değeri içerir. Kaynaklarınızı en iyi şekilde korumak için, kodunuzu kaydetmeden önce Workers editöründe başlık anahtarını ve değerini değiştirin.
 :::
 
 <Tabs syncKey="workersExamples"> <TabItem label="JavaScript" icon="seti:javascript">
@@ -29,20 +27,20 @@ The example code contains a generic header key and value of `X-Custom-PSK` and `
 export default {
 	async fetch(request) {
 		/**
-		 * @param {string} PRESHARED_AUTH_HEADER_KEY Custom header to check for key
-		 * @param {string} PRESHARED_AUTH_HEADER_VALUE Hard coded key value
+		 * @param {string} PRESHARED_AUTH_HEADER_KEY Anahtar için kontrol edilecek özel başlık
+		 * @param {string} PRESHARED_AUTH_HEADER_VALUE Sabit kodlanmış anahtar değeri
 		 */
 		const PRESHARED_AUTH_HEADER_KEY = "X-Custom-PSK";
 		const PRESHARED_AUTH_HEADER_VALUE = "mypresharedkey";
 		const psk = request.headers.get(PRESHARED_AUTH_HEADER_KEY);
 
 		if (psk === PRESHARED_AUTH_HEADER_VALUE) {
-			// Correct preshared header key supplied. Fetch request from origin.
+			// Doğru önceden paylaşılan başlık anahtarı sağlandı. Origin'den isteği getirin.
 			return fetch(request);
 		}
 
-		// Incorrect key supplied. Reject the request.
-		return new Response("Sorry, you have supplied an invalid key.", {
+		// Yanlış anahtar sağlandı. İsteği reddedin.
+		return new Response("Üzgünüz, geçersiz bir anahtar sağladınız.", {
 			status: 403,
 		});
 	},
@@ -55,20 +53,20 @@ export default {
 export default {
 	async fetch(request): Promise<Response> {
 		/**
-		 * @param {string} PRESHARED_AUTH_HEADER_KEY Custom header to check for key
-		 * @param {string} PRESHARED_AUTH_HEADER_VALUE Hard coded key value
+		 * @param {string} PRESHARED_AUTH_HEADER_KEY Anahtar için kontrol edilecek özel başlık
+		 * @param {string} PRESHARED_AUTH_HEADER_VALUE Sabit kodlanmış anahtar değeri
 		 */
 		const PRESHARED_AUTH_HEADER_KEY = "X-Custom-PSK";
 		const PRESHARED_AUTH_HEADER_VALUE = "mypresharedkey";
 		const psk = request.headers.get(PRESHARED_AUTH_HEADER_KEY);
 
 		if (psk === PRESHARED_AUTH_HEADER_VALUE) {
-			// Correct preshared header key supplied. Fetch request from origin.
+			// Doğru önceden paylaşılan başlık anahtarı sağlandı. Origin'den isteği getirin.
 			return fetch(request);
 		}
 
-		// Incorrect key supplied. Reject the request.
-		return new Response("Sorry, you have supplied an invalid key.", {
+		// Yanlış anahtar sağlandı. İsteği reddedin.
+		return new Response("Üzgünüz, geçersiz bir anahtar sağladınız.", {
 			status: 403,
 		});
 	},
@@ -88,11 +86,11 @@ class Default(WorkerEntrypoint):
         psk = request.headers[PRESHARED_AUTH_HEADER_KEY]
 
         if psk == PRESHARED_AUTH_HEADER_VALUE:
-            # Correct preshared header key supplied. Fetch request from origin.
+            # Doğru önceden paylaşılan başlık anahtarı sağlandı. Origin'den isteği getirin.
             return fetch(request)
 
-        # Incorrect key supplied. Reject the request.
-        return Response("Sorry, you have supplied an invalid key.", status=403)
+        # Yanlış anahtar sağlandı. İsteği reddedin.
+        return Response("Üzgünüz, geçersiz bir anahtar sağladınız.", status=403)
 ```
 
 </TabItem> <TabItem label="Hono" icon="seti:typescript">
@@ -102,27 +100,27 @@ import { Hono } from 'hono';
 
 const app = new Hono();
 
-// Add authentication middleware
+// Kimlik doğrulama middleware'i ekleyin
 app.use('*', async (c, next) => {
   /**
-   * Define authentication constants
+   * Kimlik doğrulama sabitlerini tanımlayın
    */
   const PRESHARED_AUTH_HEADER_KEY = "X-Custom-PSK";
   const PRESHARED_AUTH_HEADER_VALUE = "mypresharedkey";
 
-  // Get the pre-shared key from the request header
+  // İstek başlığından önceden paylaşılan anahtarı alın
   const psk = c.req.header(PRESHARED_AUTH_HEADER_KEY);
 
   if (psk === PRESHARED_AUTH_HEADER_VALUE) {
-    // Correct preshared header key supplied. Continue to the next handler.
+    // Doğru önceden paylaşılan başlık anahtarı sağlandı. Bir sonraki handler'a devam edin.
     await next();
   } else {
-    // Incorrect key supplied. Reject the request.
-    return c.text("Sorry, you have supplied an invalid key.", 403);
+    // Yanlış anahtar sağlandı. İsteği reddedin.
+    return c.text("Üzgünüz, geçersiz bir anahtar sağladınız.", 403);
   }
 });
 
-// Handle all authenticated requests by passing through to origin
+// Tüm kimlik doğrulanmış istekleri origin'e geçirerek işleyin
 app.all('*', async (c) => {
   return fetch(c.req.raw);
 });

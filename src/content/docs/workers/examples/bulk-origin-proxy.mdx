@@ -1,16 +1,16 @@
 ---
 
-summary: Resolve requests to your domain to a set of proxy third-party origin URLs.
+summary: Alanınıza gelen istekleri proxy üçüncü taraf origin URL'lerine çözümleyin.
 tags:
   - Middleware
   - JavaScript
   - TypeScript
   - Python
 pcx_content_type: example
-title: Bulk origin override
+title: Toplu origin geçersiz kılma
 sidebar:
   order: 1001
-description: Resolve requests to your domain to a set of proxy third-party origin URLs.
+description: Alanınıza gelen istekleri proxy üçüncü taraf origin URL'lerine çözümleyin.
 ---
 
 import { TabItem, Tabs } from "~/components";
@@ -21,7 +21,7 @@ import { TabItem, Tabs } from "~/components";
 export default {
 	async fetch(request) {
 		/**
-		 * An object with different URLs to fetch
+		 * Farklı URL'leri getirmek için bir nesne
 		 * @param {Object} ORIGINS
 		 */
 		const ORIGINS = {
@@ -31,14 +31,14 @@ export default {
 
 		const url = new URL(request.url);
 
-		// Check if incoming hostname is a key in the ORIGINS object
+		// Gelen hostname'in ORIGINS nesnesinde bir anahtar olup olmadığını kontrol edin
 		if (url.hostname in ORIGINS) {
 			const target = ORIGINS[url.hostname];
 			url.hostname = target;
-			// If it is, proxy request to that third party origin
+			// Eğer öyleyse, isteği o üçüncü taraf origin'e proxy'leyin
 			return fetch(url.toString(), request);
 		}
-		// Otherwise, process request as normal
+		// Aksi takdirde, isteği normal olarak işleyin
 		return fetch(request);
 	},
 };
@@ -50,7 +50,7 @@ export default {
 export default {
 	async fetch(request): Promise<Response> {
 		/**
-		 * An object with different URLs to fetch
+		 * Farklı URL'leri getirmek için bir nesne
 		 * @param {Object} ORIGINS
 		 */
 		const ORIGINS = {
@@ -60,14 +60,14 @@ export default {
 
 		const url = new URL(request.url);
 
-		// Check if incoming hostname is a key in the ORIGINS object
+		// Gelen hostname'in ORIGINS nesnesinde bir anahtar olup olmadığını kontrol edin
 		if (url.hostname in ORIGINS) {
 			const target = ORIGINS[url.hostname];
 			url.hostname = target;
-			// If it is, proxy request to that third party origin
+			// Eğer öyleyse, isteği o üçüncü taraf origin'e proxy'leyin
 			return fetch(url.toString(), request);
 		}
-		// Otherwise, process request as normal
+		// Aksi takdirde, isteği normal olarak işleyin
 		return fetch(request);
 	},
 } satisfies ExportedHandler;
@@ -79,7 +79,7 @@ export default {
 import { Hono } from "hono";
 import { proxy } from "hono/proxy";
 
-// An object with different URLs to fetch
+// Farklı URL'leri getirmek için bir nesne
 const ORIGINS: Record<string, string> = {
 	"starwarsapi.yourdomain.com": "swapi.dev",
 	"google.yourdomain.com": "www.google.com",
@@ -90,16 +90,16 @@ const app = new Hono();
 app.all("*", async (c) => {
 	const url = new URL(c.req.url);
 
-	// Check if incoming hostname is a key in the ORIGINS object
+	// Gelen hostname'in ORIGINS nesnesinde bir anahtar olup olmadığını kontrol edin
 	if (url.hostname in ORIGINS) {
 		const target = ORIGINS[url.hostname];
 		url.hostname = target;
 
-		// If it is, proxy request to that third party origin
+		// Eğer öyleyse, isteği o üçüncü taraf origin'e proxy'leyin
 		return proxy(url, c.req.raw);
 	}
 
-	// Otherwise, process request as normal
+	// Aksi takdirde, isteği normal olarak işleyin
 	return proxy(c.req.raw);
 });
 
@@ -114,7 +114,7 @@ from js import fetch, URL
 
 class Default(WorkerEntrypoint):
     async def fetch(self, request):
-        # A dict with different URLs to fetch
+        # Farklı URL'leri getirmek için bir sözlük
         ORIGINS = {
           "starwarsapi.yourdomain.com": "swapi.dev",
           "google.yourdomain.com": "www.google.com",
@@ -122,13 +122,13 @@ class Default(WorkerEntrypoint):
 
         url = URL.new(request.url)
 
-        # Check if incoming hostname is a key in the ORIGINS object
+        # Gelen hostname'in ORIGINS nesnesinde bir anahtar olup olmadığını kontrol edin
         if url.hostname in ORIGINS:
             url.hostname = ORIGINS[url.hostname]
-            # If it is, proxy request to that third party origin
+            # Eğer öyleyse, isteği o üçüncü taraf origin'e proxy'leyin
             return fetch(url.toString(), request)
 
-        # Otherwise, process request as normal
+        # Aksi takdirde, isteği normal olarak işleyin
         return fetch(request)
 ```
 

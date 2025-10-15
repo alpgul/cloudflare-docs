@@ -1,7 +1,6 @@
 ---
 
-summary: Access custom Cloudflare properties and control how Cloudflare features
-  are applied to every request.
+summary: Özel Cloudflare özelliklerine erişin ve Cloudflare özelliklerinin her isteğe nasıl uygulandığını kontrol edin.
 tags:
   - JavaScript
   - TypeScript
@@ -9,18 +8,17 @@ tags:
 preview:
   - true
 pcx_content_type: example
-title: Accessing the Cloudflare Object
+title: Cloudflare Nesnesine Erişim
 sidebar:
   order: 11
-description: Access custom Cloudflare properties and control how Cloudflare
-  features are applied to every request.
+description: Özel Cloudflare özelliklerine erişin ve Cloudflare özelliklerinin her isteğe nasıl uygulandığını kontrol edin.
 ---
 
-If you want to get started quickly, click on the button below.
+Hızlıca başlamak istiyorsanız, aşağıdaki düğmeye tıklayın.
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/docs-examples/tree/main/workers/accessing-the-cloudflare-object)
 
-This creates a repository in your GitHub account and deploys the application to Cloudflare Workers.
+Bu, GitHub hesabınızda bir depo oluşturur ve uygulamayı Cloudflare Workers'a dağıtır.
 
 import { TabItem, Tabs } from "~/components";
 
@@ -32,7 +30,7 @@ export default {
 		const data =
 			req.cf !== undefined
 				? req.cf
-				: { error: "The `cf` object is not available inside the preview." };
+				: { error: "`cf` nesnesi önizleme içinde mevcut değil." };
 
 		return new Response(JSON.stringify(data, null, 2), {
 			headers: {
@@ -51,7 +49,7 @@ export default {
 		const data =
 			req.cf !== undefined
 				? req.cf
-				: { error: "The `cf` object is not available inside the preview." };
+				: { error: "`cf` nesnesi önizleme içinde mevcut değil." };
 
 		return new Response(JSON.stringify(data, null, 2), {
 			headers: {
@@ -70,16 +68,16 @@ import { Hono } from "hono";
 const app = new Hono();
 
 app.get("*", async (c) => {
-	// Access the raw request to get the cf object
+	// cf nesnesini almak için ham isteğe erişin
 	const req = c.req.raw;
 
-	// Check if the cf object is available
+	// cf nesnesinin mevcut olup olmadığını kontrol edin
 	const data =
 		req.cf !== undefined
 			? req.cf
-			: { error: "The `cf` object is not available inside the preview." };
+			: { error: "`cf` nesnesi önizleme içinde mevcut değil." };
 
-	// Return the data formatted with 2-space indentation
+	// Veriyi 2 boşluk girintisi ile biçimlendirilmiş olarak döndürün
 	return c.json(data);
 });
 
@@ -95,7 +93,7 @@ from js import JSON
 
 class Default(WorkerEntrypoint):
 	async def fetch(self, request):
-		error = json.dumps({ "error": "The `cf` object is not available inside the preview." })
+		error = json.dumps({ "error": "`cf` nesnesi önizleme içinde mevcut değil." })
 		data = request.cf if request.cf is not None else error
 		headers = {"content-type":"application/json"}
 		return Response(JSON.stringify(data, None, 2), headers=headers)

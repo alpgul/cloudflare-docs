@@ -1,6 +1,6 @@
 ---
 
-summary: Allow a client to request static assets while waiting for the HTML response.
+summary: İstemcinin HTML yanıtını beklerken statik varlıkları talep etmesine olanak tanır.
 tags:
   - Middleware
   - Headers
@@ -11,30 +11,30 @@ pcx_content_type: example
 title: 103 Early Hints
 sidebar:
   order: 1001
-description: Allow a client to request static assets while waiting for the HTML response.
+description: İstemcinin HTML yanıtını beklerken statik varlıkları talep etmesine olanak tanır.
 ---
 import { DashButton, Steps, TabItem, Tabs } from "~/components";
 
-If you want to get started quickly, click on the button below.
+Hızlıca başlamak istiyorsanız, aşağıdaki düğmeye tıklayın.
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/docs-examples/tree/main/workers/103-early-hints)
 
-This creates a repository in your GitHub account and deploys the application to Cloudflare Workers.
+Bu, GitHub hesabınızda bir depo oluşturur ve uygulamayı Cloudflare Workers'a dağıtır.
 
-`103` Early Hints is an HTTP status code designed to speed up content delivery. When enabled, Cloudflare can cache the `Link` headers marked with preload and/or preconnect from HTML pages and serve them in a `103` Early Hints response before reaching the origin server. Browsers can use these hints to fetch linked assets while waiting for the origin’s final response, dramatically improving page load speeds.
+`103` Early Hints, içerik teslimatını hızlandırmak için tasarlanmış bir HTTP durum kodudur. Etkinleştirildiğinde, Cloudflare HTML sayfalarından preload ve/veya preconnect ile işaretlenmiş `Link` başlıklarını önbelleğe alabilir ve bunları origin sunucusuna ulaşmadan önce `103` Early Hints yanıtında sunabilir. Tarayıcılar, origin'in nihai yanıtını beklerken bağlantılı varlıkları getirmek için bu ipuçlarını kullanabilir, bu da sayfa yükleme hızlarını önemli ölçüde artırır.
 
-To ensure Early Hints are enabled on your zone:
+Early Hints'in zone'unuzda etkinleştirildiğinden emin olmak için:
 
 <Steps>
-1. In the Cloudflare dashboard, go to the **Speed settings** page.
+1. Cloudflare dashboard'da **Speed settings** sayfasına gidin.
 
    <DashButton url="/?to=/:account/:zone/speed/optimization" />
 
-2. Go to **Content Optimization**.
-3. Enable the **Early Hints** toggle to on.
+2. **Content Optimization**'a gidin.
+3. **Early Hints** geçişini açık konuma getirin.
 </Steps>
 
-You can return `Link` headers from a Worker running on your zone to speed up your page load times.
+Sayfa yükleme sürelerinizi hızlandırmak için zone'unuzda çalışan bir Worker'dan `Link` başlıkları döndürebilirsiniz.
 
 <Tabs syncKey="workersExamples"> <TabItem label="JavaScript" icon="seti:javascript">
 
@@ -56,7 +56,7 @@ const HTML = `
 
 export default {
 	async fetch(req) {
-		// If request is for test.css, serve the raw CSS
+		// Eğer istek test.css için ise, ham CSS'i sun
 		if (/test\.css$/.test(req.url)) {
 			return new Response(CSS, {
 				headers: {
@@ -64,7 +64,7 @@ export default {
 				},
 			});
 		} else {
-			// Serve raw HTML using Early Hints for the CSS file
+			// CSS dosyası için Early Hints kullanarak ham HTML'i sun
 			return new Response(HTML, {
 				headers: {
 					"content-type": "text/html",
@@ -96,7 +96,7 @@ const HTML = `
 
 export default {
   async fetch(req): Promise<Response> {
-    // If request is for test.css, serve the raw CSS
+    // Eğer istek test.css için ise, ham CSS'i sun
     if (/test\.css$/.test(req.url)) {
       return new Response(CSS, {
         headers: {
@@ -104,7 +104,7 @@ export default {
         },
       });
     } else {
-      // Serve raw HTML using Early Hints for the CSS file
+      // CSS dosyası için Early Hints kullanarak ham HTML'i sun
       return new Response(HTML, {
         headers: {
           "content-type": "text/html",
@@ -169,7 +169,7 @@ const HTML = `
 </html>
 `;
 
-// Serve CSS file
+// CSS dosyasını sun
 app.get("/test.css", (c) => {
 	return c.body(CSS, {
 		headers: {
@@ -178,7 +178,7 @@ app.get("/test.css", (c) => {
 	});
 });
 
-// Serve HTML with early hints
+// Early hints ile HTML'i sun
 app.get("*", (c) => {
 	return c.html(HTML, {
 		headers: {

@@ -1,19 +1,15 @@
 ---
 
-summary: Set up an A/B test by controlling what response is served based on
-  cookies. This version supports passing the request through to test and control
-  on the origin, bypassing random assignment.
+summary: Cookie'lere dayalı olarak hangi yanıtın sunulacağını kontrol ederek A/B testi kurun. Bu sürüm, rastgele atamayı bypass ederek test ve kontrol için isteği origin'e geçirmeyi destekler.
 tags:
   - JavaScript
   - TypeScript
   - Python
 pcx_content_type: example
-title: A/B testing with same-URL direct access
+title: Aynı URL ile doğrudan erişimli A/B testi
 sidebar:
   order: 1001
-description: Set up an A/B test by controlling what response is served based on
-  cookies. This version supports passing the request through to test and control
-  on the origin, bypassing random assignment.
+description: Cookie'lere dayalı olarak hangi yanıtın sunulacağını kontrol ederek A/B testi kurun. Bu sürüm, rastgele atamayı bypass ederek test ve kontrol için isteği origin'e geçirmeyi destekler.
 ---
 
 import { TabItem, Tabs } from "~/components";
@@ -27,11 +23,11 @@ export default {
 	async fetch(req) {
 		const url = new URL(req.url);
 
-		// Enable Passthrough to allow direct access to control and test routes.
+		// Kontrol ve test rotalarına doğrudan erişime izin vermek için Passthrough'u etkinleştirin.
 		if (url.pathname.startsWith("/control") || url.pathname.startsWith("/test"))
 			return fetch(req);
 
-		// Determine which group this requester is in.
+		// Bu istekte bulunanın hangi grupta olduğunu belirleyin.
 		const cookie = req.headers.get("cookie");
 
 		if (cookie && cookie.includes(`${NAME}=control`)) {
@@ -39,17 +35,17 @@ export default {
 		} else if (cookie && cookie.includes(`${NAME}=test`)) {
 			url.pathname = "/test" + url.pathname;
 		} else {
-			// If there is no cookie, this is a new client. Choose a group and set the cookie.
-			const group = Math.random() < 0.5 ? "test" : "control"; // 50/50 split
+			// Cookie yoksa, bu yeni bir istemcidir. Bir grup seçin ve cookie'yi ayarlayın.
+			const group = Math.random() < 0.5 ? "test" : "control"; // 50/50 bölünme
 			if (group === "control") {
 				url.pathname = "/control" + url.pathname;
 			} else {
 				url.pathname = "/test" + url.pathname;
 			}
-			// Reconstruct response to avoid immutability
+			// Değişmezlikten kaçınmak için yanıtı yeniden oluşturun
 			let res = await fetch(url);
 			res = new Response(res.body, res);
-			// Set cookie to enable persistent A/B sessions.
+			// Kalıcı A/B oturumlarını etkinleştirmek için cookie'yi ayarlayın.
 			res.headers.append("Set-Cookie", `${NAME}=${group}; path=/`);
 			return res;
 		}
@@ -66,27 +62,27 @@ const NAME = "myExampleWorkersABTest";
 export default {
 	async fetch(req): Promise<Response> {
 		const url = new URL(req.url);
-		// Enable Passthrough to allow direct access to control and test routes.
+		// Kontrol ve test rotalarına doğrudan erişime izin vermek için Passthrough'u etkinleştirin.
 		if (url.pathname.startsWith("/control") || url.pathname.startsWith("/test"))
 			return fetch(req);
-		// Determine which group this requester is in.
+		// Bu istekte bulunanın hangi grupta olduğunu belirleyin.
 		const cookie = req.headers.get("cookie");
 		if (cookie && cookie.includes(`${NAME}=control`)) {
 			url.pathname = "/control" + url.pathname;
 		} else if (cookie && cookie.includes(`${NAME}=test`)) {
 			url.pathname = "/test" + url.pathname;
 		} else {
-			// If there is no cookie, this is a new client. Choose a group and set the cookie.
-			const group = Math.random() < 0.5 ? "test" : "control"; // 50/50 split
+			// Cookie yoksa, bu yeni bir istemcidir. Bir grup seçin ve cookie'yi ayarlayın.
+			const group = Math.random() < 0.5 ? "test" : "control"; // 50/50 bölünme
 			if (group === "control") {
 				url.pathname = "/control" + url.pathname;
 			} else {
 				url.pathname = "/test" + url.pathname;
 			}
-			// Reconstruct response to avoid immutability
+			// Değişmezlikten kaçınmak için yanıtı yeniden oluşturun
 			let res = await fetch(url);
 			res = new Response(res.body, res);
-			// Set cookie to enable persistent A/B sessions.
+			// Kalıcı A/B oturumlarını etkinleştirmek için cookie'yi ayarlayın.
 			res.headers.append("Set-Cookie", `${NAME}=${group}; path=/`);
 			return res;
 		}
@@ -107,14 +103,14 @@ NAME = "myExampleWorkersABTest"
 class Default(WorkerEntrypoint):
 	async def fetch(self, request):
 		url = urlparse(request.url)
-		# Uncomment below when testing locally
+		# Yerel test sırasında aşağıdaki satırın yorumunu kaldırın
 		# url = url._replace(netloc="example.com") if "localhost" in url.netloc else url
 
-		# Enable Passthrough to allow direct access to control and test routes.
+		# Kontrol ve test rotalarına doğrudan erişime izin vermek için Passthrough'u etkinleştirin.
 		if url.path.startswith("/control") or url.path.startswith("/test"):
 			return fetch(urlunparse(url))
 
-		# Determine which group this requester is in.
+		# Bu istekte bulunanın hangi grupta olduğunu belirleyin.
 		cookie = request.headers.get("cookie")
 
 		if cookie and f'{NAME}=control' in cookie:
@@ -122,14 +118,14 @@ class Default(WorkerEntrypoint):
 		elif cookie and f'{NAME}=test' in cookie:
 			url = url._replace(path="/test" + url.path)
 		else:
-			# If there is no cookie, this is a new client. Choose a group and set the cookie.
+			# Cookie yoksa, bu yeni bir istemcidir. Bir grup seçin ve cookie'yi ayarlayın.
 			group = "test" if random.random() < 0.5 else "control"
 			if group == "control":
 				url = url._replace(path="/control" + url.path)
 			else:
 				url = url._replace(path="/test" + url.path)
 
-			# Reconstruct response to avoid immutability
+			# Değişmezlikten kaçınmak için yanıtı yeniden oluşturun
 			res = await fetch(urlunparse(url))
 			headers = dict(res.headers)
 			headers["Set-Cookie"] = f'{NAME}={group}; path=/'
@@ -148,36 +144,36 @@ const app = new Hono();
 
 const NAME = "myExampleWorkersABTest";
 
-// Enable passthrough to allow direct access to control and test routes
+// Kontrol ve test rotalarına doğrudan erişime izin vermek için passthrough'u etkinleştirin
 app.all("/control/*", (c) => fetch(c.req.raw));
 app.all("/test/*", (c) => fetch(c.req.raw));
 
-// Middleware to handle A/B testing logic
+// A/B testi mantığını işlemek için middleware
 app.use("*", async (c) => {
 	const url = new URL(c.req.url);
 
-	// Determine which group this requester is in
+	// Bu istekte bulunanın hangi grupta olduğunu belirleyin
 	const abTestCookie = getCookie(c, NAME);
 
 	if (abTestCookie === "control") {
-		// User is in control group
+		// Kullanıcı kontrol grubunda
 		url.pathname = "/control" + c.req.path;
 	} else if (abTestCookie === "test") {
-		// User is in test group
+		// Kullanıcı test grubunda
 		url.pathname = "/test" + c.req.path;
 	} else {
-		// If there is no cookie, this is a new client
-		// Choose a group and set the cookie (50/50 split)
+		// Cookie yoksa, bu yeni bir istemcidir
+		// Bir grup seçin ve cookie'yi ayarlayın (50/50 bölünme)
 		const group = Math.random() < 0.5 ? "test" : "control";
 
-		// Update URL path based on assigned group
+		// Atanan gruba göre URL yolunu güncelleyin
 		if (group === "control") {
 			url.pathname = "/control" + c.req.path;
 		} else {
 			url.pathname = "/test" + c.req.path;
 		}
 
-		// Set cookie to enable persistent A/B sessions
+		// Kalıcı A/B oturumlarını etkinleştirmek için cookie'yi ayarlayın
 		setCookie(c, NAME, group, {
 			path: "/",
 		});
