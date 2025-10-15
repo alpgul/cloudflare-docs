@@ -1,72 +1,72 @@
 ---
 pcx_content_type: concept
-title: Build caching
-description: Improve build times by caching build outputs and dependencies
+title: Build önbellekleme
+description: Build çıktılarını ve bağımlılıkları önbellekleyerek build sürelerini iyileştirin
 sidebar:
   order: 5
 ---
 
-Improve Workers build times by caching dependencies and build output between builds with a project-wide shared cache.
+Proje genelinde paylaşılan önbellek ile build'ler arasında bağımlılıkları ve build çıktılarını önbellekleyerek Workers build sürelerini iyileştirin.
 
-The first build to occur after enabling build caching on your Workers project will save relevant artifacts to cache. Every subsequent build will restore from cache unless configured otherwise.
+Workers projenizde build önbellekleme etkinleştirildikten sonra gerçekleşen ilk build, ilgili yapıtları önbelleğe kaydedecektir. Her sonraki build, aksi yapılandırılmadıkça önbellekten geri yüklenecektir.
 
-## About build cache
+## Build önbelleği hakkında
 
-When enabled, build caching will automatically detect which package manager and framework the project is using from its `package.json` and cache data accordingly for the build.
+Etkinleştirildiğinde, build önbellekleme projenin `package.json` dosyasından hangi paket yöneticisi ve framework'ü kullandığını otomatik olarak algılayacak ve build için veriyi buna göre önbellekleyecektir.
 
-The following shows which package managers and frameworks are supported for dependency and build output caching respectively.
+Aşağıdaki tablo, hangi paket yöneticilerinin ve framework'lerin sırasıyla bağımlılık ve build çıktısı önbellekleme için desteklendiğini göstermektedir.
 
-### Package managers
+### Paket yöneticileri
 
-Workers build cache will cache the global cache directories of the following package managers:
+Workers build önbelleği aşağıdaki paket yöneticilerinin global önbellek dizinlerini önbellekleyecektir:
 
-| Package Manager               | Directories cached   |
-| ----------------------------- | -------------------- |
-| [npm](https://www.npmjs.com/) | `.npm`               |
-| [yarn](https://yarnpkg.com/)  | `.cache/yarn`        |
-| [pnpm](https://pnpm.io/)      | `.pnpm-store`        |
-| [bun](https://bun.sh/)        | `.bun/install/cache` |
+| Paket Yöneticisi                | Önbelleklenen Dizinler |
+| -------------------------------- | ---------------------- |
+| [npm](https://www.npmjs.com/)   | `.npm`                 |
+| [yarn](https://yarnpkg.com/)    | `.cache/yarn`          |
+| [pnpm](https://pnpm.io/)        | `.pnpm-store`          |
+| [bun](https://bun.sh/)          | `.bun/install/cache`   |
 
-### Frameworks
+### Framework'ler
 
-Some frameworks provide a cache directory that is typically populated by the framework with intermediate build outputs or dependencies during build time. Workers Builds will automatically detect the framework you are using and cache this directory for reuse in subsequent builds.
+Bazı framework'ler, genellikle build zamanında ara build çıktıları veya bağımlılıklarla framework tarafından doldurulan bir önbellek dizini sağlar. Workers Builds, kullandığınız framework'ü otomatik olarak algılayacak ve sonraki build'lerde yeniden kullanım için bu dizini önbellekleyecektir.
 
-The following frameworks support build output caching:
+Aşağıdaki framework'ler build çıktısı önbellekleme destekler:
 
-| Framework  | Directories cached                            |
-| ---------- | --------------------------------------------- |
-| Astro      | `node_modules/.astro`                         |
-| Docusaurus | `node_modules/.cache`, `.docusaurus`, `build` |
-| Eleventy   | `.cache`                                      |
+| Framework  | Önbelleklenen Dizinler                        |
+| ---------- | ---------------------------------------------- |
+| Astro      | `node_modules/.astro`                          |
+| Docusaurus | `node_modules/.cache`, `.docusaurus`, `build`  |
+| Eleventy   | `.cache`                                       |
 | Gatsby     | `.cache`, `public`                            |
-| Next.js    | `.next/cache`                                 |
-| Nuxt       | `node_modules/.cache/nuxt`                    |
+| Next.js    | `.next/cache`                                  |
+| Nuxt       | `node_modules/.cache/nuxt`                     |
 
 :::note
-[Static assets](/workers/static-assets/) and [frameworks](/workers/framework-guides/) are now supported in Cloudflare Workers.
+[Statik varlıklar](/workers/static-assets/) ve [framework'ler](/workers/framework-guides/) artık Cloudflare Workers'da desteklenmektedir.
 :::
 
-### Limits
+### Limitler
 
-The following limits are imposed for build caching:
+Build önbellekleme için aşağıdaki limitler uygulanır:
 
-- **Retention**: Cache is purged 7 days after its last read date. Unread cache artifacts are purged 7 days after creation.
-- **Storage**: Every project is allocated 10 GB. If the project cache exceeds this limit, the project will automatically start deleting artifacts that were read least recently.
+- **Saklama**: Önbellek son okuma tarihinden 7 gün sonra temizlenir. Okunmamış önbellek yapıtları oluşturulduktan 7 gün sonra temizlenir.
+- **Depolama**: Her projeye 10 GB ayrılır. Proje önbelleği bu limiti aşarsa, proje otomatik olarak en az yakın zamanda okunan yapıtları silmeye başlayacaktır.
 
-## Enable build cache
+## Build önbelleğini etkinleştir
 
-To enable build caching:
+Build önbellekleme etkinleştirmek için:
 
-1. Navigate to [Workers & Pages Overview](https://dash.cloudflare.com) on the Dashboard.
-2. Find your Workers project.
-3. Go to **Settings** > **Build** > **Build cache**.
-4. Select **Enable** to turn on build caching.
+1. Dashboard'da [Workers & Pages Overview](https://dash.cloudflare.com)'a gidin.
+2. Workers projenizi bulun.
+3. **Settings** > **Build** > **Build cache**'e gidin.
+4. Build önbellekleme açmak için **Enable**'ı seçin.
 
-## Clear build cache
+## Build önbelleğini temizle
 
-The build cache can be cleared for a project when needed, such as when debugging build issues. To clear the build cache:
+Build önbelleği gerektiğinde, örneğin build sorunlarını ayıklarken bir proje için temizlenebilir. Build önbelleğini temizlemek için:
 
-1. Navigate to [Workers & Pages Overview](https://dash.cloudflare.com) on the Dashboard.
-2. Find your Workers project.
-3. Go to **Settings** > **Build** > **Build cache**.
-4. Select **Clear Cache** to clear the build cache.
+1. Dashboard'da [Workers & Pages Overview](https://dash.cloudflare.com)'a gidin.
+2. Workers projenizi bulun.
+3. **Settings** > **Build** > **Build cache**'e gidin.
+4. Build önbelleğini temizlemek için **Clear Cache**'i seçin.

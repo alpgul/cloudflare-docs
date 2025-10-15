@@ -1,51 +1,51 @@
 ---
 pcx_content_type: reference
-title: Advanced setups
-description: Learn how to use Workers Builds with more advanced setups
+title: Gelişmiş kurulumlar
+description: Workers Builds'ı daha gelişmiş kurulumlarla nasıl kullanacağınızı öğrenin
 sidebar:
   order: 8
 ---
 
 import { FileTree } from "~/components";
 
-## Monorepos
+## Monorepo'lar
 
-A monorepo is a single repository that contains multiple applications. This setup can be useful for a few reasons:
+Monorepo, birden fazla uygulama içeren tek bir depodur. Bu kurulum birkaç nedenle yararlı olabilir:
 
-- **Simplified dependency management**: Manage dependencies across all your workers and shared packages from a single place using tools like [pnpm workspaces](https://pnpm.io/workspaces) and [syncpack](https://www.npmjs.com/package/syncpack).
-- **Code sharing and reuse**: Easily create and share common logic, types, and utilities between workers by creating shared packages.
-- **Atomic commits**: Changes affecting multiple workers or shared libraries can be committed together, making the history easier to understand and reducing the risk of inconsistencies.
-- **Consistent tooling**: Apply the same build, test, linting, and formatting configurations (e.g., via [Turborepo](https://turborepo.com) in for task orchestration and shared configs in `packages/`) across all projects, ensuring consistent tooling and code quality across Workers.
-- **Easier refactoring**: Refactoring code that spans multiple Workers or shared packages is significantly easier within a single repository.
+- **Basitleştirilmiş bağımlılık yönetimi**: [pnpm workspaces](https://pnpm.io/workspaces) ve [syncpack](https://www.npmjs.com/package/syncpack) gibi araçları kullanarak tüm worker'larınız ve paylaşılan paketlerinizdeki bağımlılıkları tek bir yerden yönetin.
+- **Kod paylaşımı ve yeniden kullanım**: Paylaşılan paketler oluşturarak worker'lar arasında ortak mantık, türler ve yardımcı programları kolayca oluşturun ve paylaşın.
+- **Atomik commit'ler**: Birden fazla worker veya paylaşılan kütüphaneyi etkileyen değişiklikler birlikte commit edilebilir, bu da geçmişi anlamayı kolaylaştırır ve tutarsızlık riskini azaltır.
+- **Tutarlı araçlar**: Tüm projelerde aynı build, test, linting ve formatlama yapılandırmalarını uygulayın (örneğin, görev orkestrasyonu için [Turborepo](https://turborepo.com) ve `packages/` içindeki paylaşılan yapılandırmalar), Worker'lar genelinde tutarlı araçlar ve kod kalitesi sağlayın.
+- **Daha kolay refactoring**: Birden fazla Worker veya paylaşılan paketi kapsayan kodları refactor etmek tek bir depo içinde önemli ölçüde daha kolaydır.
 
-#### Example Workers monorepos:
+#### Örnek Workers monorepo'ları:
 
 - [cloudflare/mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare)
 - [jahands/workers-monorepo-template](https://github.com/jahands/workers-monorepo-template)
 - [cloudflare/templates](https://github.com/cloudflare/templates)
 - [cloudflare/workers-sdk](https://github.com/cloudflare/workers-sdk)
 
-### Getting Started
+### Başlangıç
 
-To set up a monorepo workflow:
+Monorepo iş akışı kurmak için:
 
-1. Find the Workers associated with your project in the [Workers & Pages Dashboard](https://dash.cloudflare.com).
-2. Connect your monorepo to each Worker in the repository.
-3. Set the root directory for each Worker to specify the location of its `wrangler.toml` and where build and deploy commands should run.
-4. Optionally, configure unique build and deploy commands for each Worker.
-5. Optionally, configure [build watch paths](/workers/ci-cd/builds/build-watch-paths/) for each Worker to monitor specific paths for changes.
+1. Projenizle ilişkili Worker'ları [Workers & Pages Dashboard](https://dash.cloudflare.com)'da bulun.
+2. Monorepo'nuzu depodaki her Worker'a bağlayın.
+3. Her Worker için kök dizini ayarlayarak `wrangler.toml` dosyasının konumunu ve build ile deploy komutlarının çalışması gereken yeri belirtin.
+4. İsteğe bağlı olarak, her Worker için benzersiz build ve deploy komutları yapılandırın.
+5. İsteğe bağlı olarak, değişiklikleri izlemek için her Worker için [build watch paths](/workers/ci-cd/builds/build-watch-paths/) yapılandırın.
 
-When a new commit is made to the monorepo, a new build and deploy will trigger for each Worker if the change is within each of its included watch paths. You can also check on the status of each build associated with your repository within GitHub with [check runs](/workers/ci-cd/builds/git-integration/github-integration/#check-run) or within GitLab with [commit statuses](/workers/ci-cd/builds/git-integration/gitlab-integration/#commit-status).
+Monorepo'ya yeni bir commit yapıldığında, değişiklik her Worker'ın dahil edilen watch path'leri içindeyse her Worker için yeni bir build ve deploy tetiklenecektir. Ayrıca GitHub'da [check runs](/workers/ci-cd/builds/git-integration/github-integration/#check-run) veya GitLab'da [commit statuses](/workers/ci-cd/builds/git-integration/gitlab-integration/#commit-status) ile deponuzla ilişkili her build'in durumunu kontrol edebilirsiniz.
 
-### Example
+### Örnek
 
-In the example `ecommerce-monorepo`, a Workers project should be created for `product-service`, `order-service`, and `notification-service`.
+`ecommerce-monorepo` örneğinde, `product-service`, `order-service` ve `notification-service` için Workers projesi oluşturulmalıdır.
 
-A Git connection to `ecommerce-monorepo` should be added in all of the Workers projects. If you are using a monorepo tool, such as [Turborepo](https://turbo.build/), you can configure a different deploy command for each Worker, for example, `turbo deploy -F product-service`.
+`ecommerce-monorepo`'ya Git bağlantısı tüm Workers projelerine eklenmelidir. [Turborepo](https://turbo.build/) gibi bir monorepo aracı kullanıyorsanız, her Worker için farklı bir deploy komutu yapılandırabilirsiniz, örneğin `turbo deploy -F product-service`.
 
-Set the root directory of each Worker to where its wrangler.toml is located. For example, for `product-service`, the root directory should be `/workers/product-service/`. Optionally, you can add [build watch paths](/workers/ci-cd/builds/build-watch-paths/) to optimize your builds.
+Her Worker'ın kök dizinini wrangler.toml dosyasının bulunduğu yere ayarlayın. Örneğin, `product-service` için kök dizin `/workers/product-service/` olmalıdır. İsteğe bağlı olarak, build'lerinizi optimize etmek için [build watch paths](/workers/ci-cd/builds/build-watch-paths/) ekleyebilirsiniz.
 
-When a new commit is made to `ecommerce-monorepo`, a build and deploy will be triggered for each of the Workers if the change is within its included watch paths using the configured commands for that Worker.
+`ecommerce-monorepo`'ya yeni bir commit yapıldığında, değişiklik dahil edilen watch path'leri içindeyse ve o Worker için yapılandırılmış komutları kullanıyorsa her Worker için build ve deploy tetiklenecektir.
 
 {/* prettier-ignore */}
 <FileTree>
@@ -65,19 +65,19 @@ When a new commit is made to `ecommerce-monorepo`, a build and deploy will be tr
   - README.md
 </FileTree>
 
-## Wrangler Environments
+## Wrangler Ortamları
 
-You can use [Wrangler Environments](/workers/wrangler/environments/) with Workers Builds by completing the following steps:
+Workers Builds ile [Wrangler Environments](/workers/wrangler/environments/) kullanabilirsiniz. Bunun için aşağıdaki adımları tamamlayın:
 
-1. [Deploy via Wrangler](/workers/wrangler/commands/#deploy) to create the Workers for your environments on the Dashboard, if you do not already have them.
-2. Find the Workers for your environments. They are typically named `[name of Worker] - [environment name]`.
-3. Connect your repository to each of the Workers for your environment.
-4. In each of the Workers, edit your Wrangler commands to include the flag `--env: <environment name>` in the build configurations for both the deploy command, and the non-production branch deploy command ([if applicable](/workers/ci-cd/builds/build-branches/#configure-non-production-branch-builds)).
+1. Henüz yoksa, Dashboard'da ortamlarınız için Worker'ları oluşturmak üzere [Wrangler ile Deploy](/workers/wrangler/commands/#deploy) yapın.
+2. Ortamlarınız için Worker'ları bulun. Genellikle `[Worker adı] - [ortam adı]` şeklinde adlandırılırlar.
+3. Deponuzu ortamınızın her Worker'ına bağlayın.
+4. Her Worker'da, Wrangler komutlarınızı hem deploy komutu hem de üretim dışı dal deploy komutu ([varsa](/workers/ci-cd/builds/build-branches/#configure-non-production-branch-builds)) için build yapılandırmalarında `--env: <ortam adı>` bayrağını içerecek şekilde düzenleyin.
 
-When a new commit is detected in the repository, a new build/deploy will trigger for each associated Worker.
+Depoda yeni bir commit algılandığında, ilişkili her Worker için yeni bir build/deploy tetiklenecektir.
 
-### Example
+### Örnek
 
-Imagine you have a Worker named `my-worker`, and you want to set up two environments `staging` and `production` set in the `wrangler.jsonc`. If you have not already, you can deploy `my-worker` for each environment using the commands `wrangler deploy --env staging` and `wrangler deploy --env production`.
+`my-worker` adında bir Worker'ınız olduğunu ve `wrangler.jsonc` dosyasında ayarlanmış `staging` ve `production` olmak üzere iki ortam kurmak istediğinizi düşünün. Henüz yapmadıysanız, `wrangler deploy --env staging` ve `wrangler deploy --env production` komutlarını kullanarak her ortam için `my-worker`'ı deploy edebilirsiniz.
 
-In your Cloudflare Dashboard, you should find the two Workers `my-worker-staging` and `my-worker-production`. Then, connect the Git repository for the Worker, `my-worker`, to both of the environment Workers. In the build configurations of each environment Worker, edit the deploy commands to be `npx wrangler deploy --env staging` and `npx wrangler deploy --env production` and the non-production branch deploy commands to be `npx wrangler versions upload --env staging` and `npx wrangler versions upload --env production` respectively.
+Cloudflare Dashboard'unuzda `my-worker-staging` ve `my-worker-production` olmak üzere iki Worker bulmalısınız. Ardından Worker'ın Git deposunu her iki ortam Worker'ına bağlayın. Her ortam Worker'ının build yapılandırmalarında deploy komutlarını `npx wrangler deploy --env staging` ve `npx wrangler deploy --env production` olarak, üretim dışı dal deploy komutlarını ise sırasıyla `npx wrangler versions upload --env staging` ve `npx wrangler versions upload --env production` olarak düzenleyin.

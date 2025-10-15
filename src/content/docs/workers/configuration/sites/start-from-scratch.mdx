@@ -1,6 +1,6 @@
 ---
 pcx_content_type: how-to
-title: Start from scratch
+title: Sıfırdan başla
 noindex: true
 sidebar:
   order: 2
@@ -10,46 +10,46 @@ import { Render, WranglerConfig } from "~/components";
 
 <Render file="workers_sites" product="workers" />
 
-This guide shows how to quickly start a new Workers Sites project from scratch.
+Bu rehber, sıfırdan yeni bir Workers Sites projesine nasıl hızlı başlanacağını gösterir.
 
-## Getting started
+## Başlangıç
 
-1. Ensure you have the latest version of [git](https://git-scm.com/downloads) and [Node.js](https://nodejs.org/en/download/) installed.
+1. En son [git](https://git-scm.com/downloads) ve [Node.js](https://nodejs.org/en/download/) sürümlerinin yüklü olduğundan emin olun.
 
-2. In your terminal, clone the `worker-sites-template` starter repository.
-   The following example creates a project called `my-site`:
+2. Terminalinizde `worker-sites-template` başlangıç deposunu klonlayın.
+   Aşağıdaki örnek `my-site` adında bir proje oluşturur:
 
    ```sh
    git clone --depth=1 --branch=wrangler2 https://github.com/cloudflare/worker-sites-template my-site
    ```
 
-3. Run `npm install` to install all dependencies.
+3. Tüm bağımlılıkları yüklemek için `npm install` çalıştırın.
 
-4. You can preview your site by running the [`wrangler dev`](/workers/wrangler/commands/#dev) command:
+4. [`wrangler dev`](/workers/wrangler/commands/#dev) komutunu çalıştırarak sitenizi önizleyebilirsiniz:
 
    ```sh
    wrangler dev
    ```
 
-5. Deploy your site to Cloudflare:
+5. Sitenizi Cloudflare'e dağıtın:
 
    ```sh
    npx wrangler deploy
    ```
 
-## Project layout
+## Proje düzeni
 
-The template project contains the following files and directories:
+Şablon projesi aşağıdaki dosya ve dizinleri içerir:
 
-- `public`: The static assets for your project. By default it contains an `index.html` and a `favicon.ico`.
-- `src`: The Worker configured for serving your assets. You do not need to edit this but if you want to see how it works or add more functionality to your Worker, you can edit `src/index.ts`.
-- `wrangler.jsonc`: The file containing project configuration.
-  The `bucket` property tells Wrangler where to find the static assets (e.g. `site = { bucket = "./public" }`).
-- `package.json`/`package-lock.json`: define the required Node.js dependencies.
+- `public`: Projenizin statik varlıkları. Varsayılan olarak bir `index.html` ve `favicon.ico` içerir.
+- `src`: Varlıklarınızı sunmak için yapılandırılmış Worker. Bunu düzenlemeniz gerekmez ancak nasıl çalıştığını görmek veya Worker'ınıza daha fazla işlevsellik eklemek istiyorsanız `src/index.ts`'yi düzenleyebilirsiniz.
+- `wrangler.jsonc`: Proje yapılandırmasını içeren dosya.
+  `bucket` özelliği Wrangler'a statik varlıkları nerede bulacağını söyler (örneğin `site = { bucket = "./public" }`).
+- `package.json`/`package-lock.json`: gerekli Node.js bağımlılıklarını tanımlar.
 
-## Customize the `wrangler.jsonc` file:
+## `wrangler.jsonc` dosyasını özelleştirin:
 
-- Change the `name` property to the name of your project:
+- `name` özelliğini projenizin adına değiştirin:
 
   <WranglerConfig>
 
@@ -59,7 +59,7 @@ The template project contains the following files and directories:
 
   </WranglerConfig>
 
-- Consider updating`compatibility_date` to today's date to get access to the most recent Workers features:
+- En son Workers özelliklerine erişmek için `compatibility_date`'i bugünün tarihine güncellemeyi düşünün:
 
   <WranglerConfig>
 
@@ -69,7 +69,7 @@ The template project contains the following files and directories:
 
   </WranglerConfig>
 
-- Deploy your site to a [custom domain](/workers/configuration/routing/custom-domains/) that you own and have already attached as a Cloudflare zone:
+- Sitenizi sahip olduğunuz ve zaten Cloudflare zone olarak eklediğiniz [özel alana](/workers/configuration/routing/custom-domains/) dağıtın:
 
   <WranglerConfig>
 
@@ -81,7 +81,7 @@ The template project contains the following files and directories:
 
   :::note
 
-  Refer to the documentation on [Routes](/workers/configuration/routing/routes/) to configure a `route` properly.
+  `route`'u doğru şekilde yapılandırmak için [Rotalar](/workers/configuration/routing/routes/) dokümantasyonuna bakın.
   :::
 
-Learn more about [configuring your project](/workers/wrangler/configuration/).
+[Projenizi yapılandırma](/workers/wrangler/configuration/) hakkında daha fazla bilgi edinin.

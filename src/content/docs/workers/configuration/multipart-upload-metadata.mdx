@@ -1,18 +1,18 @@
 ---
 pcx_content_type: concept
-title: Multipart upload metadata
+title: Multipart yükleme meta verileri
 ---
 
 import { Type, MetaInfo } from "~/components";
 
 :::note
 
-There is a new API for uploading Workers. Refer to [these docs](/workers/platform/infrastructure-as-code#cloudflare-rest-api) for more information.
+Workers yüklemek için yeni bir API vardır. Daha fazla bilgi için [bu dokümantasyona](/workers/platform/infrastructure-as-code#cloudflare-rest-api) bakın.
 :::
 
-If you're using the [Workers Script Upload API](/api/resources/workers/subresources/scripts/methods/update/) or [Version Upload API](/api/resources/workers/subresources/scripts/subresources/versions/methods/create/) directly, `multipart/form-data` uploads require you to specify a `metadata` part. This metadata defines the Worker's configuration in JSON format, analogue to the [wrangler.toml file](/workers/wrangler/configuration/).
+[Workers Script Upload API](/api/resources/workers/subresources/scripts/methods/update/) veya [Version Upload API](/api/resources/workers/subresources/scripts/subresources/versions/methods/create/)'yi doğrudan kullanıyorsanız, `multipart/form-data` yüklemeleri için bir `metadata` bölümü belirtmeniz gerekir. Bu meta veri, Worker'ın yapılandırmasını JSON formatında tanımlar, [wrangler.toml dosyası](/workers/wrangler/configuration/) ile benzerdir.
 
-## Sample `metadata`
+## Örnek `metadata`
 
 ```json
 {
@@ -21,7 +21,7 @@ If you're using the [Workers Script Upload API](/api/resources/workers/subresour
 		{
 			"type": "plain_text",
 			"name": "MESSAGE",
-			"text": "Hello, world!"
+			"text": "Merhaba dünya!"
 		}
 	],
 	"compatibility_date": "2021-09-14"
@@ -30,95 +30,95 @@ If you're using the [Workers Script Upload API](/api/resources/workers/subresour
 
 :::note
 
-See examples of metadata being used with the Workers Script Upload API [here](/workers/platform/infrastructure-as-code#cloudflare-rest-api).
+Workers Script Upload API ile kullanılan meta veri örneklerini [burada](/workers/platform/infrastructure-as-code#cloudflare-rest-api) görün.
 :::
 
-## Attributes
+## Öznitelikler
 
-The following attributes are configurable at the top-level.
+Aşağıdaki öznitelikler üst düzeyde yapılandırılabilir.
 
 :::note
 
-At a minimum, the `main_module` key is required to upload a Worker.
+En azından, bir Worker yüklemek için `main_module` anahtarı gereklidir.
 :::
 
 - `main_module` <Type text="string" /> <MetaInfo text="required" />
 
-  - The part name that contains the module entry point of the Worker that will be executed. For example, `main.js`.
+  - Worker'ın çalıştırılacak modül giriş noktasını içeren bölüm adı. Örneğin, `main.js`.
 
 - `assets` <Type text="object" /> <MetaInfo text="optional" />
 
-  - [Asset](/workers/static-assets/) configuration for a Worker.
+  - Worker için [Asset](/workers/static-assets/) yapılandırması.
   - `config` <Type text="object" /> <MetaInfo text="optional" />
-    - [html_handling](/workers/static-assets/routing/advanced/html-handling/) determines the redirects and rewrites of requests for HTML content.
-    - [not_found_handling](/workers/static-assets/#routing-behavior) determines the response when a request does not match a static asset.
-  - `jwt` field provides a token authorizing assets to be attached to a Worker.
+    - [html_handling](/workers/static-assets/routing/advanced/html-handling/) HTML içeriği için isteklerin yönlendirmelerini ve yeniden yazmalarını belirler.
+    - [not_found_handling](/workers/static-assets/#routing-behavior) bir isteğin statik bir varlıkla eşleşmediğinde yanıtı belirler.
+  - `jwt` alanı, varlıkların bir Worker'a eklenmesini yetkilendiren bir token sağlar.
 
 - `keep_assets` <Type text="boolean" /> <MetaInfo text="optional" />
 
-  - Specifies whether assets should be retained from a previously uploaded Worker version; used in lieu of providing a completion token.
+  - Varlıkların önceden yüklenmiş bir Worker sürümünden korunup korunmayacağını belirtir; tamamlama tokeni sağlamak yerine kullanılır.
 
 - `bindings` array\[object] optional
 
-  - [Bindings](#bindings) to expose in the Worker.
+  - Worker'da açığa çıkarılacak [Bağlamalar](#bindings).
 
 - `placement` <Type text="object" /> <MetaInfo text="optional" />
 
-  - [Smart placement](/workers/configuration/smart-placement/) object for the Worker.
-  - `mode` field only supports `smart` for automatic placement.
+  - Worker için [Akıllı yerleştirme](/workers/configuration/smart-placement/) nesnesi.
+  - `mode` alanı yalnızca otomatik yerleştirme için `smart`'ı destekler.
 
 - `compatibility_date` <Type text="string" /> <MetaInfo text="optional" />
 
-  - [Compatibility Date](/workers/configuration/compatibility-dates/#setting-compatibility-date) indicating targeted support in the Workers runtime. Backwards incompatible fixes to the runtime following this date will not affect this Worker. Highly recommended to set a `compatibility_date`, otherwise if on upload via the API, it defaults to the oldest compatibility date before any flags took effect (2021-11-02).
+  - Workers runtime'da hedeflenen desteği gösteren [Uyumluluk Tarihi](/workers/configuration/compatibility-dates/#setting-compatibility-date). Bu tarihten sonra runtime'daki geriye dönük uyumsuz düzeltmeler bu Worker'ı etkilemeyecektir. `compatibility_date` ayarlamak şiddetle önerilir, aksi takdirde API aracılığıyla yükleme sırasında bayrakların etkili olmadan önceki en eski uyumluluk tarihine (2021-11-02) varsayılan olarak ayarlanır.
 
 - `compatibility_flags` array\[string] optional
 
-  - [Compatibility Flags](/workers/configuration/compatibility-flags/#setting-compatibility-flags) that enable or disable certain features in the Workers runtime. Used to enable upcoming features or opt in or out of specific changes not included in a `compatibility_date`.
+  - Workers runtime'da belirli özellikleri etkinleştiren veya devre dışı bırakan [Uyumluluk Bayrakları](/workers/configuration/compatibility-flags/#setting-compatibility-flags). Yaklaşan özellikleri etkinleştirmek veya `compatibility_date`'e dahil edilmeyen belirli değişikliklere katılmak veya çıkmak için kullanılır.
 
-## Additional attributes: [Workers Script Upload API](/api/resources/workers/subresources/scripts/methods/update/)
+## Ek öznitelikler: [Workers Script Upload API](/api/resources/workers/subresources/scripts/methods/update/)
 
-For [immediately deployed uploads](/workers/configuration/versions-and-deployments/#upload-a-new-version-and-deploy-it-immediately), the following **additional** attributes are configurable at the top-level.
+[Anında dağıtılan yüklemeler](/workers/configuration/versions-and-deployments/#upload-a-new-version-and-deploy-it-immediately) için, aşağıdaki **ek** öznitelikler üst düzeyde yapılandırılabilir.
 
 :::note
 
-These attributes are **not available** for version uploads.
+Bu öznitelikler sürüm yüklemeleri için **mevcut değildir**.
 :::
 
 - `migrations` array\[object] optional
 
-  - [Durable Objects migrations](/durable-objects/reference/durable-objects-migrations/) to apply.
+  - Uygulanacak [Durable Objects migrations](/durable-objects/reference/durable-objects-migrations/).
 
 - `logpush` <Type text="boolean" /> <MetaInfo text="optional" />
 
-  - Whether [Logpush](/cloudflare-for-platforms/cloudflare-for-saas/hostname-analytics/#logpush) is turned on for the Worker.
+  - Worker için [Logpush](/cloudflare-for-platforms/cloudflare-for-saas/hostname-analytics/#logpush)'in açık olup olmadığı.
 
 - `tail_consumers` array\[object] optional
 
-  - [Tail Workers](/workers/observability/logs/tail-workers/) that will consume logs from the attached Worker.
+  - Ekli Worker'dan logları tüketecek [Tail Workers](/workers/observability/logs/tail-workers/).
 
 - `tags` array\[string] optional
 
-  - List of strings to use as tags for this Worker.
+  - Bu Worker için etiket olarak kullanılacak dize listesi.
 
-## Additional attributes: [Version Upload API](/api/resources/workers/subresources/scripts/subresources/versions/methods/create/)
+## Ek öznitelikler: [Version Upload API](/api/resources/workers/subresources/scripts/subresources/versions/methods/create/)
 
-For [version uploads](/workers/configuration/versions-and-deployments/#upload-a-new-version-to-be-gradually-deployed-or-deployed-at-a-later-time), the following **additional** attributes are configurable at the top-level.
+[Sürüm yüklemeleri](/workers/configuration/versions-and-deployments/#upload-a-new-version-to-be-gradually-deployed-or-deployed-at-a-later-time) için, aşağıdaki **ek** öznitelikler üst düzeyde yapılandırılabilir.
 
 :::note
 
-These attributes are **not available** for immediately deployed uploads.
+Bu öznitelikler anında dağıtılan yüklemeler için **mevcut değildir**.
 :::
 
 - `annotations` <Type text="object" /> <MetaInfo text="optional" />
 
-  - Annotations object specific to the Worker version.
-  - `workers/message` specifies a custom message for the version.
-  - `workers/tag` specifies a custom identifier for the version.
-  - `workers/alias` specifies a custom alias for this version.
+  - Worker sürümüne özel açıklamalar nesnesi.
+  - `workers/message` sürüm için özel bir mesaj belirtir.
+  - `workers/tag` sürüm için özel bir tanımlayıcı belirtir.
+  - `workers/alias` bu sürüm için özel bir takma ad belirtir.
 
-## Bindings
+## Bağlamalar
 
-Workers can interact with resources on the Cloudflare Developer Platform using [bindings](/workers/runtime-apis/bindings/). Refer to the JSON example below that shows how to add bindings in the `metadata` part.
+Worker'lar [bağlamalar](/workers/runtime-apis/bindings/) kullanarak Cloudflare Developer Platform'daki kaynaklarla etkileşim kurabilir. `metadata` bölümünde bağlamaların nasıl ekleneceğini gösteren JSON örneğine bakın.
 
 ```json
 {

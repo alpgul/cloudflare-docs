@@ -1,52 +1,52 @@
 ---
 pcx_content_type: configuration
-title: Rollbacks
+title: Geri dönüşler
 head: []
-description: Revert to an older version of your Worker.
+description: Worker'ınızın eski bir sürümüne geri dönün.
 ---
 import { DashButton } from "~/components";
 
-You can roll back to a previously deployed [version](/workers/configuration/versions-and-deployments/#versions) of your Worker using [Wrangler](/workers/wrangler/commands/#rollback) or the Cloudflare dashboard. Rolling back to a previous version of your Worker will immediately create a new [deployment](/workers/configuration/versions-and-deployments/#deployments) with the version specified and become the active deployment across all your deployed routes and domains.
+[Wrangler](/workers/wrangler/commands/#rollback) veya Cloudflare dashboard kullanarak Worker'ınızın daha önce dağıtılmış [sürümüne](/workers/configuration/versions-and-deployments/#versions) geri dönebilirsiniz. Worker'ınızın önceki sürümüne geri dönmek, belirtilen sürümle hemen yeni bir [dağıtım](/workers/configuration/versions-and-deployments/#deployments) oluşturacak ve dağıtılan tüm rotalarınız ve alanlarınızda aktif dağıtım haline gelecektir.
 
-## Via Wrangler
+## Wrangler aracılığıyla
 
-To roll back to a specified version of your Worker via Wrangler, use the [`wrangler rollback`](/workers/wrangler/commands/#rollback) command.
+Wrangler aracılığıyla Worker'ınızın belirtilen sürümüne geri dönmek için [`wrangler rollback`](/workers/wrangler/commands/#rollback) komutunu kullanın.
 
-## Via the Cloudflare Dashboard
+## Cloudflare Dashboard aracılığıyla
 
-To roll back to a specified version of your Worker via the Cloudflare dashboard:
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.
+Cloudflare dashboard aracılığıyla Worker'ınızın belirtilen sürümüne geri dönmek için:
+1. Cloudflare dashboard'da **Workers & Pages** sayfasına gidin.
 
    <DashButton url="/?to=/:account/workers-and-pages" />
 
-2. Select your Worker > **Deployments**.
-3. Select the three dot icon on the right of the version you would like to roll back to and select **Rollback**.
+2. Worker'ınızı seçin > **Deployments**.
+3. Geri dönmek istediğiniz sürümün sağındaki üç nokta simgesini seçin ve **Rollback**'i seçin.
 
 :::caution
 
-**[Resources connected to your Worker](/workers/runtime-apis/bindings/) will not be changed during a rollback.**
+**[Worker'ınıza bağlı kaynaklar](/workers/runtime-apis/bindings/) geri dönüş sırasında değişmeyecektir.**
 
-Errors could occur if using code for a prior version if the structure of data has changed between the version in the active deployment and the version selected to rollback to.
+Aktif dağıtımdaki sürüm ile geri dönmek için seçilen sürüm arasında veri yapısı değişmişse, önceki sürüm için kod kullanırken hatalar oluşabilir.
 
 :::
 
-## Limits
+## Limitler
 
-### Rollbacks limit
+### Geri dönüş limiti
 
-You can only roll back to the 100 most recently published versions.
+Yalnızca en son yayınlanan 100 sürüme geri dönebilirsiniz.
 
 :::note
 
-When using Wrangler in interactive mode, only the 10 most recent versions will be displayed for selection. To roll back to an older version (beyond the 10 most recent), you must specify the version ID directly on the command line. Refer to the [`wrangler versions deploy`](/workers/wrangler/commands/#versions-deploy) documentation for details on specifying version IDs.
+Wrangler'ı etkileşimli modda kullanırken, seçim için yalnızca en son 10 sürüm görüntülenecektir. Daha eski bir sürüme (en son 10'dan ötesine) geri dönmek için, sürüm ID'sini doğrudan komut satırında belirtmelisiniz. Sürüm ID'lerini belirtme ayrıntıları için [`wrangler versions deploy`](/workers/wrangler/commands/#versions-deploy) dokümantasyonuna bakın.
 
-We plan to address this limitation soon to allow displaying all 100 available versions in interactive mode.
+Bu sınırlamayı yakında ele alarak etkileşimli modda mevcut tüm 100 sürümü görüntülemeyi planlıyoruz.
 
 :::
 
-### Bindings
+### Bağlamalar
 
-You cannot roll back to a previous version of your Worker if the [Cloudflare Developer Platform resources](/workers/runtime-apis/bindings/) (such as [KV](/kv/) and [D1](/d1/)) have been deleted or modified between the version selected to roll back to and the version in the active deployment. Specifically, rollbacks will not be allowed if:
+Aktif dağıtımdaki sürüm ile geri dönmek için seçilen sürüm arasında [Cloudflare Developer Platform kaynakları](/workers/runtime-apis/bindings/) (örneğin [KV](/kv/) ve [D1](/d1/)) silinmiş veya değiştirilmişse Worker'ınızın önceki sürümüne geri dönemezsiniz. Özellikle, şu durumlarda geri dönüşlere izin verilmeyecektir:
 
-* A [Durable Object migration](/durable-objects/reference/durable-objects-migrations/) has occurred between the version in the active deployment and the version selected to roll back to.
-* If the target deployment has a [binding](/workers/runtime-apis/bindings/) to an R2 bucket, KV namespace, or queue that no longer exists.
+* Aktif dağıtımdaki sürüm ile geri dönmek için seçilen sürüm arasında [Durable Object migration](/durable-objects/reference/durable-objects-migrations/) gerçekleşmişse.
+* Hedef dağıtımın artık var olmayan bir R2 bucket, KV namespace veya queue'ya [bağlaması](/workers/runtime-apis/bindings/) varsa.

@@ -1,27 +1,27 @@
 ---
 pcx_content_type: concept
-title: Build branches
-description: Configure which git branches should trigger a Workers Build
+title: Build dalları
+description: Hangi git dallarının Workers Build'i tetiklemesi gerektiğini yapılandırın
 sidebar:
   order: 6
 ---
 
-When you connect a git repository to Workers, commits made on the production git branch will produce a Workers Build. If you want to take advantage of [preview URLs](/workers/configuration/previews/) and [pull request comments](/workers/ci-cd/builds/git-integration/github-integration/#pull-request-comment), you can additionally enable "non-production branch builds" in order to trigger a build on all branches of your repository.
+Git deposunu Workers'a bağladığınızda, üretim git dalında yapılan commit'ler Workers Build üretecektir. [Önizleme URL'leri](/workers/configuration/previews/) ve [pull request yorumları](/workers/ci-cd/builds/git-integration/github-integration/#pull-request-comment) avantajlarından yararlanmak istiyorsanız, deponuzun tüm dallarında build tetiklemek için ek olarak "üretim dışı dal build'leri"ni etkinleştirebilirsiniz.
 
-## Change production branch
+## Üretim dalını değiştir
 
-To change the production branch of your project:
+Projenizin üretim dalını değiştirmek için:
 
-1. In **Overview**, select your Workers project.
-2. Go to **Settings** > **Build** > **Branch control**. Workers will default to the default branch of your git repository, but this can be changed in the dropdown.
+1. **Overview**'da Workers projenizi seçin.
+2. **Settings** > **Build** > **Branch control**'a gidin. Workers, git deponuzun varsayılan dalına varsayılan olarak ayarlanacaktır, ancak bu açılır menüden değiştirilebilir.
 
-Every push event made to this branch will trigger a build and execute the [build command](/workers/ci-cd/builds/configuration/#build-command), followed by the [deploy command](/workers/ci-cd/builds/configuration/#deploy-command).
+Bu dala yapılan her push olayı bir build tetikleyecek ve [build komutu](/workers/ci-cd/builds/configuration/#build-command)'nu, ardından [deploy komutu](/workers/ci-cd/builds/configuration/#deploy-command)'nu çalıştıracaktır.
 
-## Configure non-production branch builds
+## Üretim dışı dal build'lerini yapılandır
 
-To enable or disable non-production branch builds:
+Üretim dışı dal build'lerini etkinleştirmek veya devre dışı bırakmak için:
 
-1. In **Overview**, select your Workers project.
-2. Go to **Settings** > **Build** > **Branch control**. The button under **Pull Request Previews** allows you to enable or disable builds for non-production branches.
+1. **Overview**'da Workers projenizi seçin.
+2. **Settings** > **Build** > **Branch control**'a gidin. **Pull Request Previews** altındaki düğme, üretim dışı dallar için build'leri etkinleştirmenize veya devre dışı bırakmanıza olanak tanır.
 
-When enabled, every push event made to a non-production branch will trigger a build and execute the [build command](/workers/ci-cd/builds/configuration/#build-command), followed by the [non-production branch deploy command](/workers/ci-cd/builds/configuration/#non-production-branch-deploy-command).
+Etkinleştirildiğinde, üretim dışı bir dala yapılan her push olayı bir build tetikleyecek ve [build komutu](/workers/ci-cd/builds/configuration/#build-command)'nu, ardından [üretim dışı dal deploy komutu](/workers/ci-cd/builds/configuration/#non-production-branch-deploy-command)'nu çalıştıracaktır.

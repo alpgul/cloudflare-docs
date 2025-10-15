@@ -6,150 +6,150 @@ sidebar:
   order: 1
 head:
   - tag: title
-    content: Overview
+    content: Genel Bakış
 ---
 
 import { Description, RelatedProduct, LinkButton } from "~/components";
 
 <Description>
-A serverless platform for building, deploying, and scaling apps across [Cloudflare's global network](https://www.cloudflare.com/network/) with a single command  —  no infrastructure to manage, no complex configuration
+Tek bir komutla [Cloudflare'in küresel ağı](https://www.cloudflare.com/network/) üzerinde uygulamaları oluşturmak, dağıtmak ve ölçeklendirmek için sunucusuz platform — yönetilecek altyapı yok, karmaşık yapılandırma yok
 </Description>
 
-With Cloudflare Workers, you can expect to:
-- Deliver fast performance with high reliability anywhere in the world
-- Build full-stack apps with your framework of choice, including [React](/workers/framework-guides/web-apps/react/), [Vue](/workers/framework-guides/web-apps/vue/), [Svelte](/workers/framework-guides/web-apps/svelte/), [Next](/workers/framework-guides/web-apps/nextjs/), [Astro](/workers/framework-guides/web-apps/astro/), [React Router](/workers/framework-guides/web-apps/react-router/), [and more](/workers/framework-guides/)
-- Use your preferred language, including [JavaScript](/workers/languages/javascript/), [TypeScript](/workers/languages/typescript/), [Python](/workers/languages/python/), [Rust](/workers/languages/rust/), [and more](/workers/runtime-apis/webassembly/)
-- Gain deep visibility and insight with built-in [observability](/workers/observability/logs/)
-- Get started for free and grow with flexible [pricing](/workers/platform/pricing/), affordable at any scale
+Cloudflare Workers ile şunları bekleyebilirsiniz:
+- Dünyanın her yerinde yüksek güvenilirlikle hızlı performans sunma
+- Tercih ettiğiniz framework ile tam yığın uygulamalar oluşturma, [React](/workers/framework-guides/web-apps/react/), [Vue](/workers/framework-guides/web-apps/vue/), [Svelte](/workers/framework-guides/web-apps/svelte/), [Next](/workers/framework-guides/web-apps/nextjs/), [Astro](/workers/framework-guides/web-apps/astro/), [React Router](/workers/framework-guides/web-apps/react-router/), [ve daha fazlası](/workers/framework-guides/) dahil
+- Tercih ettiğiniz dili kullanma, [JavaScript](/workers/languages/javascript/), [TypeScript](/workers/languages/typescript/), [Python](/workers/languages/python/), [Rust](/workers/languages/rust/), [ve daha fazlası](/workers/runtime-apis/webassembly/) dahil
+- Yerleşik [gözlemlenebilirlik](/workers/observability/logs/) ile derin görünürlük ve içgörü elde etme
+- Ücretsiz başlayın ve esnek [fiyatlandırma](/workers/platform/pricing/) ile büyüyün, her ölçekte uygun fiyatlı
 
-Get started with your first project:
+İlk projenizle başlayın:
 
-<LinkButton href="https://dash.cloudflare.com/?to=/:account/workers-and-pages/templates">Deploy a template</LinkButton>
+<LinkButton href="https://dash.cloudflare.com/?to=/:account/workers-and-pages/templates">Şablon dağıt</LinkButton>
 
 
 <LinkButton href="/workers/get-started/guide/" variant="minimal">
-  Deploy with Wrangler CLI
+  Wrangler CLI ile dağıt
 </LinkButton>
 
 ---
 
-## Build with Workers
+## Workers ile Oluşturun
 
 <div>
-#### Front-end applications
+#### Ön uç uygulamaları
 
-<span>Deploy [static assets](/workers/static-assets/) to Cloudflare's [CDN & cache](/cache/) for fast rendering</span>
+<span>Hızlı render için [statik varlıkları](/workers/static-assets/) Cloudflare'in [CDN ve önbelleğine](/cache/) dağıtın</span>
 </div>
 
 <div>
-#### Back-end applications
+#### Arka uç uygulamaları
 
-<span>Build APIs and connect to data stores with [Smart Placement](/workers/configuration/smart-placement/) to optimize latency</span>
+<span>Gecikmeyi optimize etmek için [Smart Placement](/workers/configuration/smart-placement/) ile API'ler oluşturun ve veri depolarına bağlanın</span>
 </div>
 
 <div>
-#### Serverless AI inference
+#### Sunucusuz AI çıkarımı
 
-<span>Run LLMs, generate images, and more with [Workers AI](/workers-ai/)</span>
+<span>[Workers AI](/workers-ai/) ile LLM'leri çalıştırın, görüntü oluşturun ve daha fazlasını yapın</span>
 </div>
 
 <div>
-#### Background jobs
+#### Arka plan işleri
 
-<span>Schedule [cron jobs](/workers/configuration/cron-triggers/), run durable [Workflows](/workflows/), and integrate with [Queues](/queues/)</span>
+<span>[Cron işlerini](/workers/configuration/cron-triggers/) zamanlayın, dayanıklı [Workflows](/workflows/) çalıştırın ve [Queues](/queues/) ile entegre olun</span>
 </div>
 
 <div>
-#### Observability & monitoring
+#### Gözlemlenebilirlik ve izleme
 
-<span>Monitor performance, debug issues, and analyze traffic with [real-time logs](/workers/observability/logs/) and [analytics](/workers/observability/metrics-and-analytics/)</span>
+<span>[Gerçek zamanlı loglar](/workers/observability/logs/) ve [analitik](/workers/observability/metrics-and-analytics/) ile performansı izleyin, sorunları ayıklayın ve trafiği analiz edin</span>
 </div>
 
 ---
 
-## Integrate with Workers
+## Workers ile Entegre Olun
 
-Connect to external services like databases, APIs, and storage via [Bindings](/workers/runtime-apis/bindings/), enabling functionality with just a few lines of code:
+[Bindings](/workers/runtime-apis/bindings/) aracılığıyla veritabanları, API'ler ve depolama gibi harici hizmetlere bağlanın, sadece birkaç satır kodla işlevsellik sağlayın:
 
-**Storage**
+**Depolama**
 
 <RelatedProduct header="Durable Objects" href="/durable-objects/" product="durable-objects">
 
-Scalable stateful storage for real-time coordination.
+Gerçek zamanlı koordinasyon için ölçeklenebilir durumlu depolama.
 
 </RelatedProduct>
 
 <RelatedProduct header="D1" href="/d1/" product="d1">
 
-Serverless SQL database built for fast, global queries.
+Hızlı, küresel sorgular için oluşturulmuş sunucusuz SQL veritabanı.
 
 </RelatedProduct>
 
 <RelatedProduct header="KV" href="/kv/" product="kv">
 
-Low-latency key-value storage for fast, edge-cached reads.
+Hızlı, kenar önbellekli okumalar için düşük gecikmeli anahtar-değer depolama.
 
 </RelatedProduct>
 
 <RelatedProduct header="Queues" href="/queues/" product="queues">
 
-Guaranteed delivery with no charges for egress bandwidth.
+Çıkış bant genişliği için ücret olmadan garanti edilen teslimat.
 
 </RelatedProduct>
 
 <RelatedProduct header="Hyperdrive" href="/hyperdrive/" product="hyperdrive">
 
-Connect to your external database with accelerated queries, cached at the edge.
+Hızlandırılmış sorgularla harici veritabanınıza bağlanın, kenarda önbelleğe alınmış.
 
 </RelatedProduct>
 
-**Compute**
+**Hesaplama**
 
 <RelatedProduct header="Workers AI" href="/workers-ai/" product="workers-ai">
 
-Machine learning models powered by serverless GPUs.
+Sunucusuz GPU'lar tarafından desteklenen makine öğrenmesi modelleri.
 
 </RelatedProduct>
 
 <RelatedProduct header="Workflows" href="/workflows/" product="workflows">
 
-Durable, long-running operations with automatic retries.
+Otomatik yeniden denemelerle dayanıklı, uzun süreli işlemler.
 
 </RelatedProduct>
 
 <RelatedProduct header="Vectorize" href="/vectorize/" product="vectorize">
 
-Vector database for AI-powered semantic search.
+AI destekli anlamsal arama için vektör veritabanı.
 
 </RelatedProduct>
 
 <RelatedProduct header="R2" href="/r2/" product="r2">
 
-Zero-egress object storage for cost-efficient data access.
+Maliyet etkin veri erişimi için sıfır çıkış nesne depolama.
 
 </RelatedProduct>
 
 <RelatedProduct header="Browser Rendering" href="/browser-rendering/" product="browser-rendering">
 
-Programmatic serverless browser instances.
+Programatik sunucusuz tarayıcı örnekleri.
 
 </RelatedProduct>
 
-**Media**
+**Medya**
 
 <RelatedProduct header="Cache / CDN" href="/cache/" product="cache">
 
-Global caching for high-performance, low-latency delivery.
+Yüksek performanslı, düşük gecikmeli teslimat için küresel önbellekleme.
 
 </RelatedProduct>
 
 <RelatedProduct header="Images" href="/images/" product="images">
 
-Streamlined image infrastructure from a single API.
+Tek bir API'den basitleştirilmiş görüntü altyapısı.
 
 </RelatedProduct>
 
 
 ---
 
-Want to connect with the Workers community? [Join our Discord](https://discord.cloudflare.com)
+Workers topluluğu ile bağlantı kurmak ister misiniz? [Discord'umuza katılın](https://discord.cloudflare.com)

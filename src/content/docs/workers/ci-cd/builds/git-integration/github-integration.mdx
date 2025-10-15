@@ -1,90 +1,90 @@
 ---
 pcx_content_type: reference
-title: GitHub integration
-description: Learn how to manage your GitHub integration for Workers Builds
+title: GitHub entegrasyonu
+description: Workers Builds için GitHub entegrasyonunuzu nasıl yöneteceğinizi öğrenin
 sidebar:
   order: 2
 ---
 
-Cloudflare supports connecting your GitHub repository to your Cloudflare Worker, and will automatically deploy your code every time you push a change.
+Cloudflare, GitHub deponuzu Cloudflare Worker'ınıza bağlamayı destekler ve her değişiklik push ettiğinizde kodunuzu otomatik olarak dağıtır.
 
-## Features
+## Özellikler
 
-Beyond automatic builds and deployments, the Cloudflare GitHub integration lets you monitor builds directly in GitHub, keeping you informed without leaving your workflow.
+Otomatik build'ler ve dağıtımların ötesinde, Cloudflare GitHub entegrasyonu build'leri doğrudan GitHub'da izlemenize olanak tanır, böylece iş akışınızdan ayrılmadan bilgilendirilirsiniz.
 
-### Pull request comment
+### Pull request yorumu
 
-If a commit is on a pull request, Cloudflare will automatically post a comment on the pull request with the status of the build.
+Bir commit pull request'te ise, Cloudflare otomatik olarak pull request'e build durumuyla ilgili bir yorum gönderir.
 
-![GitHub pull request comment](~/assets/images/workers/platform/ci-cd/github-pull-request-comment.png)
+![GitHub pull request yorumu](~/assets/images/workers/platform/ci-cd/github-pull-request-comment.png)
 
-A [preview URL](/workers/configuration/previews/) will be provided for any builds which perform `wrangler versions upload`. This is particularly useful when reviewing your pull request, as it allows you to compare the code changes alongside an updated version of your Worker.
+`wrangler versions upload` gerçekleştiren herhangi bir build için [önizleme URL'si](/workers/configuration/previews/) sağlanacaktır. Bu, pull request'inizi gözden geçirirken özellikle yararlıdır çünkü kod değişikliklerini Worker'ınızın güncellenmiş sürümüyle birlikte karşılaştırmanıza olanak tanır.
 
-Comment history reveals any builds completed earlier while the PR was open.
+Yorum geçmişi, PR açıkken daha önce tamamlanan build'leri gösterir.
 
-![GitHub pull request comment history](~/assets/images/workers/platform/ci-cd/github-pull-request-comment-history.png)
+![GitHub pull request yorum geçmişi](~/assets/images/workers/platform/ci-cd/github-pull-request-comment-history.png)
 
 ### Check run
 
-If you have one or multiple Workers connected to a repository (i.e. a [monorepo](/workers/ci-cd/builds/advanced-setups/#monorepos)), you can check on the status of each build within GitHub via [GitHub check runs](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/collaborating-on-repositories-with-code-quality-features/about-status-checks#checks).
+Bir veya birden fazla Worker'ı bir depoya bağladıysanız (yani [monorepo](/workers/ci-cd/builds/advanced-setups/#monorepos)), GitHub deponuz içinde [GitHub check runs](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/collaborating-on-repositories-with-code-quality-features/about-status-checks#checks) aracılığıyla her build'in durumunu kontrol edebilirsiniz.
 
-You can see the checks by selecting on the status icon next to a commit within your GitHub repository. In the example below, you can select the green check mark to see the results of the check run.
+GitHub deponuz içindeki commit'in yanındaki durum simgesini seçerek check'leri görebilirsiniz. Aşağıdaki örnekte, check run'un sonuçlarını görmek için yeşil onay işaretini seçebilirsiniz.
 
-![GitHub status](~/assets/images/workers/platform/ci-cd/gh-status-check-runs.png)
+![GitHub durum](~/assets/images/workers/platform/ci-cd/gh-status-check-runs.png)
 
-Check runs will appear like the following in your repository. You can select **Details** to view the build (Build ID) and project (Script) associated with each check.
+Check run'lar deponuzda aşağıdaki gibi görünecektir. Her check ile ilişkili build'i (Build ID) ve projeyi (Script) görüntülemek için **Details**'i seçebilirsiniz.
 
-![GitHub check runs](~/assets/images/workers/platform/ci-cd/workers-builds-gh-check-runs.png)
+![GitHub check run'lar](~/assets/images/workers/platform/ci-cd/workers-builds-gh-check-runs.png)
 
-Note that when using [build watch paths](/workers/ci-cd/builds/build-watch-paths/), only projects that trigger a build will generate a check run.
+[Build watch paths](/workers/ci-cd/builds/build-watch-paths/) kullanırken, yalnızca build tetikleyen projelerin check run oluşturacağını unutmayın.
 
-## Manage access
+## Erişimi yönet
 
-You can deploy projects to Cloudflare Workers from your company or side project on GitHub using the [Cloudflare Workers & Pages GitHub App](https://github.com/apps/cloudflare-workers-and-pages).
+Şirketinizden veya GitHub'daki yan projenizden [Cloudflare Workers & Pages GitHub App](https://github.com/apps/cloudflare-workers-and-pages) kullanarak projeleri Cloudflare Workers'a dağıtabilirsiniz.
 
-### Organizational access
+### Organizasyon erişimi
 
-When authorizing Cloudflare Workers to access a GitHub account, you can specify access to your individual account or an organization that you belong to on GitHub.
+Cloudflare Workers'ın GitHub hesabına erişimini yetkilendirirken, bireysel hesabınıza veya GitHub'da ait olduğunuz bir organizasyona erişim belirtebilirsiniz.
 
-To add Cloudflare Workers installation to an organization, your user account must be an owner or have the appropriate role within the organization (i.e. the GitHub Apps Manager role). More information on these roles can be seen on [GitHub's documentation](https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/roles-in-an-organization#github-app-managers).
+Cloudflare Workers kurulumunu bir organizasyona eklemek için, kullanıcı hesabınızın sahip olması veya organizasyon içinde uygun role sahip olması gerekir (yani GitHub Apps Manager rolü). Bu roller hakkında daha fazla bilgi [GitHub'ın dokümantasyonunda](https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/roles-in-an-organization#github-app-managers) görülebilir.
 
-:::caution[GitHub security consideration]
+:::caution[GitHub güvenlik değerlendirmesi]
 
-A GitHub account should only point to one Cloudflare account. If you are setting up Cloudflare with GitHub for your organization, Cloudflare recommends that you limit the scope of the application to only the repositories you intend to build with Pages. To modify these permissions, go to the [Applications page](https://github.com/settings/installations) on GitHub and select **Switch settings context** to access your GitHub organization settings. Then, select **Cloudflare Workers & Pages** > For **Repository access**, select **Only select repositories** > select your repositories.
+Bir GitHub hesabı yalnızca bir Cloudflare hesabını işaret etmelidir. Organizasyonunuz için Cloudflare'i GitHub ile kuruyorsanız, Cloudflare uygulamanın kapsamını yalnızca Pages ile build etmeyi planladığınız depoları içerecek şekilde sınırlamanızı önerir. Bu izinleri değiştirmek için GitHub'da [Applications sayfasına](https://github.com/settings/installations) gidin ve GitHub organizasyon ayarlarınıza erişmek için **Switch settings context**'i seçin. Ardından **Cloudflare Workers & Pages** > **Repository access** için **Only select repositories**'i seçin > depolarınızı seçin.
 
 :::
 
-### Remove access
+### Erişimi kaldır
 
-You can remove Cloudflare Workers' access to your GitHub repository or account by going to the [Applications page](https://github.com/settings/installations) on GitHub (if you are in an organization, select Switch settings context to access your GitHub organization settings). The GitHub App is named Cloudflare Workers and Pages, and it is shared between Workers and Pages projects.
+GitHub'da [Applications sayfasına](https://github.com/settings/installations) giderek Cloudflare Workers'ın GitHub deponuz veya hesabınıza erişimini kaldırabilirsiniz (bir organizasyonda iseniz, GitHub organizasyon ayarlarınıza erişmek için Switch settings context'i seçin). GitHub App'i Cloudflare Workers ve Pages olarak adlandırılır ve Workers ve Pages projeleri arasında paylaşılır.
 
-#### Remove Cloudflare access to a GitHub repository
+#### Cloudflare'in GitHub deposuna erişimini kaldır
 
-To remove access to an individual GitHub repository, you can navigate to **Repository access**. Select the **Only select repositories** option, and configure which repositories you would like Cloudflare to have access to.
+Tek bir GitHub deposuna erişimi kaldırmak için **Repository access**'e gidebilirsiniz. **Only select repositories** seçeneğini seçin ve Cloudflare'in erişmesini istediğiniz depoları yapılandırın.
 
-![GitHub Repository Access](~/assets/images/workers/platform/ci-cd/github-repository-access.png)
+![GitHub Depo Erişimi](~/assets/images/workers/platform/ci-cd/github-repository-access.png)
 
-#### Remove Cloudflare access to the entire GitHub account
+#### Cloudflare'in tüm GitHub hesabına erişimini kaldır
 
-To remove Cloudflare Workers and Pages access to your entire Git account, you can navigate to **Uninstall "Cloudflare Workers and Pages"**, then select **Uninstall**. Removing access to the Cloudflare Workers and Pages app will revoke Cloudflare's access to _all repositories_ from that GitHub account. If you want to only disable automatic builds and deployments, follow the [Disable Build](/workers/ci-cd/builds/#disconnecting-builds) instructions.
+Cloudflare Workers ve Pages'in tüm Git hesabınıza erişimini kaldırmak için **Uninstall "Cloudflare Workers and Pages"**'e gidebilir, ardından **Uninstall**'i seçebilirsiniz. Cloudflare Workers ve Pages uygulamasına erişimi kaldırmak, Cloudflare'in o GitHub hesabından _tüm depolara_ erişimini iptal edecektir. Yalnızca otomatik build'leri ve dağıtımları devre dışı bırakmak istiyorsanız, [Build'i Devre Dışı Bırak](/workers/ci-cd/builds/#disconnecting-builds) talimatlarını takip edin.
 
-Note that removing access to GitHub will disable new builds for Workers and Pages project that were connected to those repositories, though your previous deployments will continue to be hosted by Cloudflare Workers.
+GitHub'a erişimi kaldırmanın, o depolara bağlı Workers ve Pages projeleri için yeni build'leri devre dışı bırakacağını, ancak önceki dağıtımlarınızın Cloudflare Workers tarafından barındırılmaya devam edeceğini unutmayın.
 
-### Reinstall the Cloudflare GitHub App
+### Cloudflare GitHub App'ini yeniden kur
 
-When encountering Git integration related issues, one potential troubleshooting step is attempting to uninstall and reinstall the GitHub or GitLab application associated with the Cloudflare Pages installation. The process for each Git provider is provided below.
+Git entegrasyonu ile ilgili sorunlarla karşılaştığınızda, potansiyel sorun giderme adımlarından biri Cloudflare Pages kurulumuyla ilişkili GitHub veya GitLab uygulamasını kaldırmayı ve yeniden kurmayı denemektir. Her Git sağlayıcısı için süreç aşağıda verilmiştir.
 
-1. Go to the installation settings page on GitHub:
-   - Navigate to **Settings > Builds** for the Workers or Pages project and select **Manage** under Git Repository.
-   - Alternatively, visit these links to find the Cloudflare Workers and Pages installation and select **Configure**:
+1. GitHub'da kurulum ayarları sayfasına gidin:
+   - Workers veya Pages projesi için **Settings > Builds**'e gidin ve Git Repository altında **Manage**'i seçin.
+   - Alternatif olarak, Cloudflare Workers ve Pages kurulumunu bulmak için bu bağlantıları ziyaret edin ve **Configure**'u seçin:
 
 |                  |                                                                                    |
 | ---------------- | ---------------------------------------------------------------------------------- |
-| **Individual**   | `https://github.com/settings/installations`                                        |
-| **Organization** | `https://github.com/organizations/<YOUR_ORGANIZATION_NAME>/settings/installations` |
+| **Bireysel**     | `https://github.com/settings/installations`                                        |
+| **Organizasyon** | `https://github.com/organizations/<YOUR_ORGANIZATION_NAME>/settings/installations` |
 
-2. In the Cloudflare Workers and Pages GitHub App settings page, navigate to **Uninstall "Cloudflare Workers and Pages"** and select **Uninstall**.
-3. Go back to the [**Workers & Pages** overview](https://dash.cloudflare.com) page. Select **Create application** > **Pages** > **Connect to Git**.
-4. Select the **+ Add account** button, select the GitHub account you want to add, and then select **Install & Authorize**.
-5. You should be redirected to the create project page with your GitHub account or organization in the account list.
-6. Attempt to make a new deployment with your project which was previously broken.
+2. Cloudflare Workers ve Pages GitHub App ayarları sayfasında **Uninstall "Cloudflare Workers and Pages"**'e gidin ve **Uninstall**'i seçin.
+3. [**Workers & Pages** genel bakış](https://dash.cloudflare.com) sayfasına geri dönün. **Create application** > **Pages** > **Connect to Git**'i seçin.
+4. **+ Add account** düğmesini seçin, eklemek istediğiniz GitHub hesabını seçin ve ardından **Install & Authorize**'u seçin.
+5. GitHub hesabınız veya organizasyonunuzun hesap listesinde olduğu proje oluşturma sayfasına yönlendirilmelisiniz.
+6. Daha önce bozuk olan projenizle yeni bir dağıtım yapmayı deneyin.

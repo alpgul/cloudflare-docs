@@ -1,17 +1,17 @@
 ---
 pcx_content_type: concept
-title: APIs
+title: API'ler
 ---
 
-To integrate with third party APIs from Cloudflare Workers, use the [fetch API](/workers/runtime-apis/fetch/) to make HTTP requests to the API endpoint. Then use the response data to modify or manipulate your content as needed.
+Cloudflare Workers'dan üçüncü taraf API'lerle entegre olmak için, API endpoint'ine HTTP istekleri yapmak için [fetch API](/workers/runtime-apis/fetch/)'yi kullanın. Ardından yanıt verilerini içeriğinizi gerektiği gibi değiştirmek veya manipüle etmek için kullanın.
 
-For example, if you want to integrate with a weather API, make a fetch request to the API endpoint and retrieve the current weather data. Then use this data to display the current weather conditions on your website.
+Örneğin, bir hava durumu API'si ile entegre olmak istiyorsanız, API endpoint'ine bir fetch isteği yapın ve mevcut hava durumu verilerini alın. Ardından bu verileri web sitenizde mevcut hava durumu koşullarını göstermek için kullanın.
 
-To make the `fetch()` request, add the following code to your project's `src/index.js` file:
+`fetch()` isteğini yapmak için, projenizin `src/index.js` dosyasına aşağıdaki kodu ekleyin:
 
 ```js
 async function handleRequest(request) {
-	// Make the fetch request to the third party API endpoint
+	// Üçüncü taraf API endpoint'ine fetch isteği yapın
 	const response = await fetch("https://weather-api.com/endpoint", {
 		method: "GET",
 		headers: {
@@ -19,34 +19,34 @@ async function handleRequest(request) {
 		},
 	});
 
-	// Retrieve the data from the response
+	// Yanıttan veriyi alın
 	const data = await response.json();
 
-	// Use the data to modify or manipulate your content as needed
+	// Veriyi içeriğinizi gerektiği gibi değiştirmek veya manipüle etmek için kullanın
 	return new Response(data);
 }
 ```
 
-## Authentication
+## Kimlik Doğrulama
 
-If your API requires authentication, use Wrangler secrets to securely store your credentials. To do this, create a secret in your Cloudflare Workers project using the following [`wrangler secret`](/workers/wrangler/commands/#secret) command:
+API'niz kimlik doğrulama gerektiriyorsa, kimlik bilgilerinizi güvenli bir şekilde saklamak için Wrangler gizli anahtarlarını kullanın. Bunu yapmak için, aşağıdaki [`wrangler secret`](/workers/wrangler/commands/#secret) komutunu kullanarak Cloudflare Workers projenizde bir gizli anahtar oluşturun:
 
 ```sh
 wrangler secret put SECRET_NAME
 ```
 
-Then, retrieve the secret value in your code using the following code snippet:
+Ardından, aşağıdaki kod parçacığını kullanarak kodunuzda gizli anahtar değerini alın:
 
 ```js
 const secretValue = env.SECRET_NAME;
 ```
 
-Then use the secret value to authenticate with the external service. For example, if the external service requires an API key for authentication, include it in your request headers.
+Ardından harici hizmetle kimlik doğrulama yapmak için gizli anahtar değerini kullanın. Örneğin, harici hizmet kimlik doğrulama için bir API anahtarı gerektiriyorsa, bunu istek başlıklarınızda dahil edin.
 
-For services that require mTLS authentication, use [mTLS certificates](/workers/runtime-apis/bindings/mtls) to present a client certificate.
+mTLS kimlik doğrulaması gerektiren hizmetler için, bir istemci sertifikası sunmak üzere [mTLS sertifikalarını](/workers/runtime-apis/bindings/mtls) kullanın.
 
-## Tips
+## İpuçları
 
-- Use the [Cache API](/workers/runtime-apis/cache/) to cache data from the third party API. This allows you to optimize cacheable requests made to the API. Integrating with third party APIs from Cloudflare Workers adds additional functionality and features to your application.
+- Üçüncü taraf API'den gelen verileri önbelleğe almak için [Cache API](/workers/runtime-apis/cache/)'yi kullanın. Bu, API'ye yapılan önbelleğe alınabilir istekleri optimize etmenizi sağlar. Cloudflare Workers'dan üçüncü taraf API'lerle entegre olmak uygulamanıza ek işlevsellik ve özellikler ekler.
 
-- Use [Custom Domains](/workers/configuration/routing/custom-domains/) when communicating with external APIs, which treat your Worker as your core application.
+- Harici API'lerle iletişim kurarken [Özel Alanlar](/workers/configuration/routing/custom-domains/) kullanın, bu Worker'ınızı temel uygulamanız olarak ele alır.

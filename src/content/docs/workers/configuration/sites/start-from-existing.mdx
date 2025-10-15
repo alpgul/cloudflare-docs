@@ -1,6 +1,6 @@
 ---
 pcx_content_type: how-to
-title: Start from existing
+title: Mevcut siteden başla
 noindex: true
 sidebar:
   order: 1
@@ -10,54 +10,54 @@ import { Render, TabItem, Tabs, WranglerConfig } from "~/components";
 
 <Render file="workers_sites" product="workers" />
 
-Workers Sites require [Wrangler](https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler) — make sure to use the [latest version](/workers/wrangler/install-and-update/#update-wrangler).
+Workers Sites [Wrangler](https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler) gerektirir — [en son sürümü](/workers/wrangler/install-and-update/#update-wrangler) kullandığınızdan emin olun.
 
-To deploy a pre-existing static site project, start with a pre-generated site. Workers Sites works with all static site generators, for example:
+Önceden var olan statik site projesini dağıtmak için, önceden oluşturulmuş bir site ile başlayın. Workers Sites tüm statik site oluşturucularıyla çalışır, örneğin:
 
 - [Hugo](https://gohugo.io/getting-started/quick-start/)
-- [Gatsby](https://www.gatsbyjs.org/docs/quick-start/), requires Node
-- [Jekyll](https://jekyllrb.com/docs/), requires Ruby
-- [Eleventy](https://www.11ty.io/#quick-start), requires Node
-- [WordPress](https://wordpress.org) (refer to the tutorial on [deploying static WordPress sites with Pages](/pages/how-to/deploy-a-wordpress-site/))
+- [Gatsby](https://www.gatsbyjs.org/docs/quick-start/), Node gerektirir
+- [Jekyll](https://jekyllrb.com/docs/), Ruby gerektirir
+- [Eleventy](https://www.11ty.io/#quick-start), Node gerektirir
+- [WordPress](https://wordpress.org) ([Pages ile statik WordPress sitelerini dağıtma](/pages/how-to/deploy-a-wordpress-site/) öğreticisine bakın)
 
-## Getting started
+## Başlangıç
 
-1. Run the `wrangler init` command in the root of your project's directory to generate a basic Worker:
+1. Projenizin dizininin kökünde temel bir Worker oluşturmak için `wrangler init` komutunu çalıştırın:
 
    ```sh
    wrangler init -y
    ```
 
-   This command adds/update the following files:
-   - `wrangler.jsonc`: The file containing project configuration.
-   - `package.json`: Wrangler `devDependencies` are added.
-   - `tsconfig.json`: Added if not already there to support writing the Worker in TypeScript.
-   - `src/index.ts`: A basic Cloudflare Worker, written in TypeScript.
+   Bu komut aşağıdaki dosyaları ekler/günceller:
+   - `wrangler.jsonc`: Proje yapılandırmasını içeren dosya.
+   - `package.json`: Wrangler `devDependencies` eklenir.
+   - `tsconfig.json`: Worker'ı TypeScript'te yazmayı desteklemek için zaten yoksa eklenir.
+   - `src/index.ts`: TypeScript'te yazılmış temel Cloudflare Worker.
 
-2. Add your site's build/output directory to the Wrangler file:
+2. Sitenizin build/çıktı dizinini Wrangler dosyasına ekleyin:
 
    <WranglerConfig>
 
    ```toml
    [site]
-   bucket = "./public" # <-- Add your build directory name here.
+   bucket = "./public" # <-- Build dizin adınızı buraya ekleyin.
    ```
 
    </WranglerConfig>
 
-   The default directories for the most popular static site generators are listed below:
+   En popüler statik site oluşturucuları için varsayılan dizinler aşağıda listelenmiştir:
    - Hugo: `public`
    - Gatsby: `public`
    - Jekyll: `_site`
    - Eleventy: `_site`
 
-3. Install the `@cloudflare/kv-asset-handler` package in your project:
+3. Projenizde `@cloudflare/kv-asset-handler` paketini yükleyin:
 
    ```sh
    npm i -D @cloudflare/kv-asset-handler
    ```
 
-4. Replace the contents of `src/index.ts` with the following code snippet:
+4. `src/index.ts` içeriğini aşağıdaki kod parçacığıyla değiştirin:
 
 <Tabs> <TabItem label="Module Worker" icon="seti:javascript">
 
@@ -69,7 +69,7 @@ const assetManifest = JSON.parse(manifestJSON);
 export default {
 	async fetch(request, env, ctx) {
 		try {
-			// Add logic to decide whether to serve an asset or run your original Worker code
+			// Bir varlık sunmak mı yoksa orijinal Worker kodunuzu çalıştırmak mı gerektiğine karar vermek için mantık ekleyin
 			return await getAssetFromKV(
 				{
 					request,
@@ -93,9 +93,9 @@ export default {
 
 </TabItem> <TabItem label="Service Worker" icon="seti:javascript">
 
-:::caution[Service Workers are deprecated]
+:::caution[Service Worker'lar kullanımdan kaldırıldı]
 
-Service Workers are deprecated, but still supported. We recommend using [Module Workers](/workers/reference/migrate-to-module-workers/) instead. New features may not be supported for Service Workers.
+Service Worker'lar kullanımdan kaldırıldı ancak hala destekleniyor. Bunun yerine [Module Worker'lar](/workers/reference/migrate-to-module-workers/) kullanmanızı öneririz. Yeni özellikler Service Worker'lar için desteklenmeyebilir.
 
 :::
 
@@ -108,7 +108,7 @@ addEventListener("fetch", (event) => {
 
 async function handleEvent(event) {
 	try {
-		// Add logic to decide whether to serve an asset or run your original Worker code
+		// Bir varlık sunmak mı yoksa orijinal Worker kodunuzu çalıştırmak mı gerektiğine karar vermek için mantık ekleyin
 		return await getAssetFromKV(event);
 	} catch (e) {
 		let pathname = new URL(event.request.url).pathname;
@@ -122,14 +122,14 @@ async function handleEvent(event) {
 
 </TabItem> </Tabs>
 
-5. Run `wrangler dev` or `npx wrangler deploy` to preview or deploy your site on Cloudflare.
-   Wrangler will automatically upload the assets found in the configured directory.
+5. Sitenizi Cloudflare'de önizlemek veya dağıtmak için `wrangler dev` veya `npx wrangler deploy` çalıştırın.
+   Wrangler yapılandırılmış dizinde bulunan varlıkları otomatik olarak yükleyecektir.
 
    ```sh
    npx wrangler deploy
    ```
 
-6. Deploy your site to a [custom domain](/workers/configuration/routing/custom-domains/) that you own and have already attached as a Cloudflare zone. Add a `route` property to the Wrangler file.
+6. Sitenizi sahip olduğunuz ve zaten Cloudflare zone olarak eklediğiniz [özel alana](/workers/configuration/routing/custom-domains/) dağıtın. Wrangler dosyasına `route` özelliği ekleyin.
 
    <WranglerConfig>
 
@@ -141,7 +141,7 @@ async function handleEvent(event) {
 
    :::note
 
-   Refer to the documentation on [Routes](/workers/configuration/routing/routes/) to configure a `route` properly.
+   `route`'u doğru şekilde yapılandırmak için [Rotalar](/workers/configuration/routing/routes/) dokümantasyonuna bakın.
    :::
 
-Learn more about [configuring your project](/workers/wrangler/configuration/).
+[Projenizi yapılandırma](/workers/wrangler/configuration/) hakkında daha fazla bilgi edinin.

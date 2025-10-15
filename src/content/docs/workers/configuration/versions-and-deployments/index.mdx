@@ -1,109 +1,109 @@
 ---
 pcx_content_type: concept
-title: Versions & Deployments
+title: Sürümler ve Dağıtımlar
 head: []
-description: Upload versions of Workers and create deployments to release new versions.
+description: Worker'ların sürümlerini yükleyin ve yeni sürümleri yayınlamak için dağıtımlar oluşturun.
 ---
 import { DashButton } from "~/components";
 
-Versions track changes to your Worker. Deployments configure how those changes are deployed to your traffic.
+Sürümler Worker'ınızdaki değişiklikleri takip eder. Dağıtımlar bu değişikliklerin trafiğinize nasıl dağıtılacağını yapılandırır.
 
-You can upload changes (versions) to your Worker independent of changing the version that is actively serving traffic (deployment).
+Worker'ınıza değişiklikleri (sürümler) yükleyebilirsiniz, aktif olarak trafik sunan sürümü (dağıtım) değiştirmeden bağımsız olarak.
 
-![Versions and Deployments](~/assets/images/workers/platform/versions-and-deployments/versions-and-deployments.png)
+![Sürümler ve Dağıtımlar](~/assets/images/workers/platform/versions-and-deployments/versions-and-deployments.png)
 
-Using versions and deployments is useful if:
+Sürümler ve dağıtımları kullanmak şu durumlarda yararlıdır:
 
-- You are running critical applications on Workers and want to reduce risk when deploying new versions of your Worker using a rolling deployment strategy.
-- You want to monitor for performance differences when deploying new versions of your Worker.
-- You have a CI/CD pipeline configured for Workers but want to cut manual releases.
+- Worker'larda kritik uygulamalar çalıştırıyorsanız ve Worker'ınızın yeni sürümlerini rolling dağıtım stratejisi kullanarak dağıtırken riski azaltmak istiyorsanız.
+- Worker'ınızın yeni sürümlerini dağıtırken performans farklılıklarını izlemek istiyorsanız.
+- Worker'lar için CI/CD pipeline'ı yapılandırdıysanız ancak manuel sürümler kesmek istiyorsanız.
 
-## Versions
+## Sürümler
 
-A version is defined by the state of code as well as the state of configuration in a Worker's [Wrangler configuration file](/workers/wrangler/configuration/). Versions track historical changes to [bundled code](/workers/wrangler/bundling/), [static assets](/workers/static-assets/) and changes to configuration like [bindings](/workers/runtime-apis/bindings/) and [compatibility date and compatibility flags](/workers/configuration/compatibility-dates/) over time.
+Bir sürüm, Worker'ın [Wrangler yapılandırma dosyasındaki](/workers/wrangler/configuration/) kodun durumu ve yapılandırmanın durumu ile tanımlanır. Sürümler [paketlenmiş kod](/workers/wrangler/bundling/), [statik varlıklar](/workers/static-assets/) ve [bağlamalar](/workers/runtime-apis/bindings/) ve [uyumluluk tarihi ve uyumluluk bayrakları](/workers/configuration/compatibility-dates/) gibi yapılandırma değişikliklerinin zaman içindeki geçmiş değişikliklerini takip eder.
 
-Versions also track metadata associated with a version, including: the version ID, the user that created the version, deploy source, and timestamp. Optionally, a version message and version tag can be configured on version upload.
-
-:::note
-State changes for associated Workers [storage resources](/workers/platform/storage-options/) such as [KV](/kv/), [R2](/r2/), [Durable Objects](/durable-objects/) and [D1](/d1/) are not tracked with versions.
-:::
-
-## Deployments
-
-Deployments track the version(s) of your Worker that are actively serving traffic. A deployment can consist of one or two versions of a Worker.
-
-By default, Workers supports an all-at-once deployment model where traffic is immediately shifted from one version to the newly deployed version automatically. Alternatively, you can use [gradual deployments](/workers/configuration/versions-and-deployments/gradual-deployments/) to create a rolling deployment strategy.
-
-You can also track metadata associated with a deployment, including: the user that created the deployment, deploy source, timestamp and the version(s) in the deployment. Optionally, you can configure a deployment message when you create a deployment.
-
-## Use versions and deployments
-
-### Create a new version
-
-Review the different ways you can create versions of your Worker and deploy them.
-
-#### Upload a new version and deploy it immediately
-
-A new version that is automatically deployed to 100% of traffic when:
-
-- Changes are uploaded with [`wrangler deploy`](/workers/wrangler/commands/#deploy) via the Cloudflare Dashboard
-- Changes are deployed with the command [`npx wrangler deploy`](/workers/wrangler/commands/#deploy) via [Workers Builds](/workers/ci-cd/builds)
-- Changes are uploaded with the [Workers Script Upload API](/api/resources/workers/subresources/scripts/methods/update/)
-
-#### Upload a new version to be gradually deployed or deployed at a later time
+Sürümler ayrıca sürümle ilişkili meta verileri de takip eder, bunlar: sürüm ID'si, sürümü oluşturan kullanıcı, dağıtım kaynağı ve zaman damgası. İsteğe bağlı olarak, sürüm yükleme sırasında sürüm mesajı ve sürüm etiketi yapılandırılabilir.
 
 :::note
-
-Wrangler versions before 3.73.0 require you to specify a `--x-versions` flag.
-
+[KV](/kv/), [R2](/r2/), [Durable Objects](/durable-objects/) ve [D1](/d1/) gibi ilişkili Worker [depolama kaynakları](/workers/platform/storage-options/) için durum değişiklikleri sürümlerle takip edilmez.
 :::
 
-To create a new version of your Worker that is not deployed immediately, use the [`wrangler versions upload`](/workers/wrangler/commands/#upload) command or create a new version via the Cloudflare dashboard using the **Save** button. You can find the **Save** option under the down arrow beside the "Deploy" button.
+## Dağıtımlar
 
-Versions created in this way can then be deployed all at once or gradually deployed using the [`wrangler versions deploy`](/workers/wrangler/commands/#deploy-2) command or via the Cloudflare dashboard under the **Deployments** tab.
+Dağıtımlar aktif olarak trafik sunan Worker'ınızın sürümlerini takip eder. Bir dağıtım bir veya iki Worker sürümünden oluşabilir.
+
+Varsayılan olarak, Worker'lar trafiğin bir sürümden yeni dağıtılan sürüme otomatik olarak hemen kaydırıldığı hepsi-bir-arada dağıtım modelini destekler. Alternatif olarak, rolling dağıtım stratejisi oluşturmak için [kademeli dağıtımlar](/workers/configuration/versions-and-deployments/gradual-deployments/) kullanabilirsiniz.
+
+Ayrıca dağıtımla ilişkili meta verileri de takip edebilirsiniz, bunlar: dağıtımı oluşturan kullanıcı, dağıtım kaynağı, zaman damgası ve dağıtımdaki sürüm(ler). İsteğe bağlı olarak, dağıtım oluştururken dağıtım mesajı yapılandırabilirsiniz.
+
+## Sürümler ve dağıtımları kullanma
+
+### Yeni sürüm oluşturma
+
+Worker'ınızın sürümlerini oluşturmanın ve dağıtmanın farklı yollarını gözden geçirin.
+
+#### Yeni sürüm yükleme ve hemen dağıtma
+
+Şu durumlarda %100 trafiğe otomatik olarak dağıtılan yeni sürüm:
+
+- Değişiklikler [`wrangler deploy`](/workers/wrangler/commands/#deploy) ile Cloudflare Dashboard üzerinden yüklenir
+- Değişiklikler [`npx wrangler deploy`](/workers/wrangler/commands/#deploy) komutu ile [Workers Builds](/workers/ci-cd/builds) üzerinden dağıtılır
+- Değişiklikler [Workers Script Upload API](/api/resources/workers/subresources/scripts/methods/update/) ile yüklenir
+
+#### Kademeli olarak dağıtılacak veya daha sonra dağıtılacak yeni sürüm yükleme
 
 :::note
-When using [Wrangler](/workers/wrangler/), changes made to a Worker's triggers [routes, domains](/workers/configuration/routing/) or [cron triggers](/workers/configuration/cron-triggers/) need to be applied with the command [`wrangler triggers deploy`](/workers/wrangler/commands/#triggers).
+
+3.73.0'dan önceki Wrangler sürümleri `--x-versions` bayrağını belirtmenizi gerektirir.
+
+:::
+
+Hemen dağıtılmayan Worker'ınızın yeni sürümünü oluşturmak için [`wrangler versions upload`](/workers/wrangler/commands/#upload) komutunu kullanın veya Cloudflare dashboard'da **Save** düğmesini kullanarak yeni sürüm oluşturun. **Save** seçeneğini "Deploy" düğmesinin yanındaki aşağı ok altında bulabilirsiniz.
+
+Bu şekilde oluşturulan sürümler daha sonra [`wrangler versions deploy`](/workers/wrangler/commands/#deploy-2) komutu ile hepsi birden veya kademeli olarak dağıtılabilir veya Cloudflare dashboard'da **Deployments** sekmesi altından dağıtılabilir.
+
+:::note
+[Wrangler](/workers/wrangler/) kullanırken, Worker'ın tetikleyicilerinde [rotalar, alanlar](/workers/configuration/routing/) veya [cron tetikleyicileri](/workers/configuration/cron-triggers/) yapılan değişiklikler [`wrangler triggers deploy`](/workers/wrangler/commands/#triggers) komutu ile uygulanmalıdır.
 :::
 
 :::note
-New versions are not created when you make changes to [resources connected to your Worker](/workers/runtime-apis/bindings/). For example, if two Workers (Worker A and Worker B) are connected via a [service binding](/workers/runtime-apis/bindings/service-bindings/), changing the code of Worker B will not create a new version of Worker A. Changing the code of Worker B will only create a new version of Worker B. Changes to the service binding (such as, deleting the binding or updating the [environment](/workers/wrangler/environments/) it points to) on Worker A will also not create a new version of Worker B.
+Worker'ınıza [bağlı kaynaklarda](/workers/runtime-apis/bindings/) değişiklik yaptığınızda yeni sürümler oluşturulmaz. Örneğin, iki Worker (Worker A ve Worker B) [servis bağlaması](/workers/runtime-apis/bindings/service-bindings/) ile bağlıysa, Worker B'nin kodunu değiştirmek Worker A'nın yeni sürümünü oluşturmaz. Worker B'nin kodunu değiştirmek yalnızca Worker B'nin yeni sürümünü oluşturacaktır. Worker A'daki servis bağlamasında (bağlamayı silmek veya işaret ettiği [ortamı](/workers/wrangler/environments/) güncellemek gibi) değişiklikler Worker B'nin yeni sürümünü de oluşturmayacaktır.
 :::
 
-#### Directly manage Versions and Deployments
+#### Sürümler ve Dağıtımları doğrudan yönetme
 
-See examples of creating a Worker, Versions, and Deployments directly with the API, library SDKs, and Terraform in [Infrastructure as Code](/workers/platform/infrastructure-as-code/).
+API, kütüphane SDK'ları ve Terraform ile Worker, Sürümler ve Dağıtımları doğrudan oluşturma örnekleri için [Infrastructure as Code](/workers/platform/infrastructure-as-code/)'a bakın.
 
-### View versions and deployments
+### Sürümler ve dağıtımları görüntüleme
 
-#### Via Wrangler
+#### Wrangler aracılığıyla
 
-Wrangler allows you to view the 100 most recent versions and deployments. Refer to the [`versions list`](/workers/wrangler/commands/#list-4) and [`deployments`](/workers/wrangler/commands/#list-5) documentation to view the commands.
+Wrangler en son 100 sürüm ve dağıtımı görüntülemenize olanak tanır. Komutları görüntülemek için [`versions list`](/workers/wrangler/commands/#list-4) ve [`deployments`](/workers/wrangler/commands/#list-5) dokümantasyonuna bakın.
 
-#### Via the Cloudflare dashboard
+#### Cloudflare dashboard aracılığıyla
 
-To view your deployments in the Cloudflare dashboard:
+Dağıtımlarınızı Cloudflare dashboard'da görüntülemek için:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.
+1. Cloudflare dashboard'da **Workers & Pages** sayfasına gidin.
 
    <DashButton url="/?to=/:account/workers-and-pages" />
 
-2. Select your Worker > **Deployments**.
+2. Worker'ınızı seçin > **Deployments**.
 
-## Limits
+## Limitler
 
-### First upload
+### İlk yükleme
 
-You must use [C3](/workers/get-started/guide/#1-create-a-new-worker-project) or [`wrangler deploy`](/workers/wrangler/commands/#deploy) the first time you create a new Workers project. Using [`wrangler versions upload`](/workers/wrangler/commands/#upload) the first time you upload a Worker will fail.
+Yeni Workers projesi oluştururken ilk kez [C3](/workers/get-started/guide/#1-create-a-new-worker-project) veya [`wrangler deploy`](/workers/wrangler/commands/#deploy) kullanmalısınız. Worker'ı ilk kez yüklerken [`wrangler versions upload`](/workers/wrangler/commands/#upload) kullanmak başarısız olacaktır.
 
-### Service worker syntax
+### Service worker sözdizimi
 
-Service worker syntax is not supported for versions that are uploaded through [`wrangler versions upload`](/workers/wrangler/commands/#upload). You must use ES modules format.
+[`wrangler versions upload`](/workers/wrangler/commands/#upload) ile yüklenen sürümler için service worker sözdizimi desteklenmez. ES modules formatını kullanmalısınız.
 
-Refer to [Migrate from Service Workers to ES modules](/workers/reference/migrate-to-module-workers/#advantages-of-migrating) to learn how to migrate your Workers from the service worker format to the ES modules format.
+Worker'larınızı service worker formatından ES modules formatına nasıl geçireceğinizi öğrenmek için [Service Worker'lardan ES modules'a geçiş](/workers/reference/migrate-to-module-workers/#advantages-of-migrating)'e bakın.
 
 ### Durable Object migrations
 
-Uploading a version with [Durable Object migrations](/durable-objects/reference/durable-objects-migrations/) is not supported. Use [`wrangler deploy`](/workers/wrangler/commands/#deploy) if you are applying a [Durable Object migration](/durable-objects/reference/durable-objects-migrations/).
+[Durable Object migrations](/durable-objects/reference/durable-objects-migrations/) ile sürüm yükleme desteklenmez. [Durable Object migration](/durable-objects/reference/durable-objects-migrations/) uyguluyorsanız [`wrangler deploy`](/workers/wrangler/commands/#deploy) kullanın.
 
-This will be supported in the near future.
+Bu yakın gelecekte desteklenecektir.

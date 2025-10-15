@@ -1,9 +1,8 @@
 ---
 pcx_content_type: concept
-title: Smart Placement
+title: Akıllı Yerleştirme
 head: []
-description: Speed up your Worker application by automatically placing your
-  workloads in an optimal location that minimizes latency.
+description: Worker uygulamanızı hızlandırın ve gecikmeyi en aza indiren optimal bir konumda iş yüklerinizi otomatik olarak yerleştirin.
 sidebar:
   badge:
     text: Beta
@@ -11,41 +10,41 @@ sidebar:
 
 import { WranglerConfig, DashButton } from "~/components";
 
-By default, [Workers](/workers/) and [Pages Functions](/pages/functions/) are invoked in a data center closest to where the request was received. If you are running back-end logic in a Worker, it may be more performant to run that Worker closer to your back-end infrastructure rather than the end user. Smart Placement automatically places your workloads in an optimal location that minimizes latency and speeds up your applications.
+Varsayılan olarak, [Workers](/workers/) ve [Pages Functions](/pages/functions/) isteğin alındığı yere en yakın veri merkezinde çağrılır. Bir Worker'da arka uç mantığı çalıştırıyorsanız, o Worker'ı son kullanıcıdan ziyade arka uç altyapınıza daha yakın çalıştırmak daha performanslı olabilir. Akıllı Yerleştirme, iş yüklerinizi gecikmeyi en aza indiren ve uygulamalarınızı hızlandıran optimal bir konuma otomatik olarak yerleştirir.
 
-## Background
+## Arka Plan
 
-The following example demonstrates how moving your Worker close to your back-end services could decrease application latency:
+Aşağıdaki örnek, Worker'ınızı arka uç hizmetlerinize yakın taşımanın uygulama gecikmesini nasıl azaltabileceğini gösterir:
 
-You have a user in Sydney, Australia who is accessing an application running on Workers. This application makes multiple round trips to a database located in Frankfurt, Germany in order to serve the user’s request.
+Avustralya, Sidney'de bulunan bir kullanıcınız var ve Workers üzerinde çalışan bir uygulamaya erişiyor. Bu uygulama, kullanıcının isteğini karşılamak için Almanya, Frankfurt'ta bulunan bir veritabanına birden fazla gidiş-dönüş yapar.
 
-![A user located in Sydney, AU connecting to a Worker in the same region which then makes multiple round trips to a database located in Frankfurt, DE. ](~/assets/images/workers/platform/workers-smart-placement-disabled.png)
+![Avustralya, Sidney'de bulunan bir kullanıcı, aynı bölgedeki bir Worker'a bağlanıyor ve ardından Almanya, Frankfurt'ta bulunan bir veritabanına birden fazla gidiş-dönüş yapıyor.](~/assets/images/workers/platform/workers-smart-placement-disabled.png)
 
-The issue is the time that it takes the Worker to perform multiple round trips to the database. Instead of the request being processed close to the user, the Cloudflare network, with Smart Placement enabled, would process the request in a data center closest to the database.
+Sorun, Worker'ın veritabanına birden fazla gidiş-dönüş yapması için gereken süredir. İstek kullanıcıya yakın işlenmek yerine, Akıllı Yerleştirme etkinleştirilmiş Cloudflare ağı, isteği veritabanına en yakın veri merkezinde işleyecektir.
 
-![A user located in Sydney, AU connecting to a Worker in Frankfurt, DE which then makes multiple round trips to a database also located in Frankfurt, DE. ](~/assets/images/workers/platform/workers-smart-placement-enabled.png)
+![Avustralya, Sidney'de bulunan bir kullanıcı, Almanya, Frankfurt'taki bir Worker'a bağlanıyor ve ardından aynı zamanda Almanya, Frankfurt'ta bulunan bir veritabanına birden fazla gidiş-dönüş yapıyor.](~/assets/images/workers/platform/workers-smart-placement-enabled.png)
 
-## Understand how Smart Placement works
+## Akıllı Yerleştirmenin nasıl çalıştığını anlayın
 
-Smart Placement is enabled on a per-Worker basis. Once enabled, Smart Placement analyzes the [request duration](/workers/observability/metrics-and-analytics/#request-duration) of the Worker in different Cloudflare locations around the world on a regular basis. Smart Placement decides where to run the Worker by comparing the estimated request duration in the location closest to where the request was received (the default location where the Worker would run) to a set of candidate locations around the world. For each candidate location, Smart Placement considers the performance of the Worker in that location as well as the network latency added by forwarding the request to that location. If the estimated request duration in the best candidate location is significantly faster than the location where the request was received, the request will be forwarded to that candidate location. Otherwise, the Worker will run in the default location closest to where the request was received.
+Akıllı Yerleştirme Worker başına etkinleştirilir. Etkinleştirildikten sonra, Akıllı Yerleştirme düzenli olarak dünya çapındaki farklı Cloudflare konumlarında Worker'ın [istek süresini](/workers/observability/metrics-and-analytics/#request-duration) analiz eder. Akıllı Yerleştirme, Worker'ın nerede çalıştırılacağına karar verirken, isteğin alındığı yere en yakın konumdaki (Worker'ın çalışacağı varsayılan konum) tahmini istek süresini dünya çapındaki aday konumlar kümesiyle karşılaştırır. Her aday konum için, Akıllı Yerleştirme o konumdaki Worker'ın performansını ve isteği o konuma yönlendirerek eklenen ağ gecikmesini dikkate alır. En iyi aday konumdaki tahmini istek süresi, isteğin alındığı konumdan önemli ölçüde daha hızlıysa, istek o aday konuma yönlendirilecektir. Aksi takdirde, Worker isteğin alındığı yere en yakın varsayılan konumda çalışacaktır.
 
-Smart Placement only considers candidate locations where the Worker has previously run, since the estimated request duration in each candidate location is based on historical data from the Worker running in that location. This means that Smart Placement cannot run the Worker in a location that it does not normally receive traffic from.
+Akıllı Yerleştirme yalnızca Worker'ın daha önce çalıştığı aday konumları dikkate alır, çünkü her aday konumdaki tahmini istek süresi o konumda çalışan Worker'dan elde edilen geçmiş verilere dayanır. Bu, Akıllı Yerleştirme'nin Worker'ı normalde trafik almadığı bir konumda çalıştıramayacağı anlamına gelir.
 
-Smart Placement only affects the execution of [fetch event handlers](/workers/runtime-apis/handlers/fetch/). Smart Placement does not affect the execution of [RPC methods](/workers/runtime-apis/rpc/) or [named entrypoints](/workers/runtime-apis/bindings/service-bindings/rpc/#named-entrypoints). Workers without a fetch event handler will be ignored by Smart Placement. For Workers with both fetch and non-fetch event handlers, Smart Placement will only affect the execution of the fetch event handler.
+Akıllı Yerleştirme yalnızca [fetch olay handler'larının](/workers/runtime-apis/handlers/fetch/) yürütülmesini etkiler. Akıllı Yerleştirme [RPC yöntemlerinin](/workers/runtime-apis/rpc/) veya [adlandırılmış giriş noktalarının](/workers/runtime-apis/bindings/service-bindings/rpc/#named-entrypoints) yürütülmesini etkilemez. Fetch olay handler'ı olmayan Worker'lar Akıllı Yerleştirme tarafından göz ardı edilir. Hem fetch hem de fetch olmayan olay handler'larına sahip Worker'lar için, Akıllı Yerleştirme yalnızca fetch olay handler'ının yürütülmesini etkiler.
 
-Similarly, Smart Placement will not affect where [static assets](/workers/static-assets/) are served from. Static assets will continue to be served from the location nearest to the incoming request. If a Worker is invoked and your code retrieves assets via the [static assets binding](https://developers.cloudflare.com/workers/static-assets/binding/), then assets will be served from the location that your Worker runs in.
+Benzer şekilde, Akıllı Yerleştirme [statik varlıkların](/workers/static-assets/) nereden sunulduğunu etkilemez. Statik varlıklar gelen isteğe en yakın konumdan sunulmaya devam edecektir. Bir Worker çağrılırsa ve kodunuz [statik varlık bağlaması](https://developers.cloudflare.com/workers/static-assets/binding/) aracılığıyla varlıkları alırsa, varlıklar Worker'ınızın çalıştığı konumdan sunulacaktır.
 
-## Enable Smart Placement
+## Akıllı Yerleştirmeyi Etkinleştirme
 
-Smart Placement is available to users on all Workers plans.
+Akıllı Yerleştirme tüm Workers planlarındaki kullanıcılar için mevcuttur.
 
-### Enable Smart Placement via Wrangler
+### Wrangler ile Akıllı Yerleştirmeyi Etkinleştirme
 
-To enable Smart Placement via Wrangler:
+Wrangler ile Akıllı Yerleştirmeyi etkinleştirmek için:
 
-1. Make sure that you have `wrangler@2.20.0` or later [installed](/workers/wrangler/install-and-update/).
+1. `wrangler@2.20.0` veya daha yeni sürümün [yüklü](/workers/wrangler/install-and-update/) olduğundan emin olun.
 
-2. Add the following to your Worker project's Wrangler file:
+2. Worker projenizin Wrangler dosyasına aşağıdakini ekleyin:
 
    <WranglerConfig>
 
@@ -56,29 +55,29 @@ To enable Smart Placement via Wrangler:
 
    </WranglerConfig>
 
-3. Wait for Smart Placement to analyze your Worker. This process may take up to 15 minutes.
+3. Akıllı Yerleştirme'nin Worker'ınızı analiz etmesini bekleyin. Bu süreç 15 dakikaya kadar sürebilir.
 
-4. View your Worker's [request duration analytics](/workers/observability/metrics-and-analytics/#request-duration).
+4. Worker'ınızın [istek süresi analitiklerini](/workers/observability/metrics-and-analytics/#request-duration) görüntüleyin.
 
-### Enable Smart Placement via the dashboard
+### Dashboard ile Akıllı Yerleştirmeyi Etkinleştirme
 
-To enable Smart Placement via the dashboard:
+Dashboard ile Akıllı Yerleştirmeyi etkinleştirmek için:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.
+1. Cloudflare dashboard'da **Workers & Pages** sayfasına gidin.
 
    <DashButton url="/?to=/:account/workers-and-pages" />
 
-2. In **Overview**,select your Worker.
-3. Select **Settings** > **General**.
-4. Under **Placement**, choose **Smart**.
-5. Wait for Smart Placement to analyze your Worker. Smart Placement requires consistent traffic to the Worker from multiple locations around the world to make a placement decision. The analysis process may take up to 15 minutes.
-6. View your Worker's [request duration analytics](/workers/observability/metrics-and-analytics/#request-duration)
+2. **Overview**'da Worker'ınızı seçin.
+3. **Settings** > **General**'i seçin.
+4. **Placement** altında **Smart**'ı seçin.
+5. Akıllı Yerleştirme'nin Worker'ınızı analiz etmesini bekleyin. Akıllı Yerleştirme, yerleştirme kararı verebilmek için Worker'a dünya çapındaki birden fazla konumdan tutarlı trafik gerektirir. Analiz süreci 15 dakikaya kadar sürebilir.
+6. Worker'ınızın [istek süresi analitiklerini](/workers/observability/metrics-and-analytics/#request-duration) görüntüleyin.
 
-## Observability
+## Gözlemlenebilirlik
 
-### Placement Status
+### Yerleştirme Durumu
 
-A Worker's metadata contains details about a Worker's placement status. Query your Worker's placement status through the following Workers API endpoint:
+Bir Worker'ın meta verileri, Worker'ın yerleştirme durumu hakkında ayrıntılar içerir. Aşağıdaki Workers API endpoint'i aracılığıyla Worker'ınızın yerleştirme durumunu sorgulayın:
 
 ```bash
 curl -X GET https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/workers/services/{WORKER_NAME} \
@@ -86,39 +85,39 @@ curl -X GET https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/workers/s
 -H "Content-Type: application/json" | jq .
 ```
 
-Possible placement states include:
+Olası yerleştirme durumları şunları içerir:
 
-- _(not present)_: The Worker has not been analyzed for Smart Placement yet. The Worker will always run in the default Cloudflare location closest to where the request was received.
-- `SUCCESS`: The Worker was successfully analyzed and will be optimized by Smart Placement. The Worker will run in the Cloudflare location that minimizes expected request duration, which may be the default location closest to where the request was received or may be a faster location elsewhere in the world.
-- `INSUFFICIENT_INVOCATIONS`: The Worker has not received enough requests to make a placement decision. Smart Placement requires consistent traffic to the Worker from multiple locations around the world. The Worker will always run in the default Cloudflare location closest to where the request was received.
-- `UNSUPPORTED_APPLICATION`: Smart Placement began optimizing the Worker and measured the results, which showed that Smart Placement made the Worker slower. In response, Smart Placement reverted the placement decision. The Worker will always run in the default Cloudflare location closest to where the request was received, and Smart Placement will not analyze the Worker again until it's redeployed. This state is rare and accounts for less that 1% of Workers with Smart Placement enabled.
+- _(mevcut değil)_: Worker henüz Akıllı Yerleştirme için analiz edilmemiştir. Worker her zaman isteğin alındığı yere en yakın varsayılan Cloudflare konumunda çalışacaktır.
+- `SUCCESS`: Worker başarıyla analiz edildi ve Akıllı Yerleştirme tarafından optimize edilecek. Worker, beklenen istek süresini en aza indiren Cloudflare konumunda çalışacaktır, bu da isteğin alındığı yere en yakın varsayılan konum veya dünyanın başka bir yerindeki daha hızlı bir konum olabilir.
+- `INSUFFICIENT_INVOCATIONS`: Worker yerleştirme kararı verebilmek için yeterli istek almamıştır. Akıllı Yerleştirme, Worker'a dünya çapındaki birden fazla konumdan tutarlı trafik gerektirir. Worker her zaman isteğin alındığı yere en yakın varsayılan Cloudflare konumunda çalışacaktır.
+- `UNSUPPORTED_APPLICATION`: Akıllı Yerleştirme Worker'ı optimize etmeye başladı ve sonuçları ölçtü, bu da Akıllı Yerleştirme'nin Worker'ı yavaşlattığını gösterdi. Buna yanıt olarak, Akıllı Yerleştirme yerleştirme kararını geri aldı. Worker her zaman isteğin alındığı yere en yakın varsayılan Cloudflare konumunda çalışacaktır ve Akıllı Yerleştirme Worker yeniden dağıtılana kadar Worker'ı tekrar analiz etmeyecektir. Bu durum nadirdir ve Akıllı Yerleştirme etkinleştirilmiş Worker'ların %1'inden azını oluşturur.
 
-### Request Duration Analytics
+### İstek Süresi Analitikleri
 
-Once Smart Placement is enabled, data about request duration gets collected. Request duration is measured at the data center closest to the end user.
+Akıllı Yerleştirme etkinleştirildikten sonra, istek süresi hakkında veri toplanır. İstek süresi son kullanıcıya en yakın veri merkezinde ölçülür.
 
-By default, one percent (1%) of requests are not routed with Smart Placement. These requests serve as a baseline to compare to.
+Varsayılan olarak, isteklerin yüzde biri (%1) Akıllı Yerleştirme ile yönlendirilmez. Bu istekler karşılaştırma için bir temel oluşturur.
 
-### `cf-placement` header
+### `cf-placement` başlığı
 
-Once Smart Placement is enabled, Cloudflare adds a `cf-placement` header to all requests. This can be used to check whether a request has been routed with Smart Placement and where the Worker is processing the request (which is shown as the nearest airport code to the data center).
+Akıllı Yerleştirme etkinleştirildikten sonra, Cloudflare tüm isteklere bir `cf-placement` başlığı ekler. Bu, bir isteğin Akıllı Yerleştirme ile yönlendirilip yönlendirilmediğini ve Worker'ın isteği nerede işlediğini (veri merkezine en yakın havaalanı kodu olarak gösterilir) kontrol etmek için kullanılabilir.
 
-For example, the `cf-placement: remote-LHR` header's `remote` value indicates that the request was routed using Smart Placement to a Cloudflare data center near London. The `cf-placement: local-EWR` header's `local` value indicates that the request was not routed using Smart Placement and the Worker was invoked in a data center closest to where the request was received, close to Newark Liberty International Airport (EWR).
+Örneğin, `cf-placement: remote-LHR` başlığının `remote` değeri, isteğin Akıllı Yerleştirme kullanılarak Londra yakınındaki bir Cloudflare veri merkezine yönlendirildiğini gösterir. `cf-placement: local-EWR` başlığının `local` değeri, isteğin Akıllı Yerleştirme kullanılarak yönlendirilmediğini ve Worker'ın isteğin alındığı yere en yakın veri merkezinde çağrıldığını, Newark Liberty Uluslararası Havalimanı (EWR) yakınında olduğunu gösterir.
 
-:::caution[Beta use only]
+:::caution[Beta kullanımı]
 
-We may remove the `cf-placement` header before Smart Placement enters general availability.
+Akıllı Yerleştirme genel kullanıma girmeden önce `cf-placement` başlığını kaldırabiliriz.
 
 :::
 
-## Best practices
+## En iyi uygulamalar
 
-If you are building full-stack applications on Workers, we recommend splitting up the front-end and back-end logic into different Workers and using [Service Bindings](/workers/runtime-apis/bindings/service-bindings/) to connect your front-end logic and back-end logic Workers.
+Workers üzerinde tam yığın uygulamaları oluşturuyorsanız, ön uç ve arka uç mantığını farklı Worker'lara bölmenizi ve ön uç mantığı ve arka uç mantığı Worker'larınızı bağlamak için [Servis Bağlamalarını](/workers/runtime-apis/bindings/service-bindings/) kullanmanızı öneririz.
 
-![Smart Placement and Service Bindings](~/assets/images/workers/platform/smart-placement-service-bindings.png)
+![Akıllı Yerleştirme ve Servis Bağlamaları](~/assets/images/workers/platform/smart-placement-service-bindings.png)
 
-Enabling Smart Placement on your back-end Worker will invoke it close to your back-end service, while the front-end Worker serves requests close to the user. This architecture maintains fast, reactive front-ends while also improving latency when the back-end Worker is called.
+Arka uç Worker'ınızda Akıllı Yerleştirmeyi etkinleştirmek, onu arka uç hizmetinize yakın çağıracak, ön uç Worker ise istekleri kullanıcıya yakın sunacaktır. Bu mimari, hızlı, reaktif ön uçları korurken aynı zamanda arka uç Worker çağrıldığında gecikmeyi de iyileştirir.
 
-## Give feedback on Smart Placement
+## Akıllı Yerleştirme hakkında geri bildirim verin
 
-Smart Placement is in beta. To share your thoughts and experience with Smart Placement, join the [Cloudflare Developer Discord](https://discord.cloudflare.com).
+Akıllı Yerleştirme beta aşamasındadır. Akıllı Yerleştirme ile ilgili düşüncelerinizi ve deneyimlerinizi paylaşmak için [Cloudflare Developer Discord](https://discord.cloudflare.com)'a katılın.

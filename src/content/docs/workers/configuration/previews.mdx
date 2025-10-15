@@ -1,144 +1,144 @@
 ---
 pcx_content_type: configuration
-title: Preview URLs
+title: Önizleme URL'leri
 head: []
 sidebar:
   badge:
     text: Beta
-description: Preview URLs allow you to preview new versions of your project without deploying it to production.
+description: Önizleme URL'leri, projenizin yeni sürümlerini üretime dağıtmadan önizlemenize olanak tanır.
 ---
 
 import { Render, WranglerConfig, DashButton } from "~/components";
 
-# Overview
+# Genel Bakış
 
-Preview URLs allow you to preview new versions of your Worker without deploying it to production.
+Önizleme URL'leri, Worker'ınızın yeni sürümlerini üretime dağıtmadan önizlemenize olanak tanır.
 
-There are two types of preview URLs:
+İki tür önizleme URL'si vardır:
 
-- **Versioned Preview URLs**: A unique URL generated automatically for each new version of your Worker.
-- **Aliased Preview URLs**: A static, human-readable alias that you can manually assign to a Worker version.
+- **Sürümlü Önizleme URL'leri**: Worker'ınızın her yeni sürümü için otomatik olarak oluşturulan benzersiz bir URL.
+- **Takma Adlı Önizleme URL'leri**: Bir Worker sürümüne manuel olarak atayabileceğiniz statik, okunabilir bir takma ad.
 
-Both preview URL types follow the format: `<VERSION_PREFIX OR ALIAS>-<WORKER_NAME>.<SUBDOMAIN>.workers.dev`.
+Her iki önizleme URL türü de şu formatı takip eder: `<VERSION_PREFIX OR ALIAS>-<WORKER_NAME>.<SUBDOMAIN>.workers.dev`.
 
-Preview URLs can be:
+Önizleme URL'leri şunlar için kullanılabilir:
 
-- Integrated into CI/CD pipelines, allowing automatic generation of preview environments for every pull request.
-- Used for collaboration between teams to test code changes in a live environment and verify updates.
-- Used to test new API endpoints, validate data formats, and ensure backward compatibility with existing services.
+- CI/CD pipeline'larına entegre edilebilir, her pull request için otomatik önizleme ortamları oluşturulmasına olanak tanır.
+- Ekipler arasında işbirliği için kod değişikliklerini canlı ortamda test etmek ve güncellemeleri doğrulamak için kullanılabilir.
+- Yeni API endpoint'lerini test etmek, veri formatlarını doğrulamak ve mevcut hizmetlerle geriye dönük uyumluluğu sağlamak için kullanılabilir.
 
-When testing zone level performance or security features for a version, we recommend using [version overrides](/workers/configuration/versions-and-deployments/gradual-deployments/#version-overrides) so that your zone's performance and security settings apply.
+Bir sürüm için zone düzeyinde performans veya güvenlik özelliklerini test ederken, zone'unuzun performans ve güvenlik ayarlarının uygulanması için [sürüm geçersiz kılmaları](/workers/configuration/versions-and-deployments/gradual-deployments/#version-overrides) kullanmanızı öneririz.
 
 :::note
-Preview URLs are only available for Worker versions uploaded after 2024-09-25.
+Önizleme URL'leri yalnızca 2024-09-25'ten sonra yüklenen Worker sürümleri için mevcuttur.
 :::
 
-## Types of Preview URLs
+## Önizleme URL Türleri
 
-### Versioned Preview URLs
+### Sürümlü Önizleme URL'leri
 
-Every time you create a new [version](/workers/configuration/versions-and-deployments/#versions) of your Worker, a unique static version preview URL is generated automatically. These URLs use a version prefix and follow the format `<VERSION_PREFIX>-<WORKER_NAME>.<SUBDOMAIN>.workers.dev`.
+Worker'ınızın yeni bir [sürümünü](/workers/configuration/versions-and-deployments/#versions) her oluşturduğunuzda, benzersiz bir statik sürüm önizleme URL'si otomatik olarak oluşturulur. Bu URL'ler bir sürüm öneki kullanır ve `<VERSION_PREFIX>-<WORKER_NAME>.<SUBDOMAIN>.workers.dev` formatını takip eder.
 
-New versions of a Worker are created when you run:
+Worker'ın yeni sürümleri şunları çalıştırdığınızda oluşturulur:
 
 - [`wrangler deploy`](/workers/wrangler/commands/#deploy)
 - [`wrangler versions upload`](/workers/wrangler/commands/#upload)
-- Or when you make edits via the Cloudflare dashboard
+- Veya Cloudflare dashboard üzerinden düzenleme yaptığınızda
 
-If Preview URLs have been enabled, they are **public by default** and available immediately after version creation.
+Önizleme URL'leri etkinleştirilmişse, **varsayılan olarak herkese açıktır** ve sürüm oluşturulduktan hemen sonra kullanılabilir.
 
 :::note
-Minimum required Wrangler version: 3.74.0. Check your version by running `wrangler --version`. To update Wrangler, refer to [Install/Update Wrangler](/workers/wrangler/install-and-update/).
+Minimum gerekli Wrangler sürümü: 3.74.0. Sürümünüzü `wrangler --version` çalıştırarak kontrol edin. Wrangler'ı güncellemek için [Install/Update Wrangler](/workers/wrangler/install-and-update/)'a bakın.
 :::
 
-#### View versioned preview URLs using Wrangler
+#### Wrangler kullanarak sürümlü önizleme URL'lerini görüntüleme
 
-The [`wrangler versions upload`](/workers/wrangler/commands/#upload) command uploads a new [version](/workers/configuration/versions-and-deployments/#versions) of your Worker and returns a preview URL for each version uploaded.
+[`wrangler versions upload`](/workers/wrangler/commands/#upload) komutu Worker'ınızın yeni bir [sürümünü](/workers/configuration/versions-and-deployments/#versions) yükler ve yüklenen her sürüm için bir önizleme URL'si döndürür.
 
-#### View versioned preview URLs on the Workers dashboard
+#### Workers dashboard'da sürümlü önizleme URL'lerini görüntüleme
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.
+1. Cloudflare dashboard'da **Workers & Pages** sayfasına gidin.
 
    <DashButton url="/?to=/:account/workers-and-pages" />
 
-2. Select your Worker.
-3. Go to the **Deployments** tab, and find the version you would like to view.
+2. Worker'ınızı seçin.
+3. **Deployments** sekmesine gidin ve görüntülemek istediğiniz sürümü bulun.
 
-### Aliased preview URLs
+### Takma adlı önizleme URL'leri
 
-Aliased preview URLs let you assign a persistent, readable alias to a specific Worker version. These are useful for linking to stable previews across many versions (e.g. to share an upcoming but still actively being developed new feature). A common workflow would be to assign an alias for the branch that you're working on. These types of preview URLs follow the same pattern as other preview URLs:
+Takma adlı önizleme URL'leri, belirli bir Worker sürümüne kalıcı, okunabilir bir takma ad atamanıza olanak tanır. Bunlar birçok sürüm boyunca kararlı önizlemelere bağlantı kurmak için yararlıdır (örneğin, yaklaşan ancak hala aktif olarak geliştirilen yeni bir özelliği paylaşmak için). Yaygın bir iş akışı, üzerinde çalıştığınız dal için bir takma ad atamak olacaktır. Bu tür önizleme URL'leri diğer önizleme URL'leriyle aynı deseni takip eder:
 `<ALIAS>-<WORKER_NAME>.<SUBDOMAIN>.workers.dev`
 
 :::note
-Minimum required Wrangler version: `4.21.0`. Check your version by running `wrangler --version`. To update Wrangler, refer to [Install/Update Wrangler](/workers/wrangler/install-and-update/).
+Minimum gerekli Wrangler sürümü: `4.21.0`. Sürümünüzü `wrangler --version` çalıştırarak kontrol edin. Wrangler'ı güncellemek için [Install/Update Wrangler](/workers/wrangler/install-and-update/)'a bakın.
 :::
 
-#### Create an Alias
+#### Takma Ad Oluşturma
 
-Aliases may be created during `versions upload`, by providing the `--preview-alias` flag with a valid alias name:
+Takma adlar `versions upload` sırasında, geçerli bir takma ad adı ile `--preview-alias` bayrağını sağlayarak oluşturulabilir:
 
 ```bash
 wrangler versions upload --preview-alias staging
 ```
 
-The resulting alias would be associated with this version, and immediately available at:
+Sonuçta ortaya çıkan takma ad bu sürümle ilişkilendirilecek ve şu adreste hemen kullanılabilir olacaktır:
 `staging-<WORKER_NAME>.<SUBDOMAIN>.workers.dev`
 
-#### Rules and limitations
+#### Kurallar ve sınırlamalar
 
-- Aliases may only be created during version upload.
-- Aliases must use only lowercase letters, numbers, and dashes.
-- Aliases must begin with a lowercase letter.
-- The alias and Worker name combined (with a dash) must not exceed 63 characters due to DNS label limits.
-- Only the 1000 most recently deployed aliases are retained. When a new alias is created beyond this limit, the least recently deployed alias is deleted.
+- Takma adlar yalnızca sürüm yükleme sırasında oluşturulabilir.
+- Takma adlar yalnızca küçük harfler, sayılar ve tireler kullanmalıdır.
+- Takma adlar küçük harfle başlamalıdır.
+- Takma ad ve Worker adı birleşimi (tire ile) DNS etiket sınırları nedeniyle 63 karakteri aşmamalıdır.
+- Yalnızca en son dağıtılan 1000 takma ad korunur. Bu sınırın ötesinde yeni bir takma ad oluşturulduğunda, en az son dağıtılan takma ad silinir.
 
-## Manage access to Preview URLs
+## Önizleme URL'lerine Erişimi Yönetme
 
-When enabled, all preview URLs are available publicly. You can use [Cloudflare Access](/cloudflare-one/policies/access/) to require visitors to authenticate before accessing preview URLs. You can limit access to yourself, your teammates, your organization, or anyone else you specify in your [access policy](/cloudflare-one/policies/access).
+Etkinleştirildiğinde, tüm önizleme URL'leri herkese açıktır. Önizleme URL'lerine erişmeden önce ziyaretçilerin kimlik doğrulaması yapmasını gerektirmek için [Cloudflare Access](/cloudflare-one/policies/access/) kullanabilirsiniz. Erişimi kendiniz, takım arkadaşlarınız, organizasyonunuz veya [erişim politikalarınızda](/cloudflare-one/policies/access) belirttiğiniz başka herhangi birine sınırlayabilirsiniz.
 
-To limit your preview URLs to authorized emails only:
+Önizleme URL'lerinizi yalnızca yetkili e-postalara sınırlamak için:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.
-
-   <DashButton url="/?to=/:account/workers-and-pages" />
-
-2. In **Overview**, select your Worker.
-3. Go to **Settings** > **Domains & Routes**.
-4. For Preview URLs, click **Enable Cloudflare Access**.
-5. Optionally, to configure the Access application, click **Manage Cloudflare Access**. There, you can change the email addresses you want to authorize. View [Access policies](/cloudflare-one/policies/access/#selectors) to learn about configuring alternate rules.
-6. [Validate the Access JWT](https://developers.cloudflare.com/cloudflare-one/identity/authorization-cookie/validating-json/#cloudflare-workers-example) in your Worker script using the audience (`aud`) tag and JWKs URL provided.
-
-## Toggle Preview URLs (Enable or Disable)
-
-Note:
-
-- Preview URLs are disabled by default.
-- Disabling Preview URLs will disable routing to both versioned and aliased preview URLs.
-
-### From the Dashboard
-
-To toggle Preview URLs for a Worker:
-
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.
+1. Cloudflare dashboard'da **Workers & Pages** sayfasına gidin.
 
    <DashButton url="/?to=/:account/workers-and-pages" />
 
-2. In **Overview**, select your Worker.
-3. Go to **Settings** > **Domains & Routes**.
-4. For Preview URLs, click **Enable** or **Disable**.
-5. Confirm your action.
+2. **Overview**'da Worker'ınızı seçin.
+3. **Settings** > **Domains & Routes**'a gidin.
+4. Önizleme URL'leri için **Enable Cloudflare Access**'i tıklayın.
+5. İsteğe bağlı olarak, Access uygulamasını yapılandırmak için **Manage Cloudflare Access**'i tıklayın. Orada yetkilendirmek istediğiniz e-posta adreslerini değiştirebilirsiniz. Alternatif kuralları yapılandırma hakkında bilgi için [Access policies](/cloudflare-one/policies/access/#selectors)'e bakın.
+6. Sağlanan audience (`aud`) etiketi ve JWKs URL'sini kullanarak Worker scriptinizde [Access JWT'yi doğrulayın](https://developers.cloudflare.com/cloudflare-one/identity/authorization-cookie/validating-json/#cloudflare-workers-example).
 
-### From the [Wrangler configuration file](/workers/wrangler/configuration/)
+## Önizleme URL'lerini Değiştirme (Etkinleştirme veya Devre Dışı Bırakma)
+
+Not:
+
+- Önizleme URL'leri varsayılan olarak devre dışıdır.
+- Önizleme URL'lerini devre dışı bırakmak hem sürümlü hem de takma adlı önizleme URL'lerine yönlendirmeyi devre dışı bırakacaktır.
+
+### Dashboard'dan
+
+Bir Worker için Önizleme URL'lerini değiştirmek için:
+
+1. Cloudflare dashboard'da **Workers & Pages** sayfasına gidin.
+
+   <DashButton url="/?to=/:account/workers-and-pages" />
+
+2. **Overview**'da Worker'ınızı seçin.
+3. **Settings** > **Domains & Routes**'a gidin.
+4. Önizleme URL'leri için **Enable** veya **Disable**'ı tıklayın.
+5. Eyleminizi onaylayın.
+
+### [Wrangler yapılandırma dosyasından](/workers/wrangler/configuration/)
 
 :::note
-Wrangler 3.91.0 or higher is required to use this feature.
+Bu özelliği kullanmak için Wrangler 3.91.0 veya daha yüksek sürüm gereklidir.
 :::
 
 :::note
-Older Wrangler versions will default to Preview URLs being enabled.
+Eski Wrangler sürümleri varsayılan olarak Önizleme URL'lerinin etkin olduğunu varsayacaktır.
 :::
 
-To toggle Preview URLs for a Worker, include any of the following in your Worker's Wrangler file:
+Bir Worker için Önizleme URL'lerini değiştirmek için, Worker'ınızın Wrangler dosyasına aşağıdakilerden herhangi birini dahil edin:
 
 <WranglerConfig>
 
@@ -156,15 +156,15 @@ preview_urls = false
 
 </WranglerConfig>
 
-If not given, `preview_urls = false` is the default.
+Verilmezse, `preview_urls = false` varsayılandır.
 
 :::caution
-If you enable or disable Preview URLs in the Cloudflare dashboard, but do not update your Worker's Wrangler file accordingly, the Preview URLs status will change the next time you deploy your Worker with Wrangler.
+Cloudflare dashboard'da Önizleme URL'lerini etkinleştirir veya devre dışı bırakırsanız, ancak Worker'ınızın Wrangler dosyasını buna göre güncellemezseniz, Worker'ınızı Wrangler ile bir sonraki dağıtımınızda Önizleme URL'leri durumu değişecektir.
 :::
 
-## Limitations
+## Sınırlamalar
 
-- Preview URLs are not generated for Workers that implement a [Durable Object](/durable-objects/).
-- Preview URLs are not currently generated for [Workers for Platforms](/cloudflare-for-platforms/workers-for-platforms/) [user Workers](/cloudflare-for-platforms/workers-for-platforms/reference/how-workers-for-platforms-works/#user-workers). This is a temporary limitation, we are working to remove it.
-- You cannot currently configure Preview URLs to run on a subdomain other than [`workers.dev`](/workers/configuration/routing/workers-dev/).
-- You cannot view logs for Preview URLs today, this includes Workers Logs, Wrangler tail and Logpush.
+- Önizleme URL'leri [Durable Object](/durable-objects/) uygulayan Worker'lar için oluşturulmaz.
+- Önizleme URL'leri şu anda [Workers for Platforms](/cloudflare-for-platforms/workers-for-platforms/) [kullanıcı Worker'ları](/cloudflare-for-platforms/workers-for-platforms/reference/how-workers-for-platforms-works/#user-workers) için oluşturulmaz. Bu geçici bir sınırlamadır, bunu kaldırmak için çalışıyoruz.
+- Önizleme URL'lerini şu anda [`workers.dev`](/workers/configuration/routing/workers-dev/) dışında bir alt domainde çalışacak şekilde yapılandıramazsınız.
+- Önizleme URL'leri için şu anda logları görüntüleyemezsiniz, bu Workers Logs, Wrangler tail ve Logpush'u içerir.

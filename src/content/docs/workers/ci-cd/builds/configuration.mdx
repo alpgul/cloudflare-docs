@@ -1,116 +1,116 @@
 ---
 pcx_content_type: configuration
-title: Configuration
-description: Understand the different settings associated with your build.
+title: Yapılandırma
+description: Build'inizle ilişkili farklı ayarları anlayın.
 sidebar:
   order: 2
 ---
 
 import { DirectoryListing, Render, Tabs, TabItem, DashButton } from "~/components";
 
-When connecting your Git repository to your Worker, you can customize the configurations needed to build and deploy your Worker.
+Git deponuzu Worker'ınıza bağlarken, Worker'ınızı build etmek ve dağıtmak için gereken yapılandırmaları özelleştirebilirsiniz.
 
-## Build settings
+## Build ayarları
 
-Build settings can be found by navigating to **Settings** > **Build** within your Worker.
+Build ayarları Worker'ınız içinde **Settings** > **Build**'e giderek bulunabilir.
 
-Note that when you update and save build settings, the updated settings will be applied to your _next_ build. When you _retry_ a build, the build configurations that exist when the build is retried will be applied.
+Build ayarlarını güncellediğinizde ve kaydettiğinizde, güncellenmiş ayarlar _sonraki_ build'inize uygulanacaktır. Bir build'i _yeniden denediğinizde_, build yeniden denendiğinde mevcut olan build yapılandırmaları uygulanacaktır.
 
-### Overview
+### Genel Bakış
 
-| Setting                                                                                                               | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Git account**                                                                                                       | Select the Git account you would like to use. After the initial connection, you can continue to use this Git account for future projects.                                                                                                                                                                                                                                                                                                                                              |
-| **Git repository**                                                                                                    | Choose the Git repository you would like to connect your Worker to.                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| **Git branch**                                                                                                        | Select the branch you would like Cloudflare to listen to for new commits. This will be defaulted to `main`.                                                                                                                                                                                                                                                                                                                                                                            |
-| **Build command** _(Optional)_                                                                                        | Set a build command if your project requires a build step (e.g. `npm run build`). This is necessary, for example, when using a [front-end framework](/workers/ci-cd/builds/configuration/#framework-support) such as Next.js or Remix.                                                                                                                                                                                                                                                 |
-| **[Deploy command](/workers/ci-cd/builds/configuration/#deploy-command)**                                             | The deploy command lets you set the [specific Wrangler command](/workers/wrangler/commands/#deploy) used to deploy your Worker. Your deploy command will default to `npx wrangler deploy` but you may customize this command. Workers Builds will use the Wrangler version set in your `package json`.                                                                                                                                                                                 |
-| **[Non-production branch deploy command](/workers/ci-cd/builds/configuration/#non-production-branch-deploy-command)** | Set a command to run when executing [a build for commit on a non-production branch](/workers/ci-cd/builds/build-branches/#configure-non-production-branch-builds). This will default to `npx wrangler versions upload` but you may customize this command. Workers Builds will use the Wrangler version set in your `package json`.                                                                                                                                                    |
-| **Root directory** _(Optional)_                                                                                       | Specify the path to your project. The root directory defines where the build command will be run and can be helpful in [monorepos](/workers/ci-cd/builds/advanced-setups/#monorepos) to isolate a specific project within the repository for builds.                                                                                                                                                                                                                                   |
-| **[API token](/workers/ci-cd/builds/configuration/#api-token)** _(Optional)_                                          | The API token is used to authenticate your build request and authorize the upload and deployment of your Worker to Cloudflare. By default, Cloudflare will automatically generate an API token for your account when using Workers Builds, and continue to use this API token for all subsequent builds. Alternatively, you can [create your own API token](/workers/wrangler/migration/v1-to-v2/wrangler-legacy/authentication/#generate-tokens), or select one that you already own. |
-| **Build variables and secrets** _(Optional)_                                                                          | Add environment variables and secrets accessible only to your build. Build variables will not be accessible at runtime. If you would like to configure runtime variables you can do so in **Settings** > **Variables & Secrets**                                                                                                                                                                                                                                                       |
+| Ayar                                                                                                               | Açıklama                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Git hesabı**                                                                                                     | Kullanmak istediğiniz Git hesabını seçin. İlk bağlantıdan sonra, gelecekteki projeler için bu Git hesabını kullanmaya devam edebilirsiniz.                                                                                                                                                                                                                                                                                                                                              |
+| **Git deposu**                                                                                                     | Worker'ınızı bağlamak istediğiniz Git deposunu seçin.                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| **Git dalı**                                                                                                       | Cloudflare'in yeni commit'ler için dinlemesini istediğiniz dalı seçin. Bu varsayılan olarak `main` olacaktır.                                                                                                                                                                                                                                                                                                                                                                            |
+| **Build komutu** _(İsteğe bağlı)_                                                                                  | Projeniz build adımı gerektiriyorsa build komutu ayarlayın (örn. `npm run build`). Bu, örneğin Next.js veya Remix gibi [front-end framework](/workers/ci-cd/builds/configuration/#framework-support) kullanırken gereklidir.                                                                                                                                                                                                                                                         |
+| **[Deploy komutu](/workers/ci-cd/builds/configuration/#deploy-command)**                                          | Deploy komutu, Worker'ınızı dağıtmak için kullanılan [belirli Wrangler komutunu](/workers/wrangler/commands/#deploy) ayarlamanıza olanak tanır. Deploy komutunuz varsayılan olarak `npx wrangler deploy` olacaktır ancak bu komutu özelleştirebilirsiniz. Workers Builds, `package json` dosyanızda ayarlanan Wrangler sürümünü kullanacaktır.                                                                                                                                                                                 |
+| **[Üretim dışı dal deploy komutu](/workers/ci-cd/builds/configuration/#non-production-branch-deploy-command)**     | [Üretim dışı dalda commit için build](/workers/ci-cd/builds/build-branches/#configure-non-production-branch-builds) çalıştırırken çalıştırılacak komutu ayarlayın. Bu varsayılan olarak `npx wrangler versions upload` olacaktır ancak bu komutu özelleştirebilirsiniz. Workers Builds, `package json` dosyanızda ayarlanan Wrangler sürümünü kullanacaktır.                                                                                                                                                    |
+| **Kök dizin** _(İsteğe bağlı)_                                                                                     | Projenizin yolunu belirtin. Kök dizin build komutunun çalıştırılacağı yeri tanımlar ve [monorepo'larda](/workers/ci-cd/builds/advanced-setups/#monorepos) build'ler için depo içindeki belirli bir projeyi izole etmek için yararlı olabilir.                                                                                                                                                                                                                                   |
+| **[API token](/workers/ci-cd/builds/configuration/#api-token)** _(İsteğe bağlı)_                                  | API token, build isteğinizi doğrulamak ve Worker'ınızın Cloudflare'e yüklenmesini ve dağıtılmasını yetkilendirmek için kullanılır. Varsayılan olarak, Cloudflare Workers Builds kullanırken hesabınız için otomatik olarak bir API token oluşturacak ve tüm sonraki build'ler için bu API token'ı kullanmaya devam edecektir. Alternatif olarak, [kendi API token'ınızı oluşturabilir](/workers/wrangler/migration/v1-to-v2/wrangler-legacy/authentication/#generate-tokens) veya zaten sahip olduğunuz birini seçebilirsiniz. |
+| **Build değişkenleri ve sırları** _(İsteğe bağlı)_                                                                 | Yalnızca build'inize erişilebilir ortam değişkenleri ve sırlar ekleyin. Build değişkenleri runtime'da erişilebilir olmayacaktır. Runtime değişkenlerini yapılandırmak istiyorsanız bunu **Settings** > **Variables & Secrets**'ta yapabilirsiniz                                                                                                                                                                                                                                                       |
 
 :::note
-Currently, Workers Builds does not honor the configurations set in [Custom Builds](/workers/wrangler/custom-builds/) within your wrangler.toml file.
+Şu anda Workers Builds, wrangler.toml dosyanız içindeki [Custom Builds](/workers/wrangler/custom-builds/) ayarlarını dikkate almaz.
 :::
 
-### Deploy command
+### Deploy komutu
 
-You can run your deploy command using the package manager of your choice.
+Deploy komutunuzu tercih ettiğiniz paket yöneticisini kullanarak çalıştırabilirsiniz.
 
-If you have added a Wrangler deploy command as a script in your `package.json`, then you can run it by setting it as your deploy command. For example, `npm run deploy`.
+`package.json` dosyanıza Wrangler deploy komutu script olarak eklediyseniz, bunu deploy komutunuz olarak ayarlayarak çalıştırabilirsiniz. Örneğin, `npm run deploy`.
 
-Examples of other deploy commands you can set include:
+Ayarlayabileceğiniz diğer deploy komutları örnekleri:
 
-| Example Command                          | Description                                                                                                                                                                                                                                                                     |
-| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npx wrangler deploy --assets ./public/` | Deploy your Worker along with static assets from the specified directory. Alternatively, you can use the [assets binding](/workers/static-assets/binding/).                                                                                                                     |
-| `npx wrangler deploy --env staging`      | If you have a [Wrangler environment](/workers/ci-cd/builds/advanced-setups/#wrangler-environments) Worker, you should set your deploy command with the environment flag. For more details, see [Advanced Setups](/workers/ci-cd/builds/advanced-setups/#wrangler-environments). |
+| Örnek Komut                          | Açıklama                                                                                                                                                                                                                                                                     |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npx wrangler deploy --assets ./public/` | Belirtilen dizinden statik varlıklarla birlikte Worker'ınızı dağıtın. Alternatif olarak [assets binding](/workers/static-assets/binding/)'i kullanabilirsiniz.                                                                                                                     |
+| `npx wrangler deploy --env staging`      | [Wrangler ortamı](/workers/ci-cd/builds/advanced-setups/#wrangler-environments) Worker'ınız varsa, deploy komutunuzu ortam bayrağı ile ayarlamalısınız. Daha fazla ayrıntı için [Gelişmiş Kurulumlar](/workers/ci-cd/builds/advanced-setups/#wrangler-environments)'a bakın. |
 
-### Non-production branch deploy command
+### Üretim dışı dal deploy komutu
 
-The non-production branch deploy command is only applicable when you have enabled [non-production branch builds](/workers/ci-cd/builds/build-branches/#configure-non-production-branch-builds).
+Üretim dışı dal deploy komutu yalnızca [üretim dışı dal build'leri](/workers/ci-cd/builds/build-branches/#configure-non-production-branch-builds)'ni etkinleştirdiğinizde geçerlidir.
 
-It defaults to `npx wrangler versions upload`, producing a [preview URL](/workers/configuration/previews/). Like the build and deploy commands, it can be customized to instead run anything.
+Varsayılan olarak `npx wrangler versions upload` olur ve [önizleme URL'si](/workers/configuration/previews/) üretir. Build ve deploy komutları gibi, bunun yerine herhangi bir şeyi çalıştırmak için özelleştirilebilir.
 
-Examples of other non-production branch deploy commands you can set include:
+Ayarlayabileceğiniz diğer üretim dışı dal deploy komutları örnekleri:
 
-| Example Command                              | Description                                                                                                                                                                                                                                                                                           |
-| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `yarn exec wrangler versions upload`         | You can customize the package manager used to run Wrangler.                                                                                                                                                                                                                                           |
-| `npx wrangler versions upload --env staging` | If you have a [Wrangler environment](/workers/ci-cd/builds/advanced-setups/#wrangler-environments) Worker, you should set your non-production branch deploy command with the environment flag. For more details, see [Advanced Setups](/workers/ci-cd/builds/advanced-setups/#wrangler-environments). |
+| Örnek Komut                              | Açıklama                                                                                                                                                                                                                                                                                           |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `yarn exec wrangler versions upload`     | Wrangler'ı çalıştırmak için kullanılan paket yöneticisini özelleştirebilirsiniz.                                                                                                                                                                                                                       |
+| `npx wrangler versions upload --env staging` | [Wrangler ortamı](/workers/ci-cd/builds/advanced-setups/#wrangler-environments) Worker'ınız varsa, üretim dışı dal deploy komutunuzu ortam bayrağı ile ayarlamalısınız. Daha fazla ayrıntı için [Gelişmiş Kurulumlar](/workers/ci-cd/builds/advanced-setups/#wrangler-environments)'a bakın. |
 
 ### API token
 
-The API token in Workers Builds defines the access granted to Workers Builds for interacting with your account's resources. Currently, only user tokens are supported, with account-owned token support coming soon.
+Workers Builds'daki API token, Workers Builds'ın hesabınızın kaynaklarıyla etkileşim için verilen erişimi tanımlar. Şu anda yalnızca kullanıcı token'ları desteklenmektedir, hesap sahipli token desteği yakında gelecektir.
 
-When you select **Create new token**, a new API token will be created automatically with the following permissions:
+**Create new token**'ı seçtiğinizde, aşağıdaki izinlerle otomatik olarak yeni bir API token oluşturulacaktır:
 
-- **Account:** Account Settings (read), Workers Scripts (edit), Workers KV Storage (edit), Workers R2 Storage (edit)
-- **Zone:** Workers Routes (edit) for all zones on the account
-- **User:** User Details (read), Memberships (read)
+- **Hesap:** Hesap Ayarları (okuma), Workers Scripts (düzenleme), Workers KV Storage (düzenleme), Workers R2 Storage (düzenleme)
+- **Zone:** Hesaptaki tüm zone'lar için Workers Routes (düzenleme)
+- **Kullanıcı:** Kullanıcı Detayları (okuma), Üyelikler (okuma)
 
-You can configure the permissions of this API token by navigating to **My Profile** > **API Tokens** for user tokens.
+Bu API token'ın izinlerini kullanıcı token'ları için **My Profile** > **API Tokens**'a giderek yapılandırabilirsiniz.
 
-It is recommended to consistently use the same API token across all uploads and deployments of your Worker to maintain consistent access permissions.
+Tutarlı erişim izinlerini korumak için Worker'ınızın tüm yüklemeleri ve dağıtımları genelinde aynı API token'ı kullanmanız önerilir.
 
-## Framework support
+## Framework desteği
 
-[Static assets](/workers/static-assets/) and [frameworks](/workers/framework-guides/) are now supported in Cloudflare Workers. Learn to set up Workers projects and the commands for each framework in the framework guides:
+[Statik varlıklar](/workers/static-assets/) ve [framework'ler](/workers/framework-guides/) artık Cloudflare Workers'da desteklenmektedir. Framework rehberlerinde Workers projelerini ve her framework için komutları nasıl kuracağınızı öğrenin:
 
 <DirectoryListing folder="workers/framework-guides" maxDepth={4} />
 
-## Environment variables
+## Ortam değişkenleri
 
-You can provide custom environment variables to your build.
+Build'inize özel ortam değişkenleri sağlayabilirsiniz.
 
 <Tabs>
   <TabItem label="Dashboard">
 
-	To add environment variables via the dashboard:
+	Dashboard üzerinden ortam değişkenleri eklemek için:
 
-  1. In the Cloudflare dashboard, go to the **Workers & Pages** page.
+  1. Cloudflare dashboard'da **Workers & Pages** sayfasına gidin.
 
    <DashButton url="/?to=/:account/workers-and-pages" />
 
-	2. In **Overview**, select your Worker.
-	3. Select **Settings** > **Environment variables**.
+	2. **Overview**'da Worker'ınızı seçin.
+	3. **Settings** > **Environment variables**'ı seçin.
   </TabItem>
   <TabItem label="Wrangler">
-    To add env variables using Wrangler, define text and JSON via the `[vars]` configuration in your Wrangler file.
+    Wrangler kullanarak ortam değişkenleri eklemek için, Wrangler dosyanızda `[vars]` yapılandırması aracılığıyla metin ve JSON tanımlayın.
 
 		<Render file="envvar-example" product="workers" />
   </TabItem>
 </Tabs>
 
-### Default variables
+### Varsayılan değişkenler
 
-The following system environment variables are injected by default (but can be overridden):
+Aşağıdaki sistem ortam değişkenleri varsayılan olarak enjekte edilir (ancak geçersiz kılınabilir):
 
-| Environment Variable    | Injected value                  | Example use-case                                                                        |
-| ----------------------- | ------------------------------- | --------------------------------------------------------------------------------------- |
-| `CI`                    | `true`                          | Changing build behaviour when run on CI versus locally                                  |
-| `WORKERS_CI`            | `1`                             | Changing build behaviour when run on Workers Builds versus locally                      |
-| `WORKERS_CI_BUILD_UUID` | `<build-uuid-of-current-build>` | Passing the Build UUID along to custom workflows                                        |
-| `WORKERS_CI_COMMIT_SHA` | `<sha1-hash-of-current-commit>` | Passing current commit ID to error reporting, for example, Sentry                       |
-| `WORKERS_CI_BRANCH`     | `<branch-name-from-push-event`  | Customizing build based on branch, for example, disabling debug logging on `production` |
+| Ortam Değişkeni    | Enjekte edilen değer                  | Örnek kullanım durumu                                                                        |
+| ------------------ | ------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `CI`               | `true`                                | CI'da çalıştırıldığında yerel olarak çalıştırıldığından farklı build davranışı değiştirme                                  |
+| `WORKERS_CI`       | `1`                                    | Workers Builds'da çalıştırıldığında yerel olarak çalıştırıldığından farklı build davranışı değiştirme                      |
+| `WORKERS_CI_BUILD_UUID` | `<build-uuid-of-current-build>` | Build UUID'sini özel iş akışlarına geçirme                                        |
+| `WORKERS_CI_COMMIT_SHA` | `<sha1-hash-of-current-commit>` | Mevcut commit ID'sini hata raporlamaya geçirme, örneğin Sentry                       |
+| `WORKERS_CI_BRANCH`     | `<branch-name-from-push-event`  | Dal temelinde build'i özelleştirme, örneğin `production`'da debug logging'i devre dışı bırakma |

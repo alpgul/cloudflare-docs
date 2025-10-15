@@ -5,18 +5,18 @@ title: Upstash
 
 import { Render, PackageManagers } from "~/components";
 
-[Upstash](https://upstash.com/) is a serverless database with Redis\* and Kafka API. Upstash also offers QStash, a task queue/scheduler designed for the serverless.
+[Upstash](https://upstash.com/), Redis\* ve Kafka API'si ile sunucusuz veritabanıdır. Upstash ayrıca sunucusuz için tasarlanmış görev kuyruğu/zamanlayıcı olan QStash'i de sunar.
 
-## Upstash for Redis
+## Redis için Upstash
 
-To set up an integration with Upstash:
+Upstash ile entegrasyon kurmak için:
 
-1. You need an existing Upstash database to connect to. [Create an Upstash database](https://docs.upstash.com/redis#create-a-database) or [load data from an existing database to Upstash](https://docs.upstash.com/redis/howto/connectclient).
+1. Bağlanmak için mevcut bir Upstash veritabanına sahip olmanız gerekir. [Upstash veritabanı oluşturun](https://docs.upstash.com/redis#create-a-database) veya [mevcut veritabanından Upstash'e veri yükleyin](https://docs.upstash.com/redis/howto/connectclient).
 
-2. Insert some data to your Upstash database. You can add data to your Upstash database in two ways:
+2. Upstash veritabanınıza bazı veriler ekleyin. Upstash veritabanınıza veri eklemenin iki yolu vardır:
 
-   - Use the CLI directly from your Upstash console.
-   - Alternatively, install [redis-cli](https://redis.io/docs/getting-started/installation/) locally and run the following commands.
+   - Upstash konsolunuzdan doğrudan CLI'yi kullanın.
+   - Alternatif olarak, [redis-cli](https://redis.io/docs/getting-started/installation/)'yi yerel olarak yükleyin ve aşağıdaki komutları çalıştırın.
 
    ```sh
    set GB "Ey up?"
@@ -27,7 +27,7 @@ To set up an integration with Upstash:
    ```
 
    ```sh
-   set US "Yo, what’s up?"
+   set US "Yo, what's up?"
    ```
 
    ```sh output
@@ -42,25 +42,25 @@ To set up an integration with Upstash:
    OK
    ```
 
-3. Configure the Upstash Redis credentials in your Worker:
+3. Worker'ınızda Upstash Redis kimlik bilgilerini yapılandırın:
 
-   You need to add your Upstash Redis database URL and token as secrets to your Worker. Get these from your [Upstash Console](https://console.upstash.com) under your database details, then add them as secrets using Wrangler:
+   Upstash Redis veritabanı URL'nizi ve token'ınızı Worker'ınıza gizli anahtarlar olarak eklemeniz gerekir. Bunları [Upstash Console](https://console.upstash.com)'dan veritabanı detaylarınız altından alın, ardından bunları Wrangler kullanarak gizli anahtarlar olarak ekleyin:
 
    ```sh
-   # Add the Upstash Redis URL as a secret
+   # Upstash Redis URL'sini gizli anahtar olarak ekle
    npx wrangler secret put UPSTASH_REDIS_REST_URL
-   # When prompted, paste your Upstash Redis REST URL
+   # İstendiğinde, Upstash Redis REST URL'nizi yapıştırın
    
-   # Add the Upstash Redis token as a secret
+   # Upstash Redis token'ını gizli anahtar olarak ekle
    npx wrangler secret put UPSTASH_REDIS_REST_TOKEN
-   # When prompted, paste your Upstash Redis REST token
+   # İstendiğinde, Upstash Redis REST token'ınızı yapıştırın
    ```
 
-4. In your Worker, install the `@upstash/redis`, a HTTP client to connect to your database and start manipulating data:
+4. Worker'ınızda, veritabanınıza bağlanmak ve veri manipülasyonuna başlamak için `@upstash/redis`, HTTP istemcisini yükleyin:
 
    <PackageManagers pkg="@upstash/redis" />
 
-5. The following example shows how to make a query to your Upstash database in a Worker. The credentials needed to connect to Upstash have been added as secrets to your Worker.
+5. Aşağıdaki örnek, Worker'da Upstash veritabanınıza nasıl sorgu yapılacağını gösterir. Upstash'e bağlanmak için gereken kimlik bilgileri Worker'ınıza gizli anahtarlar olarak eklenmiştir.
 
    ```js
    import { Redis } from "@upstash/redis/cloudflare";
@@ -84,66 +84,66 @@ To set up an integration with Upstash:
 
    :::note
 
-   `Redis.fromEnv(env)` automatically picks up the default `url` and `token` names created in the integration.
+   `Redis.fromEnv(env)` entegrasyonda oluşturulan varsayılan `url` ve `token` adlarını otomatik olarak alır.
 
-   If you have renamed the secrets, you must declare them explicitly like in the [Upstash basic example](https://docs.upstash.com/redis/sdks/redis-ts/getstarted#basic-usage).
+   Gizli anahtarları yeniden adlandırdıysanız, bunları [Upstash temel örneğinde](https://docs.upstash.com/redis/sdks/redis-ts/getstarted#basic-usage) olduğu gibi açıkça bildirmeniz gerekir.
 
    :::
 
-To learn more about Upstash, refer to the [Upstash documentation](https://docs.upstash.com/redis).
+Upstash hakkında daha fazla bilgi için [Upstash dokümantasyonuna](https://docs.upstash.com/redis) bakın.
 
 ## Upstash Kafka
 
-To set up an integration with Upstash Kafka:
+Upstash Kafka ile entegrasyon kurmak için:
 
-1. Create a [Kafka cluster and topic](https://docs.upstash.com/kafka).
+1. [Kafka cluster ve topic](https://docs.upstash.com/kafka) oluşturun.
 
-2. Configure the Upstash Kafka credentials in your Worker:
+2. Worker'ınızda Upstash Kafka kimlik bilgilerini yapılandırın:
 
-   You need to add your Upstash Kafka connection details as secrets to your Worker. Get these from your [Upstash Console](https://console.upstash.com) under your Kafka cluster details, then add them as secrets using Wrangler:
+   Upstash Kafka bağlantı detaylarınızı Worker'ınıza gizli anahtarlar olarak eklemeniz gerekir. Bunları [Upstash Console](https://console.upstash.com)'dan Kafka cluster detaylarınız altından alın, ardından bunları Wrangler kullanarak gizli anahtarlar olarak ekleyin:
 
    ```sh
-   # Add the Upstash Kafka URL as a secret
+   # Upstash Kafka URL'sini gizli anahtar olarak ekle
    npx wrangler secret put UPSTASH_KAFKA_REST_URL
-   # When prompted, paste your Upstash Kafka REST URL
+   # İstendiğinde, Upstash Kafka REST URL'nizi yapıştırın
    
-   # Add the Upstash Kafka username as a secret
+   # Upstash Kafka kullanıcı adını gizli anahtar olarak ekle
    npx wrangler secret put UPSTASH_KAFKA_REST_USERNAME
-   # When prompted, paste your Upstash Kafka username
+   # İstendiğinde, Upstash Kafka kullanıcı adınızı yapıştırın
    
-   # Add the Upstash Kafka password as a secret
+   # Upstash Kafka şifresini gizli anahtar olarak ekle
    npx wrangler secret put UPSTASH_KAFKA_REST_PASSWORD
-   # When prompted, paste your Upstash Kafka password
+   # İstendiğinde, Upstash Kafka şifrenizi yapıştırın
    ```
 
-3. In your Worker, install `@upstash/kafka`, a HTTP/REST based Kafka client:
+3. Worker'ınızda HTTP/REST tabanlı Kafka istemcisi `@upstash/kafka`'yı yükleyin:
 
    <PackageManagers pkg="@upstash/kafka" />
 
-4. Use the [upstash-kafka](https://github.com/upstash/upstash-kafka/blob/main/README.md) JavaScript SDK to send data to Kafka.
+4. Kafka'ya veri göndermek için [upstash-kafka](https://github.com/upstash/upstash-kafka/blob/main/README.md) JavaScript SDK'sını kullanın.
 
-Refer to [Upstash documentation on Kafka setup with Workers](https://docs.upstash.com/kafka/real-time-analytics/realtime_analytics_serverless_kafka_setup#option-1-cloudflare-workers) for more information. Replace `url`, `username` and `password` with the variables set by the integration.
+Daha fazla bilgi için [Workers ile Kafka kurulumu hakkında Upstash dokümantasyonuna](https://docs.upstash.com/kafka/real-time-analytics/realtime_analytics_serverless_kafka_setup#option-1-cloudflare-workers) bakın. `url`, `username` ve `password`'u entegrasyon tarafından ayarlanan değişkenlerle değiştirin.
 
 ## Upstash QStash
 
-To set up an integration with Upstash QStash:
+Upstash QStash ile entegrasyon kurmak için:
 
-1. Configure the [publicly available HTTP endpoint](https://docs.upstash.com/qstash#1-public-api) that you want to send your messages to.
+1. Mesajlarınızı göndermek istediğiniz [genel olarak erişilebilir HTTP endpoint](https://docs.upstash.com/qstash#1-public-api)'i yapılandırın.
 
-2. Configure the Upstash QStash credentials in your Worker:
+2. Worker'ınızda Upstash QStash kimlik bilgilerini yapılandırın:
 
-   You need to add your Upstash QStash token as a secret to your Worker. Get your token from your [Upstash Console](https://console.upstash.com) under QStash settings, then add it as a secret using Wrangler:
+   Upstash QStash token'ınızı Worker'ınıza gizli anahtar olarak eklemeniz gerekir. Token'ınızı [Upstash Console](https://console.upstash.com)'dan QStash ayarları altından alın, ardından bunu Wrangler kullanarak gizli anahtar olarak ekleyin:
 
    ```sh
-   # Add the QStash token as a secret
+   # QStash token'ını gizli anahtar olarak ekle
    npx wrangler secret put QSTASH_TOKEN
-   # When prompted, paste your QStash token
+   # İstendiğinde, QStash token'ınızı yapıştırın
    ```
 
-3. In your Worker, install the `@upstash/qstash`, a HTTP client to connect to your database QStash endpoint:
+3. Worker'ınızda veritabanı QStash endpoint'inize bağlanmak için HTTP istemcisi `@upstash/qstash`'i yükleyin:
 
    <PackageManagers pkg="@upstash/qstash" />
 
-4. Refer to the [Upstash documentation on how to receive webhooks from QStash in your Cloudflare Worker](https://docs.upstash.com/qstash/quickstarts/cloudflare-workers#3-use-qstash-in-your-handler).
+4. [Cloudflare Worker'ınızda QStash'ten webhook'ları nasıl alacağınız](https://docs.upstash.com/qstash/quickstarts/cloudflare-workers#3-use-qstash-in-your-handler) hakkında Upstash dokümantasyonuna bakın.
 
-\* Redis is a trademark of Redis Ltd. Any rights therein are reserved to Redis Ltd. Any use by Upstash is for referential purposes only and does not indicate any sponsorship, endorsement or affiliation between Redis and Upstash.
+\* Redis, Redis Ltd.'nin ticari markasıdır. Oradaki tüm haklar Redis Ltd.'ye aittir. Upstash tarafından yapılan herhangi bir kullanım yalnızca referans amaçlıdır ve Redis ile Upstash arasında herhangi bir sponsorluk, onay veya bağlantıyı göstermez.

@@ -1,34 +1,34 @@
 ---
 pcx_content_type: concept
-title: Page Rules
+title: Sayfa Kuralları
 head:
   - tag: title
-    content: Page Rules with Workers
-description: Review the interaction between various Page Rules and Workers.
+    content: Worker'larla Sayfa Kuralları
+description: Çeşitli Sayfa Kuralları ve Worker'lar arasındaki etkileşimi gözden geçirin.
 
 ---
 
-Page Rules trigger certain actions whenever a request matches one of the URL patterns you define. You can define a page rule to trigger one or more actions whenever a certain URL pattern is matched. Refer to [Page Rules](/rules/page-rules/) to learn more about configuring Page Rules.
+Sayfa Kuralları, bir istek tanımladığınız URL desenlerinden birini eşleştirdiğinde belirli eylemleri tetikler. Belirli bir URL deseni eşleştirildiğinde bir veya daha fazla eylemi tetiklemek için bir sayfa kuralı tanımlayabilirsiniz. Sayfa Kurallarını yapılandırma hakkında daha fazla bilgi için [Sayfa Kuralları](/rules/page-rules/)'na bakın.
 
-## Page Rules with Workers
+## Worker'larla Sayfa Kuralları
 
-Cloudflare acts as a [reverse proxy](https://www.cloudflare.com/learning/what-is-cloudflare/) to provide services, like Page Rules, to Internet properties. Your application's traffic will pass through a Cloudflare data center that is closest to the visitor. There are hundreds of these around the world, each of which are capable of running services like Workers and Page Rules. If your application is built on Workers and/or Pages, the [Cloudflare global network](https://www.cloudflare.com/learning/serverless/glossary/what-is-edge-computing/) acts as your origin server and responds to requests directly from the Cloudflare global network.
+Cloudflare, Internet özelliklerine Sayfa Kuralları gibi hizmetler sağlamak için [ters proxy](https://www.cloudflare.com/learning/what-is-cloudflare/) olarak hareket eder. Uygulamanızın trafiği, ziyaretçiye en yakın Cloudflare veri merkezinden geçecektir. Dünya çapında bunlardan yüzlercesi vardır ve her biri Worker'lar ve Sayfa Kuralları gibi hizmetleri çalıştırabilir. Uygulamanız Worker'lar ve/veya Pages üzerine kuruluysa, [Cloudflare global ağı](https://www.cloudflare.com/learning/serverless/glossary/what-is-edge-computing/) origin sunucunuz olarak hareket eder ve istekleri doğrudan Cloudflare global ağından yanıtlar.
 
-When using Page Rules with Workers, the following workflow is applied.
+Worker'larla Sayfa Kuralları kullanırken, aşağıdaki iş akışı uygulanır.
 
-1. Request arrives at Cloudflare data center.
-2. Cloudflare decides if this request is a Worker route. Because this is a Worker route, Cloudflare evaluates and disabled a number of features, including some that would be set by Page Rules.
-3. Page Rules run as part of normal request processing with some features now disabled.
-4. Worker executes.
-5. Worker makes a same-zone or other-zone subrequest. Because this is a Worker route, Cloudflare disables a number of features, including some that would be set by Page Rules.
+1. İstek Cloudflare veri merkezine gelir.
+2. Cloudflare bu isteğin bir Worker rotası olup olmadığına karar verir. Bu bir Worker rotası olduğu için, Cloudflare Sayfa Kuralları tarafından ayarlanacak bazıları dahil olmak üzere bir dizi özelliği değerlendirir ve devre dışı bırakır.
+3. Sayfa Kuralları artık devre dışı bırakılan bazı özelliklerle normal istek işlemenin bir parçası olarak çalışır.
+4. Worker yürütülür.
+5. Worker aynı zone veya diğer zone alt isteği yapar. Bu bir Worker rotası olduğu için, Cloudflare Sayfa Kuralları tarafından ayarlanacak bazıları dahil olmak üzere bir dizi özelliği devre dışı bırakır.
 
-Page Rules are evaluated both at the client-to-Worker request stage (step 2) and the Worker subrequest stage (step 5).
+Sayfa Kuralları hem istemci-Worker istek aşamasında (adım 2) hem de Worker alt istek aşamasında (adım 5) değerlendirilir.
 
-If you are experiencing Page Rule errors when running Workers, contact your Cloudflare account team or [Cloudflare Support](/support/contacting-cloudflare-support/).
+Worker'ları çalıştırırken Sayfa Kuralı hataları yaşıyorsanız, Cloudflare hesap ekibinizle iletişime geçin veya [Cloudflare Destek](/support/contacting-cloudflare-support/)'e başvurun.
 
-## Affected Page Rules
+## Etkilenen Sayfa Kuralları
 
-The following Page Rules may not work as expected when an incoming request is matched to a Worker route:
+Gelen bir istek Worker rotasıyla eşleştirildiğinde aşağıdaki Sayfa Kuralları beklenen şekilde çalışmayabilir:
 
 * Always Online
 * [Always Use HTTPS](/workers/configuration/workers-with-page-rules/#always-use-https)
@@ -50,142 +50,138 @@ The following Page Rules may not work as expected when an incoming request is ma
 * [Security Level](/workers/configuration/workers-with-page-rules/#security-level)
 * [SSL](/workers/configuration/workers-with-page-rules/#ssl)
 
-This is because the default setting of these Page Rules will be disabled when Cloudflare recognizes that the request is headed to a Worker.
+Bunun nedeni, Cloudflare'in isteğin bir Worker'a yönlendirildiğini tanıdığında bu Sayfa Kurallarının varsayılan ayarının devre dışı bırakılmasıdır.
 
-:::caution[Testing]
+:::caution[Test]
 
-
-Due to ongoing changes to the Workers runtime, detailed documentation on how these rules will be affected are updated following testing.
-
+Worker runtime'ındaki devam eden değişiklikler nedeniyle, bu kuralların nasıl etkileneceğine dair ayrıntılı dokümantasyon test sonrasında güncellenir.
 
 :::
 
-To learn what these Page Rules do, refer to [Page Rules](/rules/page-rules/).
+Bu Sayfa Kurallarının ne yaptığını öğrenmek için [Sayfa Kuralları](/rules/page-rules/)'na bakın.
 
-:::note[Same zone versus other zone]
+:::note[Aynı zone'a karşı diğer zone]
 
-
-A same zone subrequest is a request the Worker makes to an orange-clouded hostname in the same zone the Worker runs on. Depending on your DNS configuration, any request that falls outside that definition may be considered an other zone request by the Cloudflare network.
-
+Aynı zone alt isteği, Worker'ın çalıştığı zone'daki turuncu bulutlu hostname'e yaptığı istektir. DNS yapılandırmanıza bağlı olarak, bu tanımın dışında kalan herhangi bir istek Cloudflare ağı tarafından diğer zone isteği olarak kabul edilebilir.
 
 :::
 
 ### Always Use HTTPS
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Ignored   |
-| Worker | Other Zone | Rule Ignored   |
+| Kaynak | Hedef      | Davranış        |
+| ------ | ---------- | --------------- |
+| İstemci | Worker     | Kural Saygı Duyulur |
+| Worker | Aynı Zone  | Kural Göz Ardı Edilir |
+| Worker | Diğer Zone | Kural Göz Ardı Edilir |
 
 ### Automatic HTTPS Rewrites
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Ignored   |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Kaynak | Hedef      | Davranış        |
+| ------ | ---------- | --------------- |
+| İstemci | Worker     | Kural Göz Ardı Edilir |
+| Worker | Aynı Zone  | Kural Saygı Duyulur |
+| Worker | Diğer Zone | Kural Göz Ardı Edilir |
 
 ### Browser Cache TTL
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Ignored   |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Kaynak | Hedef      | Davranış        |
+| ------ | ---------- | --------------- |
+| İstemci | Worker     | Kural Göz Ardı Edilir |
+| Worker | Aynı Zone  | Kural Saygı Duyulur |
+| Worker | Diğer Zone | Kural Göz Ardı Edilir |
 
 ### Browser Integrity Check
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Ignored   |
-| Worker | Other Zone | Rule Ignored   |
+| Kaynak | Hedef      | Davranış        |
+| ------ | ---------- | --------------- |
+| İstemci | Worker     | Kural Saygı Duyulur |
+| Worker | Aynı Zone  | Kural Göz Ardı Edilir |
+| Worker | Diğer Zone | Kural Göz Ardı Edilir |
 
 ### Cache Deception Armor
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Kaynak | Hedef      | Davranış        |
+| ------ | ---------- | --------------- |
+| İstemci | Worker     | Kural Saygı Duyulur |
+| Worker | Aynı Zone  | Kural Saygı Duyulur |
+| Worker | Diğer Zone | Kural Göz Ardı Edilir |
 
 ### Cache Level
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Kaynak | Hedef      | Davranış        |
+| ------ | ---------- | --------------- |
+| İstemci | Worker     | Kural Saygı Duyulur |
+| Worker | Aynı Zone  | Kural Saygı Duyulur |
+| Worker | Diğer Zone | Kural Göz Ardı Edilir |
 
 ### Disable Zaraz
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Kaynak | Hedef      | Davranış        |
+| ------ | ---------- | --------------- |
+| İstemci | Worker     | Kural Saygı Duyulur |
+| Worker | Aynı Zone  | Kural Saygı Duyulur |
+| Worker | Diğer Zone | Kural Göz Ardı Edilir |
 
 ### Edge Cache TTL
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Kaynak | Hedef      | Davranış        |
+| ------ | ---------- | --------------- |
+| İstemci | Worker     | Kural Saygı Duyulur |
+| Worker | Aynı Zone  | Kural Saygı Duyulur |
+| Worker | Diğer Zone | Kural Göz Ardı Edilir |
 
 ### Email Obfuscation
 
-| Source     | Target     | Behavior       |
-| -------------------------|------------|------------|
-| Client     | Worker     | Rule Ignored   |
-| Worker     | Same Zone  | Rule Respected |
-| Worker     | Other Zone | Rule Ignored   |
+| Kaynak     | Hedef      | Davranış        |
+| ---------- | ---------- | --------------- |
+| İstemci    | Worker     | Kural Göz Ardı Edilir |
+| Worker     | Aynı Zone  | Kural Saygı Duyulur |
+| Worker     | Diğer Zone | Kural Göz Ardı Edilir |
 
 ### Forwarding URL
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Ignored   |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Kaynak | Hedef      | Davranış        |
+| ------ | ---------- | --------------- |
+| İstemci | Worker     | Kural Göz Ardı Edilir |
+| Worker | Aynı Zone  | Kural Saygı Duyulur |
+| Worker | Diğer Zone | Kural Göz Ardı Edilir |
 
 ### IP Geolocation Header
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Kaynak | Hedef      | Davranış        |
+| ------ | ---------- | --------------- |
+| İstemci | Worker     | Kural Saygı Duyulur |
+| Worker | Aynı Zone  | Kural Saygı Duyulur |
+| Worker | Diğer Zone | Kural Göz Ardı Edilir |
 
 ### Origin Cache Control
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Kaynak | Hedef      | Davranış        |
+| ------ | ---------- | --------------- |
+| İstemci | Worker     | Kural Saygı Duyulur |
+| Worker | Aynı Zone  | Kural Saygı Duyulur |
+| Worker | Diğer Zone | Kural Göz Ardı Edilir |
 
 ### Rocket Loader
 
-| Source | Target     | Behavior     |
-| ------ | ---------- | ------------ |
-| Client | Worker     | Rule Ignored |
-| Worker | Same Zone  | Rule Ignored |
-| Worker | Other Zone | Rule Ignored |
+| Kaynak | Hedef      | Davranış      |
+| ------ | ---------- | ------------- |
+| İstemci | Worker     | Kural Göz Ardı Edilir |
+| Worker | Aynı Zone  | Kural Göz Ardı Edilir |
+| Worker | Diğer Zone | Kural Göz Ardı Edilir |
 
 ### Security Level
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Ignored   |
-| Worker | Other Zone | Rule Ignored   |
+| Kaynak | Hedef      | Davranış        |
+| ------ | ---------- | --------------- |
+| İstemci | Worker     | Kural Saygı Duyulur |
+| Worker | Aynı Zone  | Kural Göz Ardı Edilir |
+| Worker | Diğer Zone | Kural Göz Ardı Edilir |
 
 ### SSL
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Kaynak | Hedef      | Davranış        |
+| ------ | ---------- | --------------- |
+| İstemci | Worker     | Kural Saygı Duyulur |
+| Worker | Aynı Zone  | Kural Saygı Duyulur |
+| Worker | Diğer Zone | Kural Göz Ardı Edilir |

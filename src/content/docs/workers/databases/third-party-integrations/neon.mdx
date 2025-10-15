@@ -1,35 +1,35 @@
 ---
 pcx_content_type: configuration
 title: Neon
-description: Connect Workers to a Neon Postgres database.
+description: Workers'ı Neon Postgres veritabanına bağlayın.
 ---
 
 import { Render, PackageManagers, Tabs, TabItem } from "~/components";
 
-[Neon](https://neon.tech/) is a fully managed serverless PostgreSQL. It separates storage and compute to offer modern developer features, such as serverless, branching, and bottomless storage.
+[Neon](https://neon.tech/), tamamen yönetilen sunucusuz PostgreSQL'dir. Depolama ve hesaplamayı ayırarak sunucusuz, dallanma ve dipsiz depolama gibi modern geliştirici özellikleri sunar.
 
 :::note
 
-You can connect to Neon using [Hyperdrive](/hyperdrive) (recommended), or using the Neon serverless driver, `@neondatabase/serverless`. Both provide connection pooling and reduce the amount of round trips required to create a secure connection from Workers to your database.
+Neon'a [Hyperdrive](/hyperdrive) (önerilen) kullanarak veya Neon sunucusuz sürücüsü `@neondatabase/serverless` kullanarak bağlanabilirsiniz. Her ikisi de bağlantı havuzlama sağlar ve Workers'dan veritabanınıza güvenli bir bağlantı oluşturmak için gereken gidiş-dönüş miktarını azaltır.
 
-Hyperdrive can provide the lowest possible latencies because it performs the database connection setup and connection pooling across Cloudflare's network. Hyperdrive supports native database drivers, libraries, and ORMs, and is included in all [Workers plans](/hyperdrive/platform/pricing/). Learn more about Hyperdrive in [How Hyperdrive Works](/hyperdrive/configuration/how-hyperdrive-works/).
+Hyperdrive, veritabanı bağlantı kurulumunu ve bağlantı havuzlamasını Cloudflare ağı boyunca gerçekleştirdiği için mümkün olan en düşük gecikmeleri sağlayabilir. Hyperdrive yerel veritabanı sürücülerini, kütüphanelerini ve ORM'leri destekler ve tüm [Workers planlarında](/hyperdrive/platform/pricing/) dahildir. [Hyperdrive'un Nasıl Çalıştığı](/hyperdrive/configuration/how-hyperdrive-works/) hakkında daha fazla bilgi edinin.
 
 :::
 
 <Tabs>
-	<TabItem label="Hyperdrive (recommended)">
+	<TabItem label="Hyperdrive (önerilen)">
 
-To connect to Neon using [Hyperdrive](/hyperdrive), follow these steps:
+Neon'a [Hyperdrive](/hyperdrive) kullanarak bağlanmak için şu adımları izleyin:
 
          <Render file="neon-partial" product="hyperdrive"/>
     </TabItem>
-    <TabItem label="Neon serverless driver">
+    <TabItem label="Neon sunucusuz sürücü">
 
-To connect to Neon using `@neondatabase/serverless`, follow these steps:
+`@neondatabase/serverless` kullanarak Neon'a bağlanmak için şu adımları izleyin:
 
-1. You need to have an existing Neon database to connect to. [Create a Neon database](https://neon.tech/docs/postgres/tutorial-createdb#create-a-table) or [load data from an existing database to Neon](https://neon.tech/docs/import/import-from-postgres).
+1. Bağlanmak için mevcut bir Neon veritabanına sahip olmanız gerekir. [Neon veritabanı oluşturun](https://neon.tech/docs/postgres/tutorial-createdb#create-a-table) veya [mevcut veritabanından Neon'a veri yükleyin](https://neon.tech/docs/import/import-from-postgres).
 
-2. Create an `elements` table using the Neon SQL editor. The SQL Editor allows you to query your databases directly from the Neon Console.
+2. Neon SQL editörünü kullanarak bir `elements` tablosu oluşturun. SQL Editörü, veritabanlarınızı doğrudan Neon Console'dan sorgulamanıza olanak tanır.
 
    ```sql
    CREATE TABLE elements (
@@ -40,7 +40,7 @@ To connect to Neon using `@neondatabase/serverless`, follow these steps:
    );
    ```
 
-3. Insert some data into your newly created table.
+3. Yeni oluşturduğunuz tabloya bazı veriler ekleyin.
 
    ```sql
    INSERT INTO elements (id, elementName, atomicNumber, symbol)
@@ -57,21 +57,21 @@ To connect to Neon using `@neondatabase/serverless`, follow these steps:
      (10, 'Neon', 10, 'Ne');
    ```
 
-4. Configure the Neon database credentials in your Worker:
+4. Worker'ınızda Neon veritabanı kimlik bilgilerini yapılandırın:
 
-   You need to add your Neon database connection string as a secret to your Worker. Get your connection string from the [Neon Console](https://console.neon.tech) under **Connection Details**, then add it as a secret using Wrangler:
+   Neon veritabanı bağlantı dizinizi Worker'ınıza gizli anahtar olarak eklemeniz gerekir. Bağlantı dizinizi [Neon Console](https://console.neon.tech)'dan **Connection Details** altından alın, ardından Wrangler kullanarak gizli anahtar olarak ekleyin:
 
    ```sh
-   # Add the database connection string as a secret
+   # Veritabanı bağlantı dizinini gizli anahtar olarak ekle
    npx wrangler secret put DATABASE_URL
-   # When prompted, paste your Neon database connection string
+   # İstendiğinde, Neon veritabanı bağlantı dizinizi yapıştırın
    ```
 
-5. In your Worker, install the `@neondatabase/serverless` driver to connect to your database and start manipulating data:
+5. Worker'ınızda, veritabanınıza bağlanmak ve veri manipülasyonuna başlamak için `@neondatabase/serverless` sürücüsünü yükleyin:
 
    <PackageManagers pkg="@neondatabase/serverless" />
 
-6. The following example shows how to make a query to your Neon database in a Worker. The credentials needed to connect to Neon have been added as secrets to your Worker.
+6. Aşağıdaki örnek, Worker'da Neon veritabanınıza nasıl sorgu yapılacağını gösterir. Neon'a bağlanmak için gereken kimlik bilgileri Worker'ınıza gizli anahtarlar olarak eklenmiştir.
 
    ```js
    import { Client } from "@neondatabase/serverless";
@@ -87,7 +87,7 @@ To connect to Neon using `@neondatabase/serverless`, follow these steps:
    };
    ```
 
-To learn more about Neon, refer to [Neon's official documentation](https://neon.tech/docs/introduction).
+Neon hakkında daha fazla bilgi için [Neon'un resmi dokümantasyonuna](https://neon.tech/docs/introduction) bakın.
 
    </TabItem>
 </Tabs>

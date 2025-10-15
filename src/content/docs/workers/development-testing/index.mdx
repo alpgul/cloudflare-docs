@@ -1,10 +1,10 @@
 ---
 pcx_content_type: navigation
-title: Development & testing
+title: Geliştirme ve test
 sidebar:
   order: 6
 head: []
-description: Develop and test your Workers locally.
+description: Worker'larınızı yerel olarak geliştirin ve test edin.
 ---
 
 import {
@@ -20,59 +20,59 @@ import {
 	TypeScriptExample,
 } from "~/components";
 
-You can build, run, and test your Worker code on your own local machine before deploying it to Cloudflare's network. This is made possible through [Miniflare](/workers/testing/miniflare/), a simulator that executes your Worker code using the same runtime used in production, [`workerd`](https://github.com/cloudflare/workerd).
+Worker kodunuzu Cloudflare'in ağına dağıtmadan önce kendi yerel makinenizde oluşturabilir, çalıştırabilir ve test edebilirsiniz. Bu, Worker kodunuzu üretimde kullanılan aynı runtime olan [`workerd`](https://github.com/cloudflare/workerd) kullanarak çalıştıran bir simülatör olan [Miniflare](/workers/testing/miniflare/) aracılığıyla mümkündür.
 
-[By default](/workers/development-testing/#defaults), your Worker's bindings [connect to locally simulated resources](/workers/development-testing/#bindings-during-local-development), but can be configured to interact with the real, production resource with [remote bindings](/workers/development-testing/#remote-bindings).
+[Varsayılan olarak](/workers/development-testing/#defaults), Worker'ınızın bağlamaları [yerel olarak simüle edilmiş kaynaklara bağlanır](/workers/development-testing/#bindings-during-local-development), ancak [uzak bağlamalar](/workers/development-testing/#remote-bindings) ile gerçek, üretim kaynağıyla etkileşim kurmak için yapılandırılabilir.
 
-## Core concepts
+## Temel kavramlar
 
-### Worker execution vs Bindings
+### Worker yürütme vs Bağlamalar
 
-When developing Workers, it's important to understand two distinct concepts:
+Worker'ları geliştirirken, iki farklı kavramı anlamak önemlidir:
 
-- **Worker execution**: Where your Worker code actually runs (on your local machine vs on Cloudflare's infrastructure).
+- **Worker yürütme**: Worker kodunuzun gerçekte nerede çalıştığı (yerel makinenizde vs Cloudflare'in altyapısında).
 
-- [**Bindings**](/workers/runtime-apis/bindings/): How your Worker interacts with Cloudflare resources (like [KV namespaces](/kv), [R2 buckets](/r2), [D1 databases](/d1), [Queues](/queues/), [Durable Objects](/durable-objects/), etc). In your Worker code, these are accessed via the `env` object (such as `env.MY_KV`).
+- [**Bağlamalar**](/workers/runtime-apis/bindings/): Worker'ınızın Cloudflare kaynaklarıyla (KV namespace'leri, R2 bucket'ları, D1 veritabanları, Queue'lar, Durable Object'ler vb.) nasıl etkileşim kurduğu. Worker kodunuzda bunlara `env` nesnesi aracılığıyla erişilir (örneğin `env.MY_KV`).
 
-## Local development
+## Yerel geliştirme
 
-**You can start a local development server using:**
+**Yerel geliştirme sunucusunu şunları kullanarak başlatabilirsiniz:**
 
-1. The Cloudflare Workers CLI [**Wrangler**](/workers/wrangler/), using the built-in [`wrangler dev`](/workers/wrangler/commands/#dev) command.
+1. Cloudflare Workers CLI [**Wrangler**](/workers/wrangler/), yerleşik [`wrangler dev`](/workers/wrangler/commands/#dev) komutunu kullanarak.
 
 <PackageManagers type="exec" pkg="wrangler" args="dev" />
 
-2. [**Vite**](https://vite.dev/), using the [**Cloudflare Vite plugin**](/workers/vite-plugin/).
+2. [**Vite**](https://vite.dev/), [**Cloudflare Vite plugin**](/workers/vite-plugin/) kullanarak.
 
 <PackageManagers type="exec" pkg="vite" args="dev" />
 
-Both Wrangler and the Cloudflare Vite plugin use [Miniflare](/workers/testing/miniflare/) under the hood, and are developed and maintained by the Cloudflare team. For guidance on choosing when to use Wrangler versus Vite, see our guide [Choosing between Wrangler & Vite](/workers/development-testing/wrangler-vs-vite/).
+Hem Wrangler hem de Cloudflare Vite plugin'i arka planda [Miniflare](/workers/testing/miniflare/) kullanır ve Cloudflare ekibi tarafından geliştirilir ve sürdürülür. Wrangler ile Vite arasında ne zaman seçim yapacağınız konusunda rehberlik için [Wrangler & Vite arasında seçim](/workers/development-testing/wrangler-vs-vite/) rehberimize bakın.
 
-- [Get started with Wrangler](/workers/wrangler/install-and-update/)
-- [Get started with the Cloudflare Vite plugin](/workers/vite-plugin/get-started/)
+- [Wrangler ile başlayın](/workers/wrangler/install-and-update/)
+- [Cloudflare Vite plugin ile başlayın](/workers/vite-plugin/get-started/)
 
-### Defaults
+### Varsayılanlar
 
-By default, running `wrangler dev` / `vite dev` (when using the [Vite plugin](/workers/vite-plugin/get-started/)) means that:
+Varsayılan olarak, `wrangler dev` / `vite dev` (Vite plugin kullanırken) çalıştırmak şu anlama gelir:
 
-- Your Worker code runs on your local machine.
-- All resources your Worker is bound to in your [Wrangler configuration](/workers/wrangler/configuration/) are simulated locally.
+- Worker kodunuz yerel makinenizde çalışır.
+- Worker'ınızın [Wrangler yapılandırmanızda](/workers/wrangler/configuration/) bağlı olduğu tüm kaynaklar yerel olarak simüle edilir.
 
-### Bindings during local development
+### Yerel geliştirme sırasında bağlamalar
 
-[Bindings](/workers/runtime-apis/bindings/) are interfaces that allow your Worker to interact with various Cloudflare resources (like [KV namespaces](/kv), [R2 buckets](/r2), [D1 databases](/d1), [Queues](/queues/), [Durable Objects](/durable-objects/), etc). In your Worker code, these are accessed via the `env` object (such as `env.MY_KV`).
+[Bağlamalar](/workers/runtime-apis/bindings/), Worker'ınızın çeşitli Cloudflare kaynaklarıyla (KV namespace'leri, R2 bucket'ları, D1 veritabanları, Queue'lar, Durable Object'ler vb.) etkileşim kurmasına olanak tanıyan arayüzlerdir. Worker kodunuzda bunlara `env` nesnesi aracılığıyla erişilir (örneğin `env.MY_KV`).
 
-During local development, your Worker code interacts with these bindings using the exact same API calls (such as `env.MY_KV.put()`) as it would in a deployed environment. These local resources are initially empty, but you can populate them with data, as documented in [Adding local data](/workers/development-testing/local-data/).
+Yerel geliştirme sırasında, Worker kodunuz bu bağlamalarla dağıtılan ortamda olduğu gibi aynı API çağrılarını (örneğin `env.MY_KV.put()`) kullanarak etkileşim kurar. Bu yerel kaynaklar başlangıçta boştur, ancak [Yerel veri ekleme](/workers/development-testing/local-data/) belgelerinde açıklandığı gibi bunları veriyle doldurabilirsiniz.
 
-- By default, bindings connect to **local resource simulations** (except for [AI bindings](/workers-ai/configuration/bindings/), as AI models always run remotely).
-- You can override this default behavior and **connect to the remote resource** on a per-binding basis with [remote bindings](/workers/development-testing/#remote-bindings). This lets you connect to real, production resources while still running your Worker code locally.
-- When using `wrangler dev`, you can temporarily disable all [remote bindings](/workers/development-testing/#remote-bindings) (and connect only to local resources) by providing the `--local` flag (i.e. `wrangler dev --local`)
+- Varsayılan olarak, bağlamalar **yerel kaynak simülasyonlarına** bağlanır (AI modelleri her zaman uzaktan çalıştığı için [AI bağlamaları](/workers-ai/configuration/bindings/) hariç).
+- Bu varsayılan davranışı geçersiz kılabilir ve [uzak bağlamalar](/workers/development-testing/#remote-bindings) ile bağlama bazında **uzak kaynağa bağlanabilirsiniz**. Bu, Worker kodunuzu yerel olarak çalıştırırken gerçek, üretim kaynaklarına bağlanmanıza olanak tanır.
+- `wrangler dev` kullanırken, `--local` bayrağını sağlayarak tüm [uzak bağlamaları](/workers/development-testing/#remote-bindings) geçici olarak devre dışı bırakabilirsiniz (ve yalnızca yerel kaynaklara bağlanabilirsiniz) (yani `wrangler dev --local`)
 
-## Remote bindings
+## Uzak bağlamalar
 
-**Remote bindings** are bindings that are configured to connect to the deployed, remote resource during local development _instead_ of the locally simulated resource. Remote bindings are supported by [**Wrangler**](/workers/wrangler/), the [**Cloudflare Vite plugin**](/workers/vite-plugin/), and the `@cloudflare/vitest-pool-workers` package. You can configure remote bindings by setting `remote: true` in the binding definition.
+**Uzak bağlamalar**, yerel geliştirme sırasında yerel olarak simüle edilmiş kaynak _yerine_ dağıtılan, uzak kaynağa bağlanmak için yapılandırılmış bağlamalardır. Uzak bağlamalar [**Wrangler**](/workers/wrangler/), [**Cloudflare Vite plugin**](/workers/vite-plugin/) ve `@cloudflare/vitest-pool-workers` paketi tarafından desteklenir. Bağlama tanımında `remote: true` ayarlayarak uzak bağlamaları yapılandırabilirsiniz.
 
-### Example configuration
+### Örnek yapılandırma
 
 <WranglerConfig>
 
@@ -93,13 +93,13 @@ During local development, your Worker code interacts with these bindings using t
 
 </WranglerConfig>
 
-When remote bindings are configured, your Worker still **executes locally**, only the underlying resources your bindings connect to change. For all bindings marked with `remote: true`, Miniflare will route its operations (such as `env.MY_KV.put()`) to the deployed resource. All other bindings not explicitly configured with `remote: true` continue to use their default local simulations.
+Uzak bağlamalar yapılandırıldığında, Worker'ınız hala **yerel olarak yürütülür**, yalnızca bağlamalarınızın bağlandığı altta yatan kaynaklar değişir. `remote: true` ile işaretlenen tüm bağlamalar için Miniflare, işlemlerini (örneğin `env.MY_KV.put()`) dağıtılan kaynağa yönlendirecektir. `remote: true` ile açıkça yapılandırılmayan diğer tüm bağlamalar varsayılan yerel simülasyonlarını kullanmaya devam eder.
 
-### Integration with environments
+### Ortamlarla entegrasyon
 
-Remote Bindings work well together with [Workers Environments](/workers/wrangler/environments). To protect production data, you can create a development or staging environment and specify different resources in your [Wrangler configuration](/workers/wrangler/configuration/) than you would use for production.
+Uzak Bağlamalar [Workers Ortamları](/workers/wrangler/environments) ile iyi çalışır. Üretim verilerini korumak için bir geliştirme veya staging ortamı oluşturabilir ve [Wrangler yapılandırmanızda](/workers/wrangler/configuration/) üretim için kullanacağınızdan farklı kaynaklar belirtebilirsiniz.
 
-**For example:**
+**Örneğin:**
 
 <WranglerConfig>
 
@@ -132,20 +132,20 @@ Remote Bindings work well together with [Workers Environments](/workers/wrangler
 
 </WranglerConfig>
 
-Running `wrangler dev -e staging` (or `CLOUDFLARE_ENV=staging vite dev`) with the above configuration means that:
+Yukarıdaki yapılandırmayla `wrangler dev -e staging` (veya `CLOUDFLARE_ENV=staging vite dev`) çalıştırmak şu anlama gelir:
 
-- Your Worker code runs locally
-- All calls made to `env.screenshots_bucket` will use the `preview-screenshots-bucket` resource, rather than the production `screenshots-bucket`.
+- Worker kodunuz yerel olarak çalışır
+- `env.screenshots_bucket`'a yapılan tüm çağrılar üretim `screenshots-bucket` kaynağı yerine `preview-screenshots-bucket` kaynağını kullanacaktır.
 
-### Recommended remote bindings
+### Önerilen uzak bağlamalar
 
-We recommend configuring specific bindings to connect to their remote counterparts. These services often rely on Cloudflare's network infrastructure or have complex backends that are not fully simulated locally.
+Belirli bağlamaları uzak karşılıklarına bağlanmak için yapılandırmanızı öneriyoruz. Bu hizmetler genellikle Cloudflare'in ağ altyapısına dayanır veya yerel olarak tam olarak simüle edilmeyen karmaşık backend'lere sahiptir.
 
-The following bindings are recommended to have `remote: true` in your Wrangler configuration:
+Aşağıdaki bağlamaların Wrangler yapılandırmanızda `remote: true` olması önerilir:
 
 #### [Browser Rendering](/workers/wrangler/configuration/#browser-rendering):
 
-To interact with a real headless browser for rendering. There is no current local simulation for Browser Rendering.
+Gerçek headless tarayıcıyla etkileşim kurmak için. Browser Rendering için şu anda yerel simülasyon yoktur.
 
 <WranglerConfig>
 ```jsonc title="wrangler.jsonc"
@@ -160,7 +160,7 @@ To interact with a real headless browser for rendering. There is no current loca
 
 #### [Workers AI](/workers/wrangler/configuration/#workers-ai):
 
-To utilize actual AI models deployed on Cloudflare's network for inference. There is no current local simulation for Workers AI.
+Çıkarım için Cloudflare'in ağında dağıtılan gerçek AI modellerini kullanmak için. Workers AI için şu anda yerel simülasyon yoktur.
 
 <WranglerConfig>
 ```jsonc title="wrangler.jsonc"
@@ -175,7 +175,7 @@ To utilize actual AI models deployed on Cloudflare's network for inference. Ther
 
 #### [Vectorize](/workers/wrangler/configuration/#vectorize-indexes):
 
-To connect to your production Vectorize indexes for accurate vector search and similarity operations. There is no current local simulation for Vectorize.
+Doğru vektör arama ve benzerlik işlemleri için üretim Vectorize indekslerinize bağlanmak için. Vectorize için şu anda yerel simülasyon yoktur.
 
 <WranglerConfig>
 ```jsonc title="wrangler.jsonc"
@@ -193,7 +193,7 @@ To connect to your production Vectorize indexes for accurate vector search and s
 
 #### [mTLS](/workers/wrangler/configuration/#mtls-certificates):
 
-To verify that the certificate exchange and validation process work as expected. There is no current local simulation for mTLS bindings.
+Sertifika değişimi ve doğrulama sürecinin beklendiği gibi çalıştığını doğrulamak için. mTLS bağlamaları için şu anda yerel simülasyon yoktur.
 
 <WranglerConfig>
 ```jsonc title="wrangler.jsonc"
@@ -212,7 +212,7 @@ To verify that the certificate exchange and validation process work as expected.
 
 #### [Images](/workers/wrangler/configuration/#images):
 
-To connect to a high-fidelity version of the Images API, and verify that all transformations work as expected. Local simulation for Cloudflare Images is [limited with only a subset of features](/images/transform-images/bindings/#interact-with-your-images-binding-locally).
+Images API'nin yüksek doğruluk versiyonuna bağlanmak ve tüm dönüşümlerin beklendiği gibi çalıştığını doğrulamak için. Cloudflare Images için yerel simülasyon [yalnızca özelliklerin bir alt kümesiyle sınırlıdır](/images/transform-images/bindings/#interact-with-your-images-binding-locally).
 
 <WranglerConfig>
 ```jsonc title="wrangler.jsonc"
@@ -227,14 +227,14 @@ To connect to a high-fidelity version of the Images API, and verify that all tra
 </WranglerConfig>
 
 :::note
-If `remote: true` is not specified for Browser Rendering, Vectorize, mTLS, or Images, Cloudflare **will issue a warning**. This prompts you to consider enabling it for a more production-like testing experience.
+Browser Rendering, Vectorize, mTLS veya Images için `remote: true` belirtilmezse, Cloudflare **bir uyarı verecektir**. Bu, daha üretim benzeri test deneyimi için bunu etkinleştirmeyi düşünmenizi teşvik eder.
 
-If a Workers AI binding has `remote` set to `false`, Cloudflare will **produce an error**. If the property is omitted, Cloudflare will connect to the remote resource and issue a warning to add the property to configuration.
+Workers AI bağlaması için `remote` `false` olarak ayarlanırsa, Cloudflare **bir hata üretecektir**. Özellik atlanırsa, Cloudflare uzak kaynağa bağlanacak ve yapılandırmaya özelliği ekleme konusunda uyarı verecektir.
 :::
 
 #### [Dispatch Namespaces](/cloudflare-for-platforms/workers-for-platforms/get-started/developing-with-wrangler/):
 
-Workers for Platforms users can configure `remote: true` in dispatch namespace binding definitions:
+Workers for Platforms kullanıcıları dispatch namespace bağlama tanımlarında `remote: true` yapılandırabilir:
 
 <WranglerConfig>
 ```jsonc title="wrangler.jsonc"
@@ -250,114 +250,114 @@ Workers for Platforms users can configure `remote: true` in dispatch namespace b
 ```
 </WranglerConfig>
 
-This allows you to run your [dynamic dispatch Worker](/cloudflare-for-platforms/workers-for-platforms/reference/how-workers-for-platforms-works/#dynamic-dispatch-worker) locally, while connecting it to your remote dispatch namespace binding. This allows you to test changes to your core dispatching logic against real, deployed [user Workers](/cloudflare-for-platforms/workers-for-platforms/reference/how-workers-for-platforms-works/#user-workers).
+Bu, [dinamik dispatch Worker'ınızı](/cloudflare-for-platforms/workers-for-platforms/reference/how-workers-for-platforms-works/#dynamic-dispatch-worker) yerel olarak çalıştırmanıza olanak tanırken, onu uzak dispatch namespace bağlamanıza bağlar. Bu, çekirdek dispatch mantığınızdaki değişiklikleri gerçek, dağıtılan [kullanıcı Worker'larına](/cloudflare-for-platforms/workers-for-platforms/reference/how-workers-for-platforms-works/#user-workers) karşı test etmenize olanak tanır.
 
-### Unsupported remote bindings
+### Desteklenmeyen uzak bağlamalar
 
-Certain bindings are not supported for remote connections (i.e. with `remote: true`) during local development. These will always use local simulations or local values.
+Belirli bağlamalar yerel geliştirme sırasında uzak bağlantılar için desteklenmez (yani `remote: true` ile). Bunlar her zaman yerel simülasyonları veya yerel değerleri kullanacaktır.
 
-If `remote: true` is specified in Wrangler configuration for any of the following unsupported binding types, Cloudflare **will issue an error**. See [all supported and unsupported bindings for remote bindings](/workers/development-testing/bindings-per-env/).
+Aşağıdaki desteklenmeyen bağlama türlerinden herhangi biri için Wrangler yapılandırmasında `remote: true` belirtilirse, Cloudflare **bir hata verecektir**. [Uzak bağlamalar için desteklenen ve desteklenmeyen tüm bağlamalara](/workers/development-testing/bindings-per-env/) bakın.
 
-- [**Durable Objects**](/workers/wrangler/configuration/#durable-objects): Enabling remote connections for Durable Objects may be supported in the future, but currently will always run locally. However, using Durable Objects in combination with remote bindings is possible. Refer to [Using remote resources with Durable Objects and Workflows](#using-remote-resources-with-durable-objects-and-workflows) below.
+- [**Durable Objects**](/workers/wrangler/configuration/#durable-objects): Durable Objects için uzak bağlantıları etkinleştirmek gelecekte desteklenebilir, ancak şu anda her zaman yerel olarak çalışacaktır. Ancak Durable Objects'i uzak bağlamalarla birlikte kullanmak mümkündür. Aşağıdaki [Durable Objects ve Workflows ile uzak kaynakları kullanma](#using-remote-resources-with-durable-objects-and-workflows) bölümüne bakın.
 
-- [**Workflows**](/workflows/): Enabling remote connections for Workflows may be supported in the future, but currently will only run locally. However, using Workflows in combination with remote bindings is possible. Refer to [Using remote resources with Durable Objects and Workflows](#using-remote-resources-with-durable-objects-and-workflows) below.
+- [**Workflows**](/workflows/): Workflows için uzak bağlantıları etkinleştirmek gelecekte desteklenebilir, ancak şu anda yalnızca yerel olarak çalışacaktır. Ancak Workflows'u uzak bağlamalarla birlikte kullanmak mümkündür. Aşağıdaki [Durable Objects ve Workflows ile uzak kaynakları kullanma](#using-remote-resources-with-durable-objects-and-workflows) bölümüne bakın.
 
-- [**Environment Variables (`vars`)**](/workers/wrangler/configuration/#environment-variables): Environment variables are intended to be distinct between local development and deployed environments. They are easily configurable locally (such as in a `.dev.vars` file or directly in Wrangler configuration).
+- [**Environment Variables (`vars`)**](/workers/wrangler/configuration/#environment-variables): Ortam değişkenleri yerel geliştirme ve dağıtılan ortamlar arasında farklı olması amaçlanmıştır. Bunlar yerel olarak kolayca yapılandırılabilir (örneğin `.dev.vars` dosyasında veya doğrudan Wrangler yapılandırmasında).
 
-- [**Secrets**](/workers/wrangler/configuration/#secrets): Like environment variables, secrets are expected to have different values in local development versus deployed environments for security reasons. Use `.dev.vars` for local secret management.
+- [**Secrets**](/workers/wrangler/configuration/#secrets): Ortam değişkenleri gibi, gizli anahtarların da güvenlik nedenleriyle yerel geliştirme ile dağıtılan ortamlar arasında farklı değerlere sahip olması beklenir. Yerel gizli anahtar yönetimi için `.dev.vars` kullanın.
 
-- [**Static Assets**](/workers/wrangler/configuration/#assets) Static assets are always served from your local disk during development for speed and direct feedback on changes.
+- [**Static Assets**](/workers/wrangler/configuration/#assets) Statik varlıklar hız ve değişiklikler üzerinde doğrudan geri bildirim için geliştirme sırasında her zaman yerel diskinizden sunulur.
 
-- [**Version Metadata**](/workers/runtime-apis/bindings/version-metadata/): Since your Worker code is running locally, version metadata (like commit hash, version tags) associated with a specific deployed version is not applicable or accurate.
+- [**Version Metadata**](/workers/runtime-apis/bindings/version-metadata/): Worker kodunuz yerel olarak çalıştığı için, belirli dağıtılan sürümle ilişkili sürüm meta verileri (commit hash, sürüm etiketleri gibi) uygulanabilir veya doğru değildir.
 
-- [**Analytics Engine**](/analytics/analytics-engine/): Local development sessions typically don't contribute data directly to production Analytics Engine.
+- [**Analytics Engine**](/analytics/analytics-engine/): Yerel geliştirme oturumları genellikle doğrudan üretim Analytics Engine'e veri katkısında bulunmaz.
 
-- [**Hyperdrive**](/workers/wrangler/configuration/#hyperdrive): This is being actively worked on, but is currently unsupported.
+- [**Hyperdrive**](/workers/wrangler/configuration/#hyperdrive): Bu aktif olarak üzerinde çalışılıyor, ancak şu anda desteklenmiyor.
 
-- [**Rate Limiting**](/workers/runtime-apis/bindings/rate-limit/#configuration): Local development sessions typically should not share or affect rate limits of your deployed Workers. Rate limiting logic should be tested against local simulations.
+- [**Rate Limiting**](/workers/runtime-apis/bindings/rate-limit/#configuration): Yerel geliştirme oturumları genellikle dağıtılan Worker'larınızın hız sınırlarını paylaşmamalı veya etkilememelidir. Hız sınırlama mantığı yerel simülasyonlara karşı test edilmelidir.
 
 :::note
-If you have use-cases for connecting to any of the remote resources above, please [open a feature request](https://github.com/cloudflare/workers-sdk/issues) in our [`workers-sdk` repository](https://github.com/cloudflare/workers-sdk).
+Yukarıdaki uzak kaynaklardan herhangi birine bağlanmak için kullanım durumlarınız varsa, lütfen [`workers-sdk` depomuzda](https://github.com/cloudflare/workers-sdk) [bir özellik isteği açın](https://github.com/cloudflare/workers-sdk/issues).
 :::
 
-#### Using remote resources with Durable Objects and Workflows
+#### Durable Objects ve Workflows ile uzak kaynakları kullanma
 
-While Durable Object and Workflow bindings cannot currently be remote, you can still use them during local development and have them interact with remote resources.
+Durable Object ve Workflow bağlamaları şu anda uzak olamasa da, bunları yerel geliştirme sırasında kullanabilir ve uzak kaynaklarla etkileşim kurmalarını sağlayabilirsiniz.
 
-There are two recommended patterns for this:
+Bunun için iki önerilen desen vardır:
 
-- **Local Durable Objects/Workflows with remote bindings:**
+- **Uzak bağlamalarla yerel Durable Objects/Workflows:**
 
-  When you enable remote bindings in your [Wrangler configuration](/workers/wrangler/configuration), your locally running Durable Objects and Workflows can access remote resources. This allows such bindings, although run locally, to interact with remote resources during local development.
+  [Wrangler yapılandırmanızda](/workers/wrangler/configuration/) uzak bağlamaları etkinleştirdiğinizde, yerel olarak çalışan Durable Objects ve Workflows uzak kaynaklara erişebilir. Bu, yerel olarak çalışsa da yerel geliştirme sırasında uzak kaynaklarla etkileşim kurmalarına olanak tanır.
 
-- **Accessing remote Durable Objects/Workflows via service bindings:**
+- **Servis bağlamaları aracılığıyla uzak Durable Objects/Workflows'a erişim:**
 
-  To interact with remote Durable Object or Workflow instances, deploy a Worker that defines those. Then, in your local Worker, configure a remote [service binding](/workers/runtime-apis/bindings/service-bindings/) pointing to the deployed Worker.
-  Your local Worker will be then able to interact with the remote deployed Worker, which in turn can communicate with the remote Durable Objects/Workflows. Using this method, you can create a communication channel via the remote service binding, effectively using the deployed Worker as a proxy interface to the remote bindings during local development.
+  Uzak Durable Object veya Workflow örnekleriyle etkileşim kurmak için bunları tanımlayan bir Worker dağıtın. Ardından yerel Worker'ınızda dağıtılan Worker'a işaret eden uzak [servis bağlaması](/workers/runtime-apis/bindings/service-bindings/) yapılandırın.
+  Yerel Worker'ınız daha sonra uzak dağıtılan Worker ile etkileşim kurabilecek, bu da sırayla uzak Durable Objects/Workflows ile iletişim kurabilecektir. Bu yöntemi kullanarak uzak servis bağlaması aracılığıyla bir iletişim kanalı oluşturabilir, yerel geliştirme sırasında dağıtılan Worker'ı uzak bağlamalar için proxy arayüzü olarak etkili bir şekilde kullanabilirsiniz.
 
-### Important Considerations
+### Önemli Dikkat Edilecekler
 
-- **Data modification**: Operations (writes, deletes, updates) on bindings connected remotely will affect your actual data in the targeted Cloudflare resource (be it preview or production).
+- **Veri değişikliği**: Uzaktan bağlı bağlamalarda yapılan işlemler (yazma, silme, güncelleme) hedeflenen Cloudflare kaynağındaki (önizleme veya üretim) gerçek verilerinizi etkileyecektir.
 
-- **Billing**: Interactions with remote Cloudflare services through these connections will incur standard operational costs for those services (such as KV operations, R2 storage/operations, AI requests, D1 usage).
+- **Faturalandırma**: Bu bağlantılar aracılığıyla uzak Cloudflare hizmetleriyle etkileşimler, bu hizmetler için standart operasyonel maliyetler doğuracaktır (KV işlemleri, R2 depolama/işlemleri, AI istekleri, D1 kullanımı gibi).
 
-- **Network latency**: Expect network latency for operations on these remotely connected bindings, as they involve communication over the internet.
+- **Ağ gecikmesi**: Bu uzaktan bağlı bağlamalarda yapılan işlemler için ağ gecikmesi bekleyin, çünkü bunlar internet üzerinden iletişim içerir.
 
 ### API
 
-Wrangler provides programmatic utilities to help tooling authors support remote binding connections when running Workers code with [Miniflare](/workers/testing/miniflare/).
+Wrangler, [Miniflare](/workers/testing/miniflare/) ile Worker kodları çalıştırırken uzak bağlama bağlantılarını desteklemek için araç yazarlarına yardımcı olmak için programatik yardımcılar sağlar.
 
-**Key APIs include:**
+**Ana API'ler şunları içerir:**
 
-- [`startRemoteProxySession`](#startRemoteProxySession): Starts a proxy session that allows interaction with remote bindings.
-- [`unstable_convertConfigBindingsToStartWorkerBindings`](#unstable_convertconfigbindingstostartworkerbindings): Utility for converting binding definitions.
-- [`experimental_maybeStartOrUpdateProxySession`](#experimental_maybestartorupdatemixedmodesession): Convenience function to easily start or update a proxy session.
+- [`startRemoteProxySession`](#startRemoteProxySession): Uzak bağlamalarla etkileşime olanak tanıyan proxy oturumu başlatır.
+- [`unstable_convertConfigBindingsToStartWorkerBindings`](#unstable_convertconfigbindingstostartworkerbindings): Bağlama tanımlarını dönüştürmek için yardımcı.
+- [`experimental_maybeStartOrUpdateProxySession`](#experimental_maybestartorupdatemixedmodesession): Proxy oturumunu kolayca başlatmak veya güncellemek için kolaylık fonksiyonu.
 
 #### `startRemoteProxySession`
 
-This function starts a proxy session for a given set of bindings. It accepts options to control session behavior, including an `auth` option with your Cloudflare account ID and API token for remote binding access.
+Bu fonksiyon belirli bir bağlama seti için proxy oturumu başlatır. Uzak bağlama erişimi için Cloudflare hesap ID'niz ve API token'ınızla `auth` seçeneği dahil olmak üzere oturum davranışını kontrol etmek için seçenekleri kabul eder.
 
-It returns an object with:
+Şunları içeren bir nesne döndürür:
 
-- `ready` <Type text="Promise<void>" />: Resolves when the session is ready.
-- `dispose` <Type text="() => Promise<void>" />: Stops the session.
-- `updateBindings` <Type text="(bindings: StartDevWorkerInput['bindings']) => Promise<void>" />: Updates session bindings.
-- `remoteProxyConnectionString` <Type text="remoteProxyConnectionString" />: String to pass to Miniflare for remote binding access.
+- `ready` <Type text="Promise<void>" />: Oturum hazır olduğunda çözülür.
+- `dispose` <Type text="() => Promise<void>" />: Oturumu durdurur.
+- `updateBindings` <Type text="(bindings: StartDevWorkerInput['bindings']) => Promise<void>" />: Oturum bağlamalarını günceller.
+- `remoteProxyConnectionString` <Type text="remoteProxyConnectionString" />: Uzak bağlama erişimi için Miniflare'a geçirilecek dize.
 
 #### `unstable_convertConfigBindingsToStartWorkerBindings`
 
-The `unstable_readConfig` utility returns an `Unstable_Config` object which includes the definition of the bindings included in the configuration file. These bindings definitions
-are however not directly compatible with `startRemoteProxySession`. It can be quite convenient to however read the binding declarations with `unstable_readConfig` and then
-pass them to `startRemoteProxySession`, so for this wrangler exposes `unstable_convertConfigBindingsToStartWorkerBindings` which is a simple utility to convert
-the bindings in an `Unstable_Config` object into a structure that can be passed to `startRemoteProxySession`.
+`unstable_readConfig` yardımcısı, yapılandırma dosyasında bulunan bağlamaların tanımını içeren `Unstable_Config` nesnesini döndürür. Bu bağlama tanımları
+ancak `startRemoteProxySession` ile doğrudan uyumlu değildir. Ancak bağlama bildirimlerini `unstable_readConfig` ile okumak ve ardından
+bunları `startRemoteProxySession`'a geçirmek oldukça uygun olabilir, bu nedenle wrangler bunun için `unstable_convertConfigBindingsToStartWorkerBindings`'i açığa çıkarır, bu da
+`Unstable_Config` nesnesindeki bağlamaları `startRemoteProxySession`'a geçirilebilecek bir yapıya dönüştüren basit bir yardımcıdır.
 
 :::note
-This type conversion is temporary. In the future, the types will be unified so you can pass the config object directly to `startRemoteProxySession`.
+Bu tür dönüşüm geçicidir. Gelecekte, türler birleştirilecek böylece yapılandırma nesnesini doğrudan `startRemoteProxySession`'a geçirebileceksiniz.
 :::
 
 #### `maybeStartOrUpdateRemoteProxySession`
 
-This wrapper simplifies proxy session management. It takes:
+Bu sarmalayıcı proxy oturum yönetimini basitleştirir. Şunları alır:
 
-- An object that contains either:
-  - the path to a Wrangler configuration and a potential target environment
-  - the name of the Worker and the bindings it is using
-- The current proxy session details (this parameter can be set to `null` or not being provided if none).
-- Potentially the auth data to use for the remote proxy session.
+- Şunları içeren bir nesne:
+  - Wrangler yapılandırmasına giden yol ve potansiyel hedef ortam
+  - Worker'ın adı ve kullandığı bağlamalar
+- Mevcut proxy oturum detayları (hiçbiri yoksa bu parametre `null` olarak ayarlanabilir veya sağlanmayabilir).
+- Uzak proxy oturumu için kullanılacak potansiyel auth verileri.
 
-It returns an object with the proxy session details if started or updated, or `null` if no proxy session is needed.
+Başlatıldıysa veya güncellendiyse proxy oturum detaylarını içeren bir nesne veya proxy oturumu gerekmiyorsa `null` döndürür.
 
-The function:
+Fonksiyon:
 
-- Based on the first argument prepares the input arguments for the proxy session.
-- If there are no remote bindings to be used (nor a pre-existing proxy session) it returns null, signaling that no proxy session is needed.
-- If the details of an existing proxy session have been provided it updates the proxy session accordingly.
-- Otherwise if starts a new proxy session.
-- Returns the proxy session details (that can later be passed as the second argument to `maybeStartOrUpdateRemoteProxySession`).
+- İlk argümana dayanarak proxy oturumu için giriş argümanlarını hazırlar.
+- Kullanılacak uzak bağlama yoksa (veya önceden var olan proxy oturumu) null döndürür, proxy oturumu gerekmediğini belirtir.
+- Mevcut proxy oturumunun detayları sağlanmışsa proxy oturumunu buna göre günceller.
+- Aksi takdirde yeni proxy oturumu başlatır.
+- Proxy oturum detaylarını döndürür (daha sonra `maybeStartOrUpdateRemoteProxySession`'ın ikinci argümanı olarak geçirilebilir).
 
-#### Example
+#### Örnek
 
-Here's a basic example of using Miniflare with `maybeStartOrUpdateRemoteProxySession` to provide a local dev session with remote bindings. This example uses a single hardcoded KV binding.
+İşte uzak bağlamalarla yerel dev oturumu sağlamak için `maybeStartOrUpdateRemoteProxySession` ile Miniflare kullanmanın temel bir örneği. Bu örnek tek bir sabit kodlanmış KV bağlaması kullanır.
 
 <TypeScriptExample>
 
@@ -403,33 +403,33 @@ async function startOrUpdateDevSession() {
 	}
 }
 
-// ... tool logic that invokes `startOrUpdateDevSession()` ...
+// ... `startOrUpdateDevSession()` çağıran araç mantığı ...
 
-// ... once the dev session is no longer needed run
+// ... dev oturumu artık gerekli olmadığında çalıştır
 // `remoteProxySessionDetails?.session.dispose()`
 ```
 
 </TypeScriptExample>
 
-## `wrangler dev --remote` (Legacy)
+## `wrangler dev --remote` (Eski)
 
-Separate from Miniflare-powered local development, Wrangler also offers a fully remote development mode via [`wrangler dev --remote`](/workers/wrangler/commands/#dev). Remote development is [**not** supported in the Vite plugin](/workers/development-testing/wrangler-vs-vite/).
+Miniflare destekli yerel geliştirmeden ayrı olarak, Wrangler ayrıca [`wrangler dev --remote`](/workers/wrangler/commands/#dev) aracılığıyla tamamen uzak geliştirme modu sunar. Uzak geliştirme [Vite plugin'inde **desteklenmez**](/workers/development-testing/wrangler-vs-vite/).
 
 <PackageManagers type="exec" pkg="wrangler" args="dev --remote" />
 
-During **remote development**, all of your Worker code is uploaded to a temporary preview environment on Cloudflare's infrastructure, and changes to your code are automatically uploaded as you save.
+**Uzak geliştirme** sırasında, Worker kodunuzun tamamı Cloudflare'in altyapısında geçici önizleme ortamına yüklenir ve kodunuzdaki değişiklikler kaydettiğinizde otomatik olarak yüklenir.
 
-When using remote development, all bindings automatically connect to their remote resources. Unlike local development, you cannot configure bindings to use local simulations - they will always use the deployed resources on Cloudflare's network.
+Uzak geliştirme kullanırken, tüm bağlamalar otomatik olarak uzak kaynaklarına bağlanır. Yerel geliştirmeden farklı olarak, bağlamaları yerel simülasyonları kullanmak için yapılandıramazsınız - bunlar her zaman Cloudflare'in ağındaki dağıtılan kaynakları kullanacaktır.
 
-### When to use Remote development
+### Uzak geliştirme ne zaman kullanılır
 
-- For most development tasks, the most efficient and productive experience will be local development along with [remote bindings](/workers/development-testing/#remote-bindings) when needed.
-- You may want to use `wrangler dev --remote` for testing features or behaviors that are highly specific to Cloudflare's network and cannot be adequately simulated locally or tested via remote bindings.
+- Çoğu geliştirme görevi için, en verimli ve üretken deneyim gerektiğinde [uzak bağlamalar](/workers/development-testing/#remote-bindings) ile birlikte yerel geliştirme olacaktır.
+- Cloudflare'in ağına özgü ve yerel olarak yeterince simüle edilemeyen veya uzak bağlamalar aracılığıyla test edilemeyen özellikleri veya davranışları test etmek için `wrangler dev --remote` kullanmak isteyebilirsiniz.
 
-### Considerations
+### Dikkat Edilecekler
 
-- Iteration is significantly slower than local development due to the upload/deployment step for each change.
+- Her değişiklik için yükleme/dağıtım adımı nedeniyle yineleme, yerel geliştirmeden önemli ölçüde daha yavaştır.
 
-### Limitations
+### Sınırlamalar
 
-- When you run a remote development session using the `--remote` flag, a limit of 50 [routes](/workers/configuration/routing/routes/) per zone is enforced. Learn more in[ Workers platform limits](/workers/platform/limits/#number-of-routes-per-zone-when-using-wrangler-dev---remote).
+- `--remote` bayrağını kullanarak uzak geliştirme oturumu çalıştırdığınızda, zone başına 50 [rota](/workers/configuration/routing/routes/) sınırı uygulanır. [Workers platform limitleri](/workers/platform/limits/#number-of-routes-per-zone-when-using-wrangler-dev---remote) hakkında daha fazla bilgi edinin.

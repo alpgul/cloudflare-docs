@@ -1,32 +1,30 @@
 ---
 pcx_content_type: navigation
-title: 3rd Party Integrations 
+title: 3. Taraf Entegrasyonları
 head: []
-description: Connect to third-party databases such as Supabase,
-  Turso and PlanetScale) 
+description: Supabase, Turso ve PlanetScale gibi üçüncü taraf veritabanlarına bağlanın
 
 ---
 
 import { DirectoryListing } from "~/components"
 
-## Background
+## Arka Plan
 
-Connect to databases by configuring connection strings and credentials as [secrets](/workers/configuration/secrets/) in your Worker. 
+Veritabanlarına, Worker'ınızda bağlantı dizelerini ve kimlik bilgilerini [gizli anahtarlar](/workers/configuration/secrets/) olarak yapılandırarak bağlanın.
 
-:::note[Connecting to a regional database from a Worker?]
+:::note[Worker'dan bölgesel veritabanına bağlanıyor musunuz?]
 
-
-If your Worker is connecting to a regional database, you can reduce your query latency by using [Hyperdrive](/hyperdrive) and [Smart Placement](/workers/configuration/smart-placement/) which are both included in any Workers plan. Hyperdrive will pool your databases connections globally across Cloudflare's network. Smart Placement will monitor your application to run your Workers closest to your backend infrastructure when this reduces the latency of your Worker invocations. Learn more about [how Smart Placement works](/workers/configuration/smart-placement/).
+Worker'ınız bölgesel bir veritabanına bağlanıyorsa, herhangi bir Workers planında dahil olan [Hyperdrive](/hyperdrive) ve [Akıllı Yerleştirme](/workers/configuration/smart-placement/) kullanarak sorgu gecikmenizi azaltabilirsiniz. Hyperdrive, veritabanı bağlantılarınızı Cloudflare ağı boyunca global olarak havuzlayacaktır. Akıllı Yerleştirme, Worker çağrılarınızın gecikmesini azalttığında Worker'larınızı backend altyapınıza en yakın yerde çalıştırmak için uygulamanızı izleyecektir. [Akıllı Yerleştirme'nin nasıl çalıştığı](/workers/configuration/smart-placement/) hakkında daha fazla bilgi edinin.
 :::
 
-## Database credentials
+## Veritabanı kimlik bilgileri
 
-When you rotate or update database credentials, you must update the corresponding [secrets](/workers/configuration/secrets/) in your Worker. Use the [`wrangler secret put`](/workers/wrangler/commands/#secret) command to update secrets securely or update the secret directly in the [Cloudflare dashboard](https://dash.cloudflare.com/?to=/:account/workers/services/view/:worker/production/settings).
+Veritabanı kimlik bilgilerini döndürdüğünüzde veya güncellediğinizde, Worker'ınızdaki karşılık gelen [gizli anahtarları](/workers/configuration/secrets/) güncellemeniz gerekir. Gizli anahtarları güvenli bir şekilde güncellemek için [`wrangler secret put`](/workers/wrangler/commands/#secret) komutunu kullanın veya gizli anahtarı doğrudan [Cloudflare dashboard](https://dash.cloudflare.com/?to=/:account/workers/services/view/:worker/production/settings)'da güncelleyin.
 
-## Database limits
+## Veritabanı limitleri
 
-You can connect to multiple databases by configuring separate sets of secrets for each database connection. Use descriptive secret names to distinguish between different database connections (for example, `DATABASE_URL_PROD` and `DATABASE_URL_STAGING`).
+Her veritabanı bağlantısı için ayrı gizli anahtar setleri yapılandırarak birden fazla veritabanına bağlanabilirsiniz. Farklı veritabanı bağlantıları arasında ayrım yapmak için açıklayıcı gizli anahtar adları kullanın (örneğin, `DATABASE_URL_PROD` ve `DATABASE_URL_STAGING`).
 
-## Popular providers
+## Popüler sağlayıcılar
 
 <DirectoryListing />

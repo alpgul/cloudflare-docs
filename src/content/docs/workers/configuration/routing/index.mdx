@@ -1,26 +1,24 @@
 ---
 pcx_content_type: navigation
-title: Routes and domains
+title: Rotalar ve alanlar
 head: []
-description: Connect your Worker to an external endpoint (via Routes, Custom
-  Domains or a `workers.dev` subdomain) such that it can be accessed by the
-  Internet.
+description: Worker'ınızı harici bir endpoint'e (Rotalar, Özel Alanlar veya `workers.dev` alt alanı aracılığıyla) bağlayın, böylece Internet tarafından erişilebilir olsun.
 ---
 
-To allow a Worker to receive inbound HTTP requests, you must connect it to an external endpoint such that it can be accessed by the Internet.
+Bir Worker'ın gelen HTTP isteklerini alabilmesi için, Internet tarafından erişilebilir olması için onu harici bir endpoint'e bağlamanız gerekir.
 
-There are three types of routes:
+Üç tür rota vardır:
 
-- [Custom Domains](/workers/configuration/routing/custom-domains): Routes to a domain or subdomain (such as `example.com` or `shop.example.com`) within a Cloudflare zone where the Worker is the origin.
+- [Özel Alanlar](/workers/configuration/routing/custom-domains): Worker'ın origin olduğu Cloudflare zone içindeki bir alan veya alt alana (örneğin `example.com` veya `shop.example.com`) yönlendiren rotalar.
 
-- [Routes](/workers/configuration/routing/routes/): Routes that are set within a Cloudflare zone where your origin server, if you have one, is behind a Worker that the Worker can communicate with.
+- [Rotalar](/workers/configuration/routing/routes/): Origin sunucunuzun varsa Worker'ın iletişim kurabileceği bir Worker'ın arkasında olduğu Cloudflare zone içinde ayarlanan rotalar.
 
-- [`workers.dev`](/workers/configuration/routing/workers-dev/): A `workers.dev` subdomain route is automatically created for each Worker to help you getting started quickly. You may choose to [disable](/workers/configuration/routing/workers-dev/) your `workers.dev` subdomain.
+- [`workers.dev`](/workers/configuration/routing/workers-dev/): Her Worker için hızlı başlamanıza yardımcı olmak için otomatik olarak bir `workers.dev` alt alan rotası oluşturulur. [`workers.dev` alt alanınızı](/workers/configuration/routing/workers-dev/) devre dışı bırakmayı seçebilirsiniz.
 
-## What is best for me?
+## Benim için en iyisi nedir?
 
-It's recommended to run production Workers on a [Workers route or custom domain](/workers/configuration/routing/), rather than on your `workers.dev` subdomain. Your `workers.dev` subdomain is treated as a [Free website](https://www.cloudflare.com/plans/) and is intended for personal or hobby projects that aren't business-critical.
+Üretim Worker'larını `workers.dev` alt alanınızda değil, [Worker rotası veya özel alanda](/workers/configuration/routing/) çalıştırmanız önerilir. `workers.dev` alt alanınız [Ücretsiz web sitesi](https://www.cloudflare.com/plans/) olarak ele alınır ve iş açısından kritik olmayan kişisel veya hobi projeleri için tasarlanmıştır.
 
-Custom Domains are recommended for use cases where your Worker is your application's origin server. Custom Domains can also be invoked within the same zone via `fetch()`, unlike Routes.
+Worker'ınızın uygulamanızın origin sunucusu olduğu kullanım durumları için Özel Alanlar önerilir. Özel Alanlar ayrıca Rotaların aksine aynı zone içinde `fetch()` aracılığıyla çağrılabilir.
 
-Routes are recommended for use cases where your application's origin server is external to Cloudflare. Note that Routes cannot be the target of a same-zone `fetch()` call.
+Uygulamanızın origin sunucusunun Cloudflare dışında olduğu kullanım durumları için Rotalar önerilir. Rotaların aynı zone `fetch()` çağrısının hedefi olamayacağını unutmayın.

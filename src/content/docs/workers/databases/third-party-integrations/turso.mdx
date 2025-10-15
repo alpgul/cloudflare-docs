@@ -5,29 +5,29 @@ title: Turso
 
 import { Render, PackageManagers } from "~/components";
 
-[Turso](https://turso.tech/) is an edge-hosted, distributed database based on [libSQL](https://libsql.org/), an open-source fork of SQLite. Turso was designed to minimize query latency for applications where queries comes from anywhere in the world.
+[Turso](https://turso.tech/), SQLite'in açık kaynaklı bir fork'u olan [libSQL](https://libsql.org/) tabanlı kenar barındırılan, dağıtılmış veritabanıdır. Turso, sorguların dünyanın herhangi bir yerinden geldiği uygulamalar için sorgu gecikmesini minimize etmek üzere tasarlanmıştır.
 
-## Set up an integration with Turso
+## Turso ile entegrasyon kurma
 
-To set up an integration with Turso:
+Turso ile entegrasyon kurmak için:
 
-1. You need to install Turso CLI to create and populate a database. Use one of the following two commands in your terminal to install the Turso CLI:
+1. Veritabanı oluşturmak ve doldurmak için Turso CLI'yi yüklemeniz gerekir. Terminalinizde Turso CLI'yi yüklemek için aşağıdaki iki komuttan birini kullanın:
 
    ```sh
-   # On macOS and linux with homebrew
+   # macOS ve linux'ta homebrew ile
    brew install tursodatabase/tap/turso
 
-   # Manual scripted installation
+   # Manuel scriptli kurulum
    curl -sSfL https://get.tur.so/install.sh | bash
    ```
 
-   Next, run the following command to make sure the Turso CLI is installed:
+   Ardından, Turso CLI'nin yüklendiğinden emin olmak için aşağıdaki komutu çalıştırın:
 
    ```sh
    turso --version
    ```
 
-2. Before you create your first Turso database, you have to authenticate with your GitHub account by running:
+2. İlk Turso veritabanınızı oluşturmadan önce, GitHub hesabınızla kimlik doğrulaması yapmanız gerekir:
 
    ```sh
    turso auth login
@@ -38,7 +38,7 @@ To set up an integration with Turso:
    ✔  Success! Logged in as <YOUR_GITHUB_USERNAME>
    ```
 
-   After you have authenticated, you can create a database using the command `turso db create <DATABASE_NAME>`. Turso will create a database and automatically choose a location closest to you.
+   Kimlik doğrulaması yaptıktan sonra, `turso db create <DATABASE_NAME>` komutunu kullanarak bir veritabanı oluşturabilirsiniz. Turso bir veritabanı oluşturacak ve size en yakın konumu otomatik olarak seçecektir.
 
    ```sh
    turso db create my-db
@@ -46,20 +46,20 @@ To set up an integration with Turso:
 
    ```sh output
 
-   # Example:
+   # Örnek:
    Creating database my-db in Amsterdam, Netherlands (ams)
 
-   # Once succeeded:
+   # Başarılı olduktan sonra:
    Created database my-db in Amsterdam, Netherlands (ams) in 13 seconds.
    ```
 
-   With the first database created, you can now connect to it directly and execute SQL queries against it.
+   İlk veritabanı oluşturulduktan sonra, artık ona doğrudan bağlanabilir ve ona karşı SQL sorguları çalıştırabilirsiniz.
 
    ```sh
    turso db shell my-db
    ```
 
-3. Copy the following SQL query into the shell you just opened:
+3. Az önce açtığınız shell'e aşağıdaki SQL sorgusunu kopyalayın:
 
    ```sql
    CREATE TABLE elements (
@@ -82,35 +82,35 @@ To set up an integration with Turso:
      (10, 'Neon', 10, 'Ne');
    ```
 
-4. Configure the Turso database credentials in your Worker:
+4. Worker'ınızda Turso veritabanı kimlik bilgilerini yapılandırın:
 
-   You need to add your Turso database URL and authentication token as secrets to your Worker. First, get your database URL and create an authentication token:
+   Turso veritabanı URL'nizi ve kimlik doğrulama token'ınızı Worker'ınıza gizli anahtarlar olarak eklemeniz gerekir. Önce veritabanı URL'nizi alın ve bir kimlik doğrulama token'ı oluşturun:
 
    ```sh
-   # Get your database URL
+   # Veritabanı URL'nizi alın
    turso db show my-db --url
    
-   # Create an authentication token
+   # Kimlik doğrulama token'ı oluşturun
    turso db tokens create my-db
    ```
 
-   Then add these as secrets to your Worker using Wrangler:
+   Ardından bunları Wrangler kullanarak Worker'ınıza gizli anahtarlar olarak ekleyin:
 
    ```sh
-   # Add the database URL as a secret
+   # Veritabanı URL'sini gizli anahtar olarak ekle
    npx wrangler secret put TURSO_URL
-   # When prompted, paste your database URL
+   # İstendiğinde, veritabanı URL'nizi yapıştırın
    
-   # Add the authentication token as a secret  
+   # Kimlik doğrulama token'ını gizli anahtar olarak ekle  
    npx wrangler secret put TURSO_AUTH_TOKEN
-   # When prompted, paste your authentication token
+   # İstendiğinde, kimlik doğrulama token'ınızı yapıştırın
    ```
 
-5. In your Worker, install the Turso client library:
+5. Worker'ınızda Turso istemci kütüphanesini yükleyin:
 
    <PackageManagers pkg="@libsql/client" />
 
-6. The following example shows how to make a query to your Turso database in a Worker. The credentials needed to connect to Turso have been added as [secrets](/workers/configuration/secrets/) to your Worker.
+6. Aşağıdaki örnek, Worker'da Turso veritabanınıza nasıl sorgu yapılacağını gösterir. Turso'ya bağlanmak için gereken kimlik bilgileri Worker'ınıza [gizli anahtarlar](/workers/configuration/secrets/) olarak eklenmiştir.
 
    ```ts
    import { Client as LibsqlClient, createClient } from "@libsql/client/web";
@@ -157,11 +157,11 @@ To set up an integration with Turso:
    }
    ```
 
-   - The libSQL client library import `@libsql/client/web` must be imported exactly as shown when working with Cloudflare Workers. The non-web import will not work in the Workers environment.
-   - The `Env` interface contains the [environment variable](/workers/configuration/environment-variables/) and [secret](/workers/configuration/secrets/) defined when you added the Turso integration in step 4.
-   - The `Env` interface also caches the libSQL client object and router, which was created on the first request to the Worker.
-   - The Worker uses `buildLibsqlClient` to query the `elements` database and returns the response as a JSON object.
+   - libSQL istemci kütüphanesi import'u `@libsql/client/web`, Cloudflare Workers ile çalışırken tam olarak gösterildiği gibi import edilmelidir. Web olmayan import Workers ortamında çalışmayacaktır.
+   - `Env` interface'i, 4. adımda Turso entegrasyonunu eklediğinizde tanımladığınız [ortam değişkeni](/workers/configuration/environment-variables/) ve [gizli anahtar](/workers/configuration/secrets/) içerir.
+   - `Env` interface'i ayrıca libSQL istemci nesnesini ve router'ı önbelleğe alır, bu da Worker'a yapılan ilk istekte oluşturulmuştur.
+   - Worker, `elements` veritabanını sorgulamak için `buildLibsqlClient` kullanır ve yanıtı JSON nesnesi olarak döndürür.
 
-With your environment configured and your code ready, you can now test your Worker locally before you deploy.
+Ortamınız yapılandırıldıktan ve kodunuz hazır olduktan sonra, dağıtmadan önce Worker'ınızı yerel olarak test edebilirsiniz.
 
-To learn more about Turso, refer to [Turso's official documentation](https://docs.turso.tech).
+Turso hakkında daha fazla bilgi için [Turso'nun resmi dokümantasyonuna](https://docs.turso.tech) bakın.

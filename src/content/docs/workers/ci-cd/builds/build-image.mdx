@@ -1,72 +1,72 @@
 ---
 pcx_content_type: reference
-title: Build image
-description: Understand the build image used in Workers Builds.
+title: Build görüntüsü
+description: Workers Builds'da kullanılan build görüntüsünü anlayın.
 sidebar:
   order: 4
 ---
 
-Workers Builds uses a build image with support for a variety of languages and tools such as Node.js, Python, PHP, Ruby, and Go.
+Workers Builds, Node.js, Python, PHP, Ruby ve Go gibi çeşitli diller ve araçlar için destek içeren bir build görüntüsü kullanır.
 
-## Supported Tooling
+## Desteklenen Araçlar
 
-Workers Builds supports a variety of runtimes, languages, and tools. Builds will use the default versions listed below unless a custom version is detected or specified. You can [override the default versions](/workers/ci-cd/builds/build-image/#overriding-default-versions) using environment variables or version files. All versions are available for override.
+Workers Builds çeşitli runtime'lar, diller ve araçlar destekler. Build'ler, özel bir sürüm algılanmadığı veya belirtilmediği sürece aşağıda listelenen varsayılan sürümleri kullanacaktır. Ortam değişkenleri veya sürüm dosyaları kullanarak [varsayılan sürümleri geçersiz kılabilirsiniz](/workers/ci-cd/builds/build-image/#overriding-default-versions). Tüm sürümler geçersiz kılınabilir.
 
-:::note[Default version updates]
-The default versions will be updated regularly to the latest minor version. No major version updates will be made without notice. If you need a specific minor version, please specify it by [overriding the default version](/workers/ci-cd/builds/build-image/#overriding-default-versions).
+:::note[Varsayılan sürüm güncellemeleri]
+Varsayılan sürümler düzenli olarak en son küçük sürüme güncellenecektir. Habersiz büyük sürüm güncellemeleri yapılmayacaktır. Belirli bir küçük sürüme ihtiyacınız varsa, lütfen [varsayılan sürümü geçersiz kılarak](/workers/ci-cd/builds/build-image/#overriding-default-versions) belirtin.
 :::
 
 ### Runtime
 
-| Tool        | Default version | Environment variable | File                         |
-| ----------- | --------------- | -------------------- | ---------------------------- |
-| **Go**      | 1.24.3          | `GO_VERSION`         |                              |
-| **Node.js** | 22.16.0         | `NODE_VERSION`       | .nvmrc, .node-version        |
-| **Python**  | 3.13.3          | `PYTHON_VERSION`     | .python-version, runtime.txt |
-| **Ruby**    | 3.4.4           | `RUBY_VERSION`       | .ruby-version                |
+| Araç        | Varsayılan sürüm | Ortam değişkeni | Dosya                         |
+| ----------- | ---------------- | --------------- | ----------------------------- |
+| **Go**      | 1.24.3           | `GO_VERSION`     |                               |
+| **Node.js** | 22.16.0          | `NODE_VERSION`  | .nvmrc, .node-version         |
+| **Python** | 3.13.3           | `PYTHON_VERSION` | .python-version, runtime.txt  |
+| **Ruby**    | 3.4.4            | `RUBY_VERSION`  | .ruby-version                 |
 
-### Tools and languages
+### Araçlar ve diller
 
-| Tool        | Default version  | Environment variable |
-| ----------- | ---------------- | -------------------- |
-| **Bun**     | 1.2.15           | `BUN_VERSION`        |
-| **Hugo**    | extended_0.147.7 | `HUGO_VERSION`       |
-| **npm**     | 10.9.2           |                      |
-| **yarn**    | 4.9.1            | `YARN_VERSION`       |
-| **pnpm**    | 10.11.1          | `PNPM_VERSION`       |
-| **pip**     | 25.1.1           |                      |
-| **gem**     | 3.6.9            |                      |
-| **poetry**  | 2.1.3            |                      |
-| **pipx**    | 1.7.1            |                      |
-| **bundler** | 2.6.9            |                      |
+| Araç      | Varsayılan sürüm | Ortam değişkeni |
+| --------- | ---------------- | --------------- |
+| **Bun**   | 1.2.15           | `BUN_VERSION`   |
+| **Hugo**  | extended_0.147.7 | `HUGO_VERSION`  |
+| **npm**   | 10.9.2           |                 |
+| **yarn**  | 4.9.1            | `YARN_VERSION`  |
+| **pnpm**  | 10.11.1          | `PNPM_VERSION`  |
+| **pip**   | 25.1.1           |                 |
+| **gem**   | 3.6.9            |                 |
+| **poetry** | 2.1.3           |                 |
+| **pipx**  | 1.7.1            |                 |
+| **bundler** | 2.6.9          |                 |
 
-## Advanced Settings
+## Gelişmiş Ayarlar
 
-### Overriding Default Versions
+### Varsayılan Sürümleri Geçersiz Kılma
 
-If you need to override a [specific version](/workers/ci-cd/builds/build-image/#overriding-default-versions) of a language or tool within the image, you can specify it as a [build environment variable](/workers/ci-cd/builds/configuration/#build-settings), or set the relevant file in your source code as shown above.
+Görüntü içindeki bir dil veya aracın [belirli sürümünü](/workers/ci-cd/builds/build-image/#overriding-default-versions) geçersiz kılmanız gerekiyorsa, bunu [build ortam değişkeni](/workers/ci-cd/builds/configuration/#build-settings) olarak belirtebilir veya yukarıda gösterildiği gibi kaynak kodunuzda ilgili dosyayı ayarlayabilirsiniz.
 
-To set the version using a build environment variables, you can:
+Build ortam değişkenleri kullanarak sürümü ayarlamak için:
 
-1. Find the environment variable name for the language or tool and desired version (e.g. `NODE_VERSION = 22`)
-2. Add and save the environment variable on the dashboard by going to **Settings** > **Build** > **Build Variables and Secrets** in your Workers project
+1. Dil veya araç için ortam değişkeni adını ve istediğiniz sürümü bulun (örn. `NODE_VERSION = 22`)
+2. Workers projenizde **Settings** > **Build** > **Build Variables and Secrets**'a giderek dashboard'da ortam değişkenini ekleyin ve kaydedin
 
-Or, to set the version by adding a file to your project, you can:
+Veya projenize dosya ekleyerek sürümü ayarlamak için:
 
-1. Find the filename for the language or tool (e.g. `.nvmrc`)
-2. Add the specified file name to the root directory and set the desired version number as the file's content. For example, if the version number is 22, the file should contain '22'.
+1. Dil veya araç için dosya adını bulun (örn. `.nvmrc`)
+2. Belirtilen dosya adını kök dizine ekleyin ve istediğiniz sürüm numarasını dosyanın içeriği olarak ayarlayın. Örneğin, sürüm numarası 22 ise, dosya '22' içermelidir.
 
-### Skip dependency install
+### Bağımlılık kurulumunu atla
 
-You can add the following build variable to disable automatic dependency installation and run a custom install command instead.
+Otomatik bağımlılık kurulumunu devre dışı bırakmak ve bunun yerine özel kurulum komutu çalıştırmak için aşağıdaki build değişkenini ekleyebilirsiniz.
 
-| Build variable            | Value         |
-| ------------------------- | ------------- |
-| `SKIP_DEPENDENCY_INSTALL` | `1` or `true` |
+| Build değişkeni            | Değer         |
+| -------------------------- | ------------- |
+| `SKIP_DEPENDENCY_INSTALL` | `1` veya `true` |
 
-## Pre-installed Packages
+## Önceden Kurulu Paketler
 
-In the following table, review the pre-installed packages in the build image. The packages are installed with `apt`, a package manager for Linux distributions.
+Aşağıdaki tabloda, build görüntüsündeki önceden kurulu paketleri gözden geçirin. Paketler Linux dağıtımları için paket yöneticisi olan `apt` ile kurulmuştur.
 
 |                   |                   |                   |
 | ----------------- | ----------------- | ----------------- |
@@ -80,11 +80,11 @@ In the following table, review the pre-installed packages in the build image. Th
 | `gnupg`           | `liblzma-dev`     | `zstd`            |
 | `libffi-dev`      | `libncurses5-dev` |                   |
 
-## Build Environment
+## Build Ortamı
 
-Workers Builds are run in the following environment:
+Workers Builds aşağıdaki ortamda çalıştırılır:
 
 |                       |              |
 | --------------------- | ------------ |
-| **Build Environment** | Ubuntu 24.04 |
-| **Architecture**      | x86_64       |
+| **Build Ortamı**      | Ubuntu 24.04 |
+| **Mimari**            | x86_64       |

@@ -1,6 +1,6 @@
 ---
 pcx_content_type: configuration
-title: Workers Sites configuration
+title: Workers Sites yapılandırması
 noindex: true
 sidebar:
   order: 4
@@ -10,30 +10,30 @@ import { Render, WranglerConfig } from "~/components";
 
 <Render file="workers_sites" product="workers" />
 
-Workers Sites require the latest version of [Wrangler](https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler).
+Workers Sites [Wrangler](https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler)'ın en son sürümünü gerektirir.
 
-## Wrangler configuration file
+## Wrangler yapılandırma dosyası
 
-There are a few specific configuration settings for Workers Sites in your Wrangler file:
+Wrangler dosyanızda Workers Sites için birkaç özel yapılandırma ayarı vardır:
 
-- `bucket` required
-  - The directory containing your static assets, path relative to your [Wrangler configuration file](/workers/wrangler/configuration/). Example: `bucket = "./public"`.
+- `bucket` gerekli
+  - Statik varlıklarınızı içeren dizin, [Wrangler yapılandırma dosyanıza](/workers/wrangler/configuration/) göre yol. Örnek: `bucket = "./public"`.
 
-- `include` optional
-  - A list of gitignore-style patterns for files or directories in `bucket` you exclusively want to upload. Example: `include = ["upload_dir"]`.
+- `include` isteğe bağlı
+  - `bucket` içinde yalnızca yüklemek istediğiniz dosya veya dizinler için gitignore tarzı desenler listesi. Örnek: `include = ["upload_dir"]`.
 
-- `exclude` optional
-  - A list of gitignore-style patterns for files or directories in `bucket` you want to exclude from uploads. Example: `exclude = ["ignore_dir"]`.
+- `exclude` isteğe bağlı
+  - `bucket` içinde yüklemelerden hariç tutmak istediğiniz dosya veya dizinler için gitignore tarzı desenler listesi. Örnek: `exclude = ["ignore_dir"]`.
 
-To learn more about the optional `include` and `exclude` fields, refer to [Ignoring subsets of static assets](#ignoring-subsets-of-static-assets).
+İsteğe bağlı `include` ve `exclude` alanları hakkında daha fazla bilgi için [Statik varlıkların alt kümelerini yok sayma](#ignoring-subsets-of-static-assets)'ya bakın.
 
 :::note
 
-If your project uses [environments](/workers/wrangler/environments/), make sure to place `site` above any environment-specific configuration blocks.
+Projeniz [ortamlar](/workers/wrangler/environments/) kullanıyorsa, `site`'yi ortam özel yapılandırma bloklarının üzerine yerleştirdiğinizden emin olun.
 
 :::
 
-Example of a [Wrangler configuration file](/workers/wrangler/configuration/):
+[Wrangler yapılandırma dosyası](/workers/wrangler/configuration/) örneği:
 
 <WranglerConfig>
 
@@ -54,64 +54,63 @@ route = "https://staging.example.com/docs*"
 
 </WranglerConfig>
 
-## Storage limits
+## Depolama limitleri
 
-For very exceptionally large pages, Workers Sites might not work for you. There is a 25 MiB limit per page or file.
+Çok büyük sayfalar için Workers Sites sizin için çalışmayabilir. Sayfa veya dosya başına 25 MiB limit vardır.
 
-## Ignoring subsets of static assets
+## Statik varlıkların alt kümelerini yok sayma
 
-Workers Sites require [Wrangler](https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler) - make sure to use the [latest version](/workers/wrangler/install-and-update/#update-wrangler).
+Workers Sites [Wrangler](https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler) gerektirir - [en son sürümü](/workers/wrangler/install-and-update/#update-wrangler) kullandığınızdan emin olun.
 
-There are cases where users may not want to upload certain static assets to their Workers Sites.
-In this case, Workers Sites can also be configured to ignore certain files or directories using logic
-similar to [Cargo's optional include and exclude fields](https://doc.rust-lang.org/cargo/reference/manifest.html#the-exclude-and-include-fields-optional).
+Kullanıcıların belirli statik varlıkları Workers Sites'e yüklemek istemeyebileceği durumlar vardır.
+Bu durumda, Workers Sites [Cargo'nun isteğe bağlı include ve exclude alanları](https://doc.rust-lang.org/cargo/reference/manifest.html#the-exclude-and-include-fields-optional) benzeri mantık kullanarak belirli dosya veya dizinleri yok sayacak şekilde yapılandırılabilir.
 
-This means that you should use gitignore semantics when declaring which directory entries to include or ignore in uploads.
+Bu, yüklemelerde hangi dizin girişlerini dahil edeceğinizi veya yok sayacağınızı belirtirken gitignore semantiği kullanmanız gerektiği anlamına gelir.
 
-### Exclusively including files/directories
+### Yalnızca dosya/dizinleri dahil etme
 
-If you want to include only a certain set of files or directories in your `bucket`, you can add an `include` field to your `[site]` section of your Wrangler file:
-
-<WranglerConfig>
-
-```toml
-[site]
-bucket = "./public"
-include = ["included_dir"] # must be an array.
-```
-
-</WranglerConfig>
-
-Wrangler will only upload files or directories matching the patterns in the `include` array.
-
-### Excluding files/directories
-
-If you want to exclude files or directories in your `bucket`, you can add an `exclude` field to your `[site]` section of your Wrangler file:
+`bucket`'ınızda yalnızca belirli bir dosya veya dizin kümesini dahil etmek istiyorsanız, Wrangler dosyanızın `[site]` bölümüne `include` alanı ekleyebilirsiniz:
 
 <WranglerConfig>
 
 ```toml
 [site]
 bucket = "./public"
-exclude = ["excluded_dir"] # must be an array.
+include = ["included_dir"] # dizi olmalı.
 ```
 
 </WranglerConfig>
 
-Wrangler will ignore files or directories matching the patterns in the `exclude` array when uploading assets to Workers KV.
+Wrangler yalnızca `include` dizisindeki desenlerle eşleşen dosya veya dizinleri yükleyecektir.
+
+### Dosya/dizinleri hariç tutma
+
+`bucket`'ınızdaki dosya veya dizinleri hariç tutmak istiyorsanız, Wrangler dosyanızın `[site]` bölümüne `exclude` alanı ekleyebilirsiniz:
+
+<WranglerConfig>
+
+```toml
+[site]
+bucket = "./public"
+exclude = ["excluded_dir"] # dizi olmalı.
+```
+
+</WranglerConfig>
+
+Wrangler, varlıkları Workers KV'ye yüklerken `exclude` dizisindeki desenlerle eşleşen dosya veya dizinleri yok sayacaktır.
 
 ### Include > exclude
 
-If you provide both `include` and `exclude` fields, the `include` field will be used and the `exclude` field will be ignored.
+Hem `include` hem de `exclude` alanları sağlarsanız, `include` alanı kullanılacak ve `exclude` alanı yok sayılacaktır.
 
-### Default ignored entries
+### Varsayılan yok sayılan girişler
 
-Wrangler will always ignore:
+Wrangler her zaman şunları yok sayacaktır:
 
 - `node_modules`
-- Hidden files and directories
-- Symlinks
+- Gizli dosyalar ve dizinler
+- Symlink'ler
 
-#### More about include/exclude patterns
+#### Include/exclude desenleri hakkında daha fazla bilgi
 
-Learn more about the standard patterns used for include and exclude in the [gitignore documentation](https://git-scm.com/docs/gitignore).
+Include ve exclude için kullanılan standart desenler hakkında daha fazla bilgi için [gitignore dokümantasyonuna](https://git-scm.com/docs/gitignore) bakın.

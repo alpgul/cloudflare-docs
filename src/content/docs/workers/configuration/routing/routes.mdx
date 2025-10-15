@@ -1,64 +1,64 @@
 ---
 pcx_content_type: concept
-title: Routes
+title: Rotalar
 ---
 
 import { WranglerConfig, DashButton, Steps } from "~/components";
 
-## Background
+## Arka Plan
 
-Routes allow users to map a URL pattern to a Worker. When a request comes in to the Cloudflare network that matches the specified URL pattern, your Worker will execute on that route.
+Rotalar, kullanıcıların bir URL desenini Worker'a eşlemesine olanak tanır. Cloudflare ağına belirtilen URL deseniyle eşleşen bir istek geldiğinde, Worker'ınız o rota üzerinde çalışacaktır.
 
-Routes are a set of rules that evaluate against a request's URL. Routes are recommended for you if you have a designated application server you always need to communicate with. Calling `fetch()` on the incoming `Request` object will trigger a subrequest to your application server, as defined in the **DNS** settings of your Cloudflare zone.
+Rotalar, bir isteğin URL'sine karşı değerlendirilen kurallar kümesidir. Her zaman iletişim kurmanız gereken belirli bir uygulama sunucunuz varsa Rotalar önerilir. Gelen `Request` nesnesi üzerinde `fetch()` çağırmak, Cloudflare zone'unuzun **DNS** ayarlarında tanımlandığı gibi uygulama sunucunuza bir alt istek tetikleyecektir.
 
-Routes add Workers functionality to your existing proxied hostnames, in front of your application server. These allow your Workers to act as a proxy and perform any necessary work before reaching out to an application server behind Cloudflare.
+Rotalar, uygulama sunucunuzun önünde mevcut proxy hostname'lerinize Workers işlevselliği ekler. Bunlar Worker'larınızın proxy olarak hareket etmesine ve Cloudflare'in arkasındaki bir uygulama sunucusuna ulaşmadan önce gerekli işleri gerçekleştirmesine olanak tanır.
 
-![Routes work with your applications defined in Cloudflare DNS](~/assets/images/workers/learning/routes-diagram.png)
+![Rotalar Cloudflare DNS'de tanımlanan uygulamalarınızla çalışır](~/assets/images/workers/learning/routes-diagram.png)
 
-Routes can `fetch()` Custom Domains and take precedence if configured on the same hostname. If you would like to run a logging Worker in front of your application, for example, you can create a Custom Domain on your application Worker for `app.example.com`, and create a Route for your logging Worker at `app.example.com/*`. Calling `fetch()` will invoke the application Worker on your Custom Domain. Note that Routes cannot be the target of a same-zone `fetch()` call.
+Rotalar Özel Alanları `fetch()` edebilir ve aynı hostname'de yapılandırılırsa öncelik alır. Örneğin, uygulamanızın önünde bir loglama Worker'ı çalıştırmak istiyorsanız, uygulama Worker'ınız için `app.example.com` üzerinde bir Özel Alan oluşturabilir ve loglama Worker'ınız için `app.example.com/*` rotası oluşturabilirsiniz. `fetch()` çağırmak Özel Alanınızdaki uygulama Worker'ını çağıracaktır. Rotaların aynı zone `fetch()` çağrısının hedefi olamayacağını unutmayın.
 
-## Set up a route
+## Rota ayarlama
 
-To add a route, you must have:
+Rota eklemek için şunlara sahip olmalısınız:
 
-1. An [active Cloudflare zone](/dns/zone-setups/).
-2. A Worker to invoke.
-3. A DNS record set up for the [domain](/dns/manage-dns-records/how-to/create-zone-apex/) or [subdomain](/dns/manage-dns-records/how-to/create-subdomain/) proxied by Cloudflare (also known as orange-clouded) you would like to route to.
+1. [Aktif Cloudflare zone](/dns/zone-setups/).
+2. Çağrılacak bir Worker.
+3. Rota yapmak istediğiniz Cloudflare tarafından proxy edilen (turuncu bulutlu olarak da bilinen) [alan](/dns/manage-dns-records/how-to/create-zone-apex/) veya [alt alan](/dns/manage-dns-records/how-to/create-subdomain/) için ayarlanmış DNS kaydı.
 
 :::caution
 
-Route setup will differ depending on if your application's origin is a Worker or not. If your Worker is your application's origin, use [Custom Domains](/workers/configuration/routing/custom-domains/).
+Rota kurulumu, uygulamanızın origin'inin Worker olup olmadığına bağlı olarak farklılık gösterecektir. Worker'ınız uygulamanızın origin'iyse [Özel Alanlar](/workers/configuration/routing/custom-domains/) kullanın.
 :::
 
-If your Worker is not your application's origin, follow the instructions below to set up a route.
+Worker'ınız uygulamanızın origin'i değilse, rota ayarlamak için aşağıdaki talimatları izleyin.
 
 :::note
 
-Routes can also be created via the API. Refer to the [Workers Routes API documentation](/api/resources/workers/subresources/routes/methods/create/) for more information.
+Rotalar API aracılığıyla da oluşturulabilir. Daha fazla bilgi için [Workers Routes API dokümantasyonuna](/api/resources/workers/subresources/routes/methods/create/) bakın.
 :::
 
-### Set up a route in the dashboard
+### Dashboard'da rota ayarlama
 
-Before you set up a route, make sure you have a DNS record set up for the [domain](/dns/manage-dns-records/how-to/create-zone-apex/) or [subdomain](/dns/manage-dns-records/how-to/create-subdomain/) you would like to route to.
+Rota ayarlamadan önce, rota yapmak istediğiniz [alan](/dns/manage-dns-records/how-to/create-zone-apex/) veya [alt alan](/dns/manage-dns-records/how-to/create-subdomain/) için DNS kaydı ayarladığınızdan emin olun.
 
-To set up a route in the dashboard:
+Dashboard'da rota ayarlamak için:
 
 <Steps>
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.
+1. Cloudflare dashboard'da **Workers & Pages** sayfasına gidin.
 
    <DashButton url="/?to=/:account/workers-and-pages" />
 
-2. In **Overview**, select your Worker.
-3. Go to **Settings** > **Domains & Routes** > **Add** > **Route**.
-4. Select the zone and enter the route pattern.
-5. Select **Add route**.
+2. **Overview**'da Worker'ınızı seçin.
+3. **Settings** > **Domains & Routes** > **Add** > **Route**'a gidin.
+4. Zone'u seçin ve rota desenini girin.
+5. **Add route**'u seçin.
 </Steps>
 
-### Set up a route in the Wrangler configuration file
+### Wrangler yapılandırma dosyasında rota ayarlama
 
-Before you set up a route, make sure you have a DNS record set up for the [domain](/dns/manage-dns-records/how-to/create-zone-apex/) or [subdomain](/dns/manage-dns-records/how-to/create-subdomain/) you would like to route to.
+Rota ayarlamadan önce, rota yapmak istediğiniz [alan](/dns/manage-dns-records/how-to/create-zone-apex/) veya [alt alan](/dns/manage-dns-records/how-to/create-subdomain/) için DNS kaydı ayarladığınızdan emin olun.
 
-To configure a route using your [Wrangler configuration file](/workers/wrangler/configuration/), refer to the following example.
+[Wrangler yapılandırma dosyanızı](/workers/wrangler/configuration/) kullanarak rota yapılandırmak için aşağıdaki örneğe bakın.
 
 <WranglerConfig>
 
@@ -67,7 +67,7 @@ To configure a route using your [Wrangler configuration file](/workers/wrangler/
 pattern = "subdomain.example.com/*"
 zone_name = "example.com"
 
-# or
+# veya
 
 [[routes]]
 pattern = "subdomain.example.com/*"
@@ -76,19 +76,17 @@ zone_id = "<YOUR_ZONE_ID>"
 
 </WranglerConfig>
 
-Add the `zone_name` or `zone_id` option after each route. The `zone_name` and `zone_id` options are interchangeable. If using `zone_id`, find your zone ID by:
+Her rotadan sonra `zone_name` veya `zone_id` seçeneğini ekleyin. `zone_name` ve `zone_id` seçenekleri birbirinin yerine kullanılabilir. `zone_id` kullanıyorsanız, zone ID'nizi şu şekilde bulun:
 
 <Steps>
-1. Go to the Zone Overview page in the Cloudflare dashboard.
+1. Cloudflare dashboard'da Zone Overview sayfasına gidin.
 
    <DashButton url="/?to=/:account/:zone/" />
 
-2. Find the **Zone ID** in the left-hand side of **Overview**.
+2. **Overview**'ın sol tarafında **Zone ID**'yi bulun.
 </Steps>
 
-To add multiple routes:
-
-
+Birden fazla rota eklemek için:
 
 <WranglerConfig>
 
@@ -104,94 +102,93 @@ zone_id = "<YOUR_ZONE_ID>"
 
 </WranglerConfig>
 
-## Matching behavior
+## Eşleştirme davranışı
 
-Route patterns look like this:
+Rota desenleri şu şekilde görünür:
 
 ```txt
 https://*.example.com/images/*
 ```
 
-This pattern would match all HTTPS requests destined for a subhost of
-example.com and whose paths are prefixed by `/images/`.
+Bu desen, example.com'un bir alt hostuna yönelik ve yolları `/images/` ile başlayan tüm HTTPS istekleriyle eşleşir.
 
-A pattern to match all requests looks like this:
+Tüm isteklerle eşleşen bir desen şu şekilde görünür:
 
 ```txt
 *example.com/*
 ```
 
-While they look similar to a [regex](https://en.wikipedia.org/wiki/Regular_expression) pattern, route patterns follow specific rules:
+[Regex](https://en.wikipedia.org/wiki/Regular_expression) desenine benzer görünseler de, rota desenleri belirli kuralları takip eder:
 
-- The only supported operator is the wildcard (`*`), which matches zero or more of any character.
+- Desteklenen tek operatör, sıfır veya daha fazla karakterle eşleşen joker (`*`) karakteridir.
 
-- Route patterns may not contain infix wildcards or query parameters. For example, neither `example.com/*.jpg` nor `example.com/?foo=*` are valid route patterns.
+- Rota desenleri infix jokerler veya sorgu parametreleri içeremez. Örneğin, `example.com/*.jpg` veya `example.com/?foo=*` geçerli rota desenleri değildir.
 
-- When more than one route pattern could match a request URL, the most specific route pattern wins. For example, the pattern `www.example.com/*` would take precedence over `*.example.com/*` when matching a request for `https://www.example.com/`. The pattern `example.com/hello/*` would take precedence over `example.com/*` when matching a request for `example.com/hello/world`.
+- Birden fazla rota deseni bir istek URL'siyle eşleşebildiğinde, en spesifik rota deseni kazanır. Örneğin, `https://www.example.com/` için bir istek eşleştirirken `www.example.com/*` deseni `*.example.com/*` deseninden öncelik alır. `example.com/hello/world` için bir istek eşleştirirken `example.com/hello/*` deseni `example.com/*` deseninden öncelik alır.
 
-- Route pattern matching considers the entire request URL, including the query parameter string. Since route patterns may not contain query parameters, the only way to have a route pattern match URLs with query parameters is to terminate it with a wildcard, `*`.
+- Rota deseni eşleştirmesi, sorgu parametresi dizesi dahil olmak üzere tüm istek URL'sini dikkate alır. Rota desenleri sorgu parametreleri içeremediği için, sorgu parametreleri olan URL'lerle eşleşen bir rota desenine sahip olmanın tek yolu onu joker `*` ile sonlandırmaktır.
 
-- The path component of route patterns is case sensitive, for example, `example.com/Images/*` and `example.com/images/*` are two distinct routes.
+- Rota desenlerinin yol bileşeni büyük/küçük harf duyarlıdır, örneğin `example.com/Images/*` ve `example.com/images/*` iki farklı rotadır.
 
-- For routes created before October 15th, 2023, the host component of route patterns is case sensitive, for example, `example.com/*` and `Example.com/*` are two distinct routes.
+- 15 Ekim 2023'ten önce oluşturulan rotalar için, rota desenlerinin host bileşeni büyük/küçük harf duyarlıdır, örneğin `example.com/*` ve `Example.com/*` iki farklı rotadır.
 
-- For routes created on or after October 15th, 2023, the host component of route patterns is not case sensitive, for example, `example.com/*` and `Example.com/*` are equivalent routes.
+- 15 Ekim 2023 veya sonrasında oluşturulan rotalar için, rota desenlerinin host bileşeni büyük/küçük harf duyarlı değildir, örneğin `example.com/*` ve `Example.com/*` eşdeğer rotalardır.
 
-A route can be specified without being associated with a Worker. This will act to negate any less specific patterns. For example, consider this pair of route patterns, one with a Workers script and one without:
+Bir rota Worker ile ilişkilendirilmeden belirtilebilir. Bu, daha az spesifik desenleri geçersiz kılacaktır. Örneğin, biri Workers script'i olan ve biri olmayan bu rota deseni çiftini düşünün:
 
 ```txt
-*example.com/images/cat.png -> <no script>
+*example.com/images/cat.png -> <script yok>
 *example.com/images/*       -> worker-script
 ```
 
-In this example, all requests destined for example.com and whose paths are prefixed by `/images/` would be routed to `worker-script`, _except_ for `/images/cat.png`, which would bypass Workers completely. Requests with a path of `/images/cat.png?foo=bar` would be routed to `worker-script`, due to the presence of the query string.
+Bu örnekte, example.com'a yönelik ve yolları `/images/` ile başlayan tüm istekler `worker-script`'e yönlendirilecektir, `/images/cat.png` hariç, bu tamamen Workers'ı atlayacaktır. `/images/cat.png?foo=bar` yoluna sahip istekler, sorgu dizesinin varlığı nedeniyle `worker-script`'e yönlendirilecektir.
 
-## Validity
+## Geçerlilik
 
-The following set of rules govern route pattern validity.
+Aşağıdaki kurallar kümesi rota deseni geçerliliğini yönetir.
 
-#### Route patterns must include your zone
+#### Rota desenleri zone'unuzu içermelidir
 
-If your zone is `example.com`, then the simplest possible route pattern you can have is `example.com`, which would match `http://example.com/` and `https://example.com/`, and nothing else. As with a URL, there is an implied path of `/` if you do not specify one.
+Zone'unuz `example.com` ise, sahip olabileceğiniz en basit rota deseni `example.com`'dur, bu `http://example.com/` ve `https://example.com/` ile eşleşir ve başka hiçbir şeyle eşleşmez. URL gibi, belirtmezseniz `/` yolunun örtük olduğu varsayılır.
 
-#### Route patterns may not contain any query parameters
+#### Rota desenleri herhangi bir sorgu parametresi içeremez
 
-For example, `https://example.com/?anything` is not a valid route pattern.
+Örneğin, `https://example.com/?anything` geçerli bir rota deseni değildir.
 
-#### Route patterns may optionally begin with `http://` or `https://`
+#### Rota desenleri isteğe bağlı olarak `http://` veya `https://` ile başlayabilir
 
-If you omit a scheme in your route pattern, it will match both `http://` and `https://` URLs. If you include `http://` or `https://`, it will only match HTTP or HTTPS requests, respectively.
+Rota deseninizde bir şema atlarsanız, hem `http://` hem de `https://` URL'leriyle eşleşir. `http://` veya `https://` dahil ederseniz, sırasıyla yalnızca HTTP veya HTTPS istekleriyle eşleşir.
 
-- `https://*.example.com/` matches `https://www.example.com/` but not `http://www.example.com/`.
+- `https://*.example.com/` `https://www.example.com/` ile eşleşir ancak `http://www.example.com/` ile eşleşmez.
 
-- `*.example.com/` matches both `https://www.example.com/` and `http://www.example.com/`.
+- `*.example.com/` hem `https://www.example.com/` hem de `http://www.example.com/` ile eşleşir.
 
-#### Hostnames may optionally begin with `*`
+#### Hostname'ler isteğe bağlı olarak `*` ile başlayabilir
 
-If a route pattern hostname begins with `*`, then it matches the host and all subhosts. If a route pattern hostname begins with `*.`, then it only matches all subhosts.
+Rota deseni hostname'i `*` ile başlarsa, host ve tüm alt hostlarla eşleşir. Rota deseni hostname'i `*.` ile başlarsa, yalnızca tüm alt hostlarla eşleşir.
 
-- `*example.com/` matches `https://example.com/` and `https://www.example.com/`.
+- `*example.com/` hem `https://example.com/` hem de `https://www.example.com/` ile eşleşir.
 
-- `*.example.com/` matches `https://www.example.com/` but not `https://example.com/`.
+- `*.example.com/` `https://www.example.com/` ile eşleşir ancak `https://example.com/` ile eşleşmez.
 
-#### Paths may optionally end with `*`
+#### Yollar isteğe bağlı olarak `*` ile bitebilir
 
-If a route pattern path ends with `*`, then it matches all suffixes of that path.
+Rota deseni yolu `*` ile bitiyorsa, o yolun tüm sonekleriyle eşleşir.
 
-- `https://example.com/path*` matches `https://example.com/path` and `https://example.com/path2` and `https://example.com/path/readme.txt`
+- `https://example.com/path*` `https://example.com/path` ve `https://example.com/path2` ve `https://example.com/path/readme.txt` ile eşleşir
 
 :::caution
 
-There is a well-known bug associated with path matching concerning wildcards (`*`) and forward slashes (`/`) that is documented in [Known issues](/workers/platform/known-issues/).
+Jokerler (`*`) ve ileri eğik çizgiler (`/`) ile ilgili yol eşleştirmesi konusunda [Bilinen sorunlar](/workers/platform/known-issues/)'da belgelenen iyi bilinen bir hata vardır.
 
 :::
 
-#### Domains and subdomains must have a DNS Record
+#### Alanlar ve alt alanların DNS Kaydı olmalıdır
 
-All domains and subdomains must have a [DNS record](/dns/manage-dns-records/how-to/create-dns-records/) to be proxied on Cloudflare and used to invoke a Worker. For example, if you want to put a Worker on `myname.example.com`, and you have added `example.com` to Cloudflare but have not added any DNS records for `myname.example.com`, any request to `myname.example.com` will result in the error `ERR_NAME_NOT_RESOLVED`.
+Tüm alanlar ve alt alanların Cloudflare'de proxy edilmesi ve Worker çağırmak için kullanılması için [DNS kaydı](/dns/manage-dns-records/how-to/create-dns-records/) olmalıdır. Örneğin, `myname.example.com` üzerine Worker koymak istiyorsanız ve `example.com`'u Cloudflare'e eklediyseniz ancak `myname.example.com` için herhangi bir DNS kaydı eklemediyseniz, `myname.example.com`'a yapılan herhangi bir istek `ERR_NAME_NOT_RESOLVED` hatasıyla sonuçlanacaktır.
 
 :::caution
 
-If you have previously used the Cloudflare dashboard to add an `AAAA` record for `myname` to `example.com`, pointing to `100::` (the [reserved IPv6 discard prefix](https://tools.ietf.org/html/rfc6666)), Cloudflare recommends creating a [Custom Domain](/workers/configuration/routing/custom-domains/) pointing to your Worker instead.
+Daha önce Cloudflare dashboard'u kullanarak `example.com`'a `myname` için `100::` ([ayrılmış IPv6 discard prefix](https://tools.ietf.org/html/rfc6666)) işaret eden bir `AAAA` kaydı eklediyseniz, Cloudflare bunun yerine Worker'ınıza işaret eden [Özel Alan](/workers/configuration/routing/custom-domains/) oluşturmanızı önerir.
 
 :::

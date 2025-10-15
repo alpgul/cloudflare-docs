@@ -1,50 +1,50 @@
 ---
 pcx_content_type: configuration
-title: Git integration
-description: Learn how to add and manage your Git integration for Workers Builds
+title: Git entegrasyonu
+description: Workers Builds için Git entegrasyonunuzu nasıl ekleyeceğinizi ve yöneteceğinizi öğrenin
 sidebar:
   order: 3
 ---
 
 import { DashButton, Steps } from "~/components";
 
-Cloudflare supports connecting your [GitHub](/workers/ci-cd/builds/git-integration/github-integration/) and [GitLab](/workers/ci-cd/builds/git-integration/gitlab-integration/) repository to your Cloudflare Worker, and will automatically deploy your code every time you push a change.
+Cloudflare, [GitHub](/workers/ci-cd/builds/git-integration/github-integration/) ve [GitLab](/workers/ci-cd/builds/git-integration/gitlab-integration/) deponuzu Cloudflare Worker'ınıza bağlamayı destekler ve her değişiklik push ettiğinizde kodunuzu otomatik olarak dağıtır.
 
-Adding a Git integration also lets you monitor build statuses directly in your Git provider using [pull request comments](/workers/ci-cd/builds/git-integration/github-integration/#pull-request-comment), [check runs](/workers/ci-cd/builds/git-integration/github-integration/#check-run), or [commit statuses](/workers/ci-cd/builds/git-integration/gitlab-integration/#commit-status), so you can manage deployments without leaving your workflow.
+Git entegrasyonu eklemek ayrıca [pull request yorumları](/workers/ci-cd/builds/git-integration/github-integration/#pull-request-comment), [check runs](/workers/ci-cd/builds/git-integration/github-integration/#check-run) veya [commit statuses](/workers/ci-cd/builds/git-integration/gitlab-integration/#commit-status) kullanarak build durumlarını doğrudan Git sağlayıcınızda izlemenize olanak tanır, böylece iş akışınızdan ayrılmadan dağıtımları yönetebilirsiniz.
 
-## Supported Git Providers
+## Desteklenen Git Sağlayıcıları
 
-Cloudflare supports connecting Cloudflare Workers to your GitHub and GitLab repositories. Workers Builds does not currently support connecting self-hosted instances of GitHub or GitLab.
+Cloudflare, Cloudflare Workers'ı GitHub ve GitLab depolarınıza bağlamayı destekler. Workers Builds şu anda self-hosted GitHub veya GitLab örneklerini bağlamayı desteklememektedir.
 
-If you using a different Git provider (e.g. Bitbucket), you can use an [external CI/CD provider (e.g. GitHub Actions)](/workers/ci-cd/external-cicd/) and deploy using [Wrangler CLI](/workers/wrangler/commands/#deploy).
+Farklı bir Git sağlayıcısı (örn. Bitbucket) kullanıyorsanız, [harici CI/CD sağlayıcısı (örn. GitHub Actions)](/workers/ci-cd/external-cicd/) kullanabilir ve [Wrangler CLI](/workers/wrangler/commands/#deploy) ile dağıtım yapabilirsiniz.
 
-## Add a Git Integration
+## Git Entegrasyonu Ekle
 
-Workers Builds provides direct integration with GitHub and GitLab accounts, including both individual and organization accounts, that are _not_ self-hosted.
+Workers Builds, self-hosted _olmayan_ bireysel ve organizasyon hesapları dahil olmak üzere GitHub ve GitLab hesaplarıyla doğrudan entegrasyon sağlar.
 
-If you do not have a Git account linked to your Cloudflare account, you will be prompted to set up an installation to GitHub or GitLab when [connecting a repository](/workers/ci-cd/builds/#get-started) for the first time, or when adding a new Git account. Follow the prompts and authorize the Cloudflare Git integration.
+Cloudflare hesabınıza bağlı Git hesabınız yoksa, [depo bağlarken](/workers/ci-cd/builds/#get-started) ilk kez veya yeni Git hesabı eklerken GitHub veya GitLab kurulumu yapmanız istenecektir. İstemleri takip edin ve Cloudflare Git entegrasyonunu yetkilendirin.
 
-![Git providers](~/assets/images/workers/platform/ci-cd/workers-git-provider.png)
+![Git sağlayıcıları](~/assets/images/workers/platform/ci-cd/workers-git-provider.png)
 
-You can check the following pages to see if your Git integration has been installed:
+Git entegrasyonunuzun kurulup kurulmadığını kontrol etmek için aşağıdaki sayfaları kontrol edebilirsiniz:
 
-- [GitHub Applications page](https://github.com/settings/installations) (if you are in an organization, select **Switch settings context** to access your GitHub organization settings)
-- [GitLab Authorized Applications page](https://gitlab.com/-/profile/applications)
+- [GitHub Applications sayfası](https://github.com/settings/installations) (bir organizasyonda iseniz, GitHub organizasyon ayarlarınıza erişmek için **Switch settings context**'i seçin)
+- [GitLab Authorized Applications sayfası](https://gitlab.com/-/profile/applications)
 
-For details on providing access to organization accounts, see [GitHub organizational access](/workers/ci-cd/builds/git-integration/github-integration/#organizational-access) and [GitLab organizational access](/workers/ci-cd/builds/git-integration/gitlab-integration/#organizational-access).
+Organizasyon hesaplarına erişim sağlama ayrıntıları için [GitHub organizasyon erişimi](/workers/ci-cd/builds/git-integration/github-integration/#organizational-access) ve [GitLab organizasyon erişimi](/workers/ci-cd/builds/git-integration/gitlab-integration/#organizational-access)'ne bakın.
 
-## Manage a Git Integration
+## Git Entegrasyonunu Yönet
 
-To manage your Git installation:
+Git kurulumunuzu yönetmek için:
 
 <Steps>
-1. Go to the **Workers & Pages** page in the Cloudflare dashboard.
+1. Cloudflare dashboard'da **Workers & Pages** sayfasına gidin.
 
    <DashButton url="/?to=/:account/workers-and-pages" />
 
-2. Select your Worker.
-3. Go to **Settings** > **Builds**.
-4. Under **Git Repository**, select **Manage**.
+2. Worker'ınızı seçin.
+3. **Settings** > **Builds**'e gidin.
+4. **Git Repository** altında **Manage**'i seçin.
 </Steps>
 
-This can be useful for managing repository access or troubleshooting installation issues by reinstalling. For more details, see the [GitHub](/workers/ci-cd/builds/git-integration/github-integration) and [GitLab](/workers/ci-cd/builds/git-integration/gitlab-integration) guides for how to manage your installation.
+Bu, depo erişimini yönetmek veya kurulum sorunlarını yeniden kurarak gidermek için yararlı olabilir. Daha fazla ayrıntı için kurulumunuzu nasıl yöneteceğiniz konusunda [GitHub](/workers/ci-cd/builds/git-integration/github-integration) ve [GitLab](/workers/ci-cd/builds/git-integration/gitlab-integration) rehberlerine bakın.

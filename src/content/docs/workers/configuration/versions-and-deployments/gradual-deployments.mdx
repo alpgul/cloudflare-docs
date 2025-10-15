@@ -1,30 +1,30 @@
 ---
 pcx_content_type: configuration
-title: Gradual deployments
+title: Kademeli dağıtımlar
 head: []
-description: Incrementally deploy code changes to your Workers with gradual deployments.
+description: Kademeli dağıtımlarla Worker'larınıza kod değişikliklerini artımlı olarak dağıtın.
 ---
 
 import { Example, DashButton } from "~/components";
 
-Gradual Deployments give you the ability to incrementally deploy new [versions](/workers/configuration/versions-and-deployments/#versions) of Workers by splitting traffic across versions.
+Kademeli Dağıtımlar, trafiği sürümler arasında bölerek Worker'ların yeni [sürümlerini](/workers/configuration/versions-and-deployments/#versions) artımlı olarak dağıtma yeteneği verir.
 
-![Gradual Deployments](~/assets/images/workers/platform/versions-and-deployments/gradual-deployments.png)
+![Kademeli Dağıtımlar](~/assets/images/workers/platform/versions-and-deployments/gradual-deployments.png)
 
-Using gradual deployments, you can:
+Kademeli dağıtımları kullanarak şunları yapabilirsiniz:
 
-- Gradually shift traffic to a newer version of your Worker.
-- Monitor error rates and exceptions across versions using [analytics and logs](/workers/configuration/versions-and-deployments/gradual-deployments/#observability) tooling.
-- [Roll back](/workers/configuration/versions-and-deployments/rollbacks/) to a previously stable version if you notice issues when deploying a new version.
+- Trafiği Worker'ınızın daha yeni bir sürümüne kademeli olarak kaydırın.
+- [Analitik ve log](/workers/configuration/versions-and-deployments/gradual-deployments/#observability) araçları kullanarak sürümler arasında hata oranlarını ve istisnaları izleyin.
+- Yeni sürüm dağıtırken sorun fark ederseniz daha önceki kararlı sürüme [geri dönün](/workers/configuration/versions-and-deployments/rollbacks/).
 
-## Use gradual deployments
+## Kademeli dağıtımları kullanma
 
-The following section guides you through an example usage of gradual deployments. You will choose to use either [Wrangler](/workers/configuration/versions-and-deployments/gradual-deployments/#via-wrangler) or the Cloudflare dashboard to:
+Aşağıdaki bölüm sizi kademeli dağıtımların örnek kullanımı boyunca yönlendirir. Şunları yapmak için [Wrangler](/workers/configuration/versions-and-deployments/gradual-deployments/#via-wrangler) veya Cloudflare dashboard'u kullanmayı seçeceksiniz:
 
-- Create a new Worker.
-- Publish a new version of that Worker without deploying it.
-- Create a gradual deployment between the two versions.
-- Progress the deployment of the new version to 100% of traffic.
+- Yeni bir Worker oluşturun.
+- O Worker'ın yeni sürümünü dağıtmadan yayınlayın.
+- İki sürüm arasında kademeli dağıtım oluşturun.
+- Yeni sürümün dağıtımını %100 trafiğe ilerletin.
 
 ### Via Wrangler
 

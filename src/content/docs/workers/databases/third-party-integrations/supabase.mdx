@@ -5,29 +5,29 @@ title: Supabase
 
 import { Render, PackageManagers, Tabs, TabItem } from "~/components";
 
-[Supabase](https://supabase.com/) is an open source Firebase alternative and a PostgreSQL database service that offers real-time functionality, database backups, and extensions. With Supabase, developers can quickly set up a PostgreSQL database and build applications.
+[Supabase](https://supabase.com/), açık kaynaklı Firebase alternatifi ve gerçek zamanlı işlevsellik, veritabanı yedeklemeleri ve uzantılar sunan PostgreSQL veritabanı hizmetidir. Supabase ile geliştiriciler hızla PostgreSQL veritabanı kurabilir ve uygulamalar oluşturabilir.
 
 :::note
 
-The Supabase client (`@supabase/supabase-js`) provides access to Supabase's various features, including database access. If you need access to all of the Supabase client functionality, use the Supabase client. 
+Supabase istemcisi (`@supabase/supabase-js`), veritabanı erişimi dahil olmak üzere Supabase'in çeşitli özelliklerine erişim sağlar. Supabase istemci işlevselliğinin tamamına erişime ihtiyacınız varsa, Supabase istemcisini kullanın.
 
-If you want to connect directly to the Supabase Postgres database, connect using [Hyperdrive](/hyperdrive). Hyperdrive can provide lower latencies because it performs the database connection setup and connection pooling across Cloudflare's network. Hyperdrive supports native database drivers, libraries, and ORMs, and is included in all [Workers plans](/hyperdrive/platform/pricing/). Learn more about Hyperdrive in [How Hyperdrive Works](/hyperdrive/configuration/how-hyperdrive-works/). 
+Supabase Postgres veritabanına doğrudan bağlanmak istiyorsanız, [Hyperdrive](/hyperdrive) kullanarak bağlanın. Hyperdrive, veritabanı bağlantı kurulumunu ve bağlantı havuzlamasını Cloudflare ağı boyunca gerçekleştirdiği için daha düşük gecikmeler sağlayabilir. Hyperdrive yerel veritabanı sürücülerini, kütüphanelerini ve ORM'leri destekler ve tüm [Workers planlarında](/hyperdrive/platform/pricing/) dahildir. [Hyperdrive'un Nasıl Çalıştığı](/hyperdrive/configuration/how-hyperdrive-works/) hakkında daha fazla bilgi edinin.
 
 :::
 
 <Tabs>
-	    <TabItem label="Supabase client">
+	    <TabItem label="Supabase istemcisi">
 
-### Supabase client setup
+### Supabase istemci kurulumu
 
-To set up an integration with Supabase:
+Supabase ile entegrasyon kurmak için:
 
-1. You need to have an existing Supabase database to connect to. [Create a Supabase database](https://supabase.com/docs/guides/database/tables#creating-tables) or [have an existing database to connect to Supabase and load data from](https://supabase.com/docs/guides/database/tables#loading-data).
+1. Bağlanmak için mevcut bir Supabase veritabanına sahip olmanız gerekir. [Supabase veritabanı oluşturun](https://supabase.com/docs/guides/database/tables#creating-tables) veya [bağlanmak için mevcut bir veritabanınız olsun ve Supabase'den veri yükleyin](https://supabase.com/docs/guides/database/tables#loading-data).
 
-2. Create a `countries` table with the following query. You can create a table in your Supabase dashboard in two ways:
+2. Aşağıdaki sorgu ile bir `countries` tablosu oluşturun. Supabase dashboard'unuzda tablo oluşturmanın iki yolu vardır:
 
-   - Use the table editor, which allows you to set up Postgres similar to a spreadsheet.
-   - Alternatively, use the [SQL editor](https://supabase.com/docs/guides/database/overview#the-sql-editor):
+   - Tablo editörünü kullanın, bu da Postgres'i elektronik tablo gibi kurmanıza olanak tanır.
+   - Alternatif olarak, [SQL editörünü](https://supabase.com/docs/guides/database/overview#the-sql-editor) kullanın:
 
    ```sql
    CREATE TABLE countries (
@@ -36,7 +36,7 @@ To set up an integration with Supabase:
    );
    ```
 
-3. Insert some data in your newly created table. Run the following commands to add countries to your table:
+3. Yeni oluşturduğunuz tabloya bazı veriler ekleyin. Tablonuza ülkeler eklemek için aşağıdaki komutları çalıştırın:
 
    ```sql
    INSERT INTO countries (name) VALUES ('United States');
@@ -44,25 +44,25 @@ To set up an integration with Supabase:
    INSERT INTO countries (name) VALUES ('The Netherlands');
    ```
 
-4. Configure the Supabase database credentials in your Worker:
+4. Worker'ınızda Supabase veritabanı kimlik bilgilerini yapılandırın:
 
-   You need to add your Supabase URL and anon key as secrets to your Worker. Get these from your [Supabase Dashboard](https://supabase.com/dashboard) under **Settings** > **API**, then add them as secrets using Wrangler:
+   Supabase URL'nizi ve anon anahtarınızı Worker'ınıza gizli anahtarlar olarak eklemeniz gerekir. Bunları [Supabase Dashboard](https://supabase.com/dashboard)'dan **Settings** > **API** altından alın, ardından bunları Wrangler kullanarak gizli anahtarlar olarak ekleyin:
 
    ```sh
-   # Add the Supabase URL as a secret
+   # Supabase URL'sini gizli anahtar olarak ekle
    npx wrangler secret put SUPABASE_URL
-   # When prompted, paste your Supabase project URL
+   # İstendiğinde, Supabase proje URL'nizi yapıştırın
 
-   # Add the Supabase anon key as a secret
+   # Supabase anon anahtarını gizli anahtar olarak ekle
    npx wrangler secret put SUPABASE_KEY
-   # When prompted, paste your Supabase anon/public key
+   # İstendiğinde, Supabase anon/genel anahtarınızı yapıştırın
    ```
 
-5. In your Worker, install the `@supabase/supabase-js` driver to connect to your database and start manipulating data:
+5. Worker'ınızda, veritabanınıza bağlanmak ve veri manipülasyonuna başlamak için `@supabase/supabase-js` sürücüsünü yükleyin:
 
    <PackageManagers pkg="@supabase/supabase-js" />
 
-6. The following example shows how to make a query to your Supabase database in a Worker. The credentials needed to connect to Supabase have been added as secrets to your Worker.
+6. Aşağıdaki örnek, Worker'da Supabase veritabanınıza nasıl sorgu yapılacağını gösterir. Supabase'e bağlanmak için gereken kimlik bilgileri Worker'ınıza gizli anahtarlar olarak eklenmiştir.
 
    ```js
    import { createClient } from "@supabase/supabase-js";
@@ -81,12 +81,12 @@ To set up an integration with Supabase:
    };
    ```
 
-To learn more about Supabase, refer to [Supabase's official documentation](https://supabase.com/docs).
+Supabase hakkında daha fazla bilgi için [Supabase'in resmi dokümantasyonuna](https://supabase.com/docs) bakın.
 
 </TabItem>
 	<TabItem label="Hyperdrive">
 
-When connecting to Supabase with Hyperdrive, you connect directly to the underlying Postgres database. This provides the lowest latency for databsae queries when accessed server-side from Workers. To connect to Supabase using [Hyperdrive](/hyperdrive), follow these steps:
+Supabase'e Hyperdrive ile bağlanırken, altta yatan Postgres veritabanına doğrudan bağlanırsınız. Bu, Workers'dan sunucu tarafında erişildiğinde veritabanı sorguları için en düşük gecikmeyi sağlar. Supabase'e [Hyperdrive](/hyperdrive) kullanarak bağlanmak için şu adımları izleyin:
 
          <Render file="supabase-partial" product="hyperdrive"/>
     </TabItem>

@@ -1,61 +1,61 @@
 ---
 pcx_content_type: concept
 title: Build watch paths
-description: Reduce compute for your monorepo by specifying paths for Workers Builds to skip
+description: Workers Builds'ın atlaması için yolları belirterek monorepo'nuz için hesaplamayı azaltın
 sidebar:
   order: 7
 ---
 
-When you connect a git repository to Workers, by default a change to any file in the repository will trigger a build. You can configure Workers to include or exclude specific paths to specify if Workers should skip a build for a given path. This can be especially helpful if you are using a monorepo project structure and want to limit the amount of builds being kicked off.
+Git deposunu Workers'a bağladığınızda, varsayılan olarak depodaki herhangi bir dosyadaki değişiklik bir build tetikleyecektir. Workers'ın belirli bir yol için build'i atlaması gerekip gerekmediğini belirtmek için Workers'ın dahil etmesi veya hariç tutması gereken belirli yolları yapılandırabilirsiniz. Bu, özellikle monorepo proje yapısı kullanıyorsanız ve tetiklenen build miktarını sınırlamak istiyorsanız yararlı olabilir.
 
-## Configure Paths
+## Yolları Yapılandır
 
-To configure which paths are included and excluded:
+Hangi yolların dahil edildiğini ve hariç tutulduğunu yapılandırmak için:
 
-1. In **Overview**, select your Workers project.
-2. Go to **Settings** > **Build** > **Build watch paths**. Workers will default to setting your project’s includes paths to everything (\[\*]) and excludes paths to nothing (`[]`).
+1. **Overview**'da Workers projenizi seçin.
+2. **Settings** > **Build** > **Build watch paths**'e gidin. Workers varsayılan olarak projenizin dahil edilen yollarını her şeye (\[\*]) ve hariç tutulan yolları hiçbir şeye (`[]`) ayarlayacaktır.
 
-The configuration fields can be filled in two ways:
+Yapılandırma alanları iki şekilde doldurulabilir:
 
-- **Static filepaths**: Enter the precise name of the file you are looking to include or exclude (for example, `docs/README.md`).
-- **Wildcard syntax:** Use wildcards to match multiple path directories. You can specify wildcards at the start or end of your rule.
+- **Statik dosya yolları**: Dahil etmek veya hariç tutmak istediğiniz dosyanın tam adını girin (örneğin, `docs/README.md`).
+- **Wildcard sözdizimi**: Birden fazla yol dizinini eşleştirmek için wildcard'ları kullanın. Wildcard'ları kuralınızın başına veya sonuna yerleştirebilirsiniz.
 
-:::note[Wildcard syntax]
+:::note[Wildcard sözdizimi]
 
-A wildcard (`*`) is a character that is used within rules. It can be placed alone to match anything or placed at the start or end of a rule to allow for better control over branch configuration. A wildcard will match zero or more characters.For example, if you wanted to match all branches that started with `fix/` then you would create the rule `fix/*` to match strings like `fix/1`, `fix/bugs`or `fix/`.
+Wildcard (`*`), kurallar içinde kullanılan bir karakterdir. Herhangi bir şeyle eşleşmek için tek başına yerleştirilebilir veya dal yapılandırması üzerinde daha iyi kontrol sağlamak için kuralın başına veya sonuna yerleştirilebilir. Wildcard sıfır veya daha fazla karakterle eşleşir. Örneğin, `fix/` ile başlayan tüm dallarla eşleşmek istiyorsanız, `fix/1`, `fix/bugs` veya `fix/` gibi dizelerle eşleşmek için `fix/*` kuralını oluşturursunuz.
 
 :::
 
-For each path in a push event, build watch paths will be evaluated as follows:
+Push olayındaki her yol için build watch paths şu şekilde değerlendirilecektir:
 
-- Paths satisfying excludes conditions are ignored first
-- Any remaining paths are checked against includes conditions
-- If any matching path is found, a build is triggered. Otherwise the build is skipped
+- Hariç tutma koşullarını karşılayan yollar önce göz ardı edilir
+- Kalan yollar dahil etme koşullarına karşı kontrol edilir
+- Eşleşen herhangi bir yol bulunursa build tetiklenir. Aksi takdirde build atlanır
 
-Workers will bypass the path matching for a push event and default to building the project if:
+Workers, aşağıdaki durumlarda push olayı için yol eşleştirmesini atlayacak ve varsayılan olarak projeyi build edecektir:
 
-- A push event contains 0 file changes, in case a user pushes a empty push event to trigger a build
-- A push event contains 3000+ file changes or 20+ commits
+- Push olayı 0 dosya değişikliği içeriyorsa (kullanıcı build'i tetiklemek için boş push olayı push etmişse)
+- Push olayı 3000+ dosya değişikliği veya 20+ commit içeriyorsa
 
-## Examples
+## Örnekler
 
-### Example 1
+### Örnek 1
 
-If you want to trigger a build from all changes within a set of directories, such as all changes in the folders `project-a/` and `packages/`
+`project-a/` ve `packages/` klasörlerindeki tüm değişiklikler gibi bir dizi dizin içindeki tüm değişikliklerden build tetiklemek istiyorsanız
 
-- Include paths: `project-a/*, packages/*`
-- Exclude paths: \`\`
+- Dahil edilen yollar: `project-a/*, packages/*`
+- Hariç tutulan yollar: ``
 
-### Example 2
+### Örnek 2
 
-If you want to trigger a build for any changes, but want to exclude changes to a certain directory, such as all changes in a docs/ directory
+Herhangi bir değişiklik için build tetiklemek istiyorsanız, ancak docs/ dizinindeki tüm değişiklikler gibi belirli bir dizindeki değişiklikleri hariç tutmak istiyorsanız
 
-- Include paths: `*`
-- Exclude paths: `docs/*`
+- Dahil edilen yollar: `*`
+- Hariç tutulan yollar: `docs/*`
 
-### Example 3
+### Örnek 3
 
-If you want to trigger a build for a specific file or specific filetype, for example all files ending in `.md`.
+Belirli bir dosya veya belirli dosya türü için build tetiklemek istiyorsanız, örneğin `.md` ile biten tüm dosyalar.
 
-- Include paths: `*.md`
-- Exclude paths: \`\`
+- Dahil edilen yollar: `*.md`
+- Hariç tutulan yollar: ``

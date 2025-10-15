@@ -1,56 +1,56 @@
 ---
 pcx_content_type: concept
-title: Compatibility flags
+title: Uyumluluk bayrakları
 rss: https://github.com/cloudflare/cloudflare-docs/commits/production/src/content/compatibility-flags.atom
 head: []
-description: Opt into a specific features of the Workers runtime for your Workers project.
+description: Workers projeniz için Workers runtime'ının belirli özelliklerini seçin.
 ---
 
 import { CompatibilityFlags, WranglerConfig, Render } from "~/components";
 
-Compatibility flags enable specific features. They can be useful if you want to help the Workers team test upcoming changes that are not yet enabled by default, or if you need to hold back a change that your code depends on but still want to apply other compatibility changes.
+Uyumluluk bayrakları belirli özellikleri etkinleştirir. Workers ekibinin henüz varsayılan olarak etkinleştirilmemiş yaklaşan değişiklikleri test etmesine yardım etmek istiyorsanız veya kodunuzun bağımlı olduğu bir değişikliği geri tutmak istiyorsanız ancak yine de diğer uyumluluk değişikliklerini uygulamak istiyorsanız yararlı olabilirler.
 
-Compatibility flags will often have a date in which they are enabled by default, and so, by specifying a [`compatibility_date`](/workers/configuration/compatibility-dates) for your Worker, you can quickly enable all of these various compatibility flags up to, and including, that date.
+Uyumluluk bayrakları genellikle varsayılan olarak etkinleştirildikleri bir tarihe sahip olacaktır ve bu nedenle Worker'ınız için bir [`compatibility_date`](/workers/configuration/compatibility-dates) belirterek, o tarihe kadar ve dahil olmak üzere tüm bu çeşitli uyumluluk bayraklarını hızlıca etkinleştirebilirsiniz.
 
-## Setting compatibility flags
+## Uyumluluk bayraklarını ayarlama
 
-You may provide a list of `compatibility_flags`, which enable or disable specific changes.
+Belirli değişiklikleri etkinleştiren veya devre dışı bırakan `compatibility_flags` listesi sağlayabilirsiniz.
 
-#### Via Wrangler
+#### Wrangler ile
 
-Compatibility flags can be set in a Worker's [Wrangler configuration file](/workers/wrangler/configuration/).
+Uyumluluk bayrakları bir Worker'ın [Wrangler yapılandırma dosyasında](/workers/wrangler/configuration/) ayarlanabilir.
 
-This example enables the specific flag `formdata_parser_supports_files`, which is described [below](/workers/configuration/compatibility-flags/#formdata-parsing-supports-file). As of the specified date, `2021-09-14`, this particular flag was not yet enabled by default, but, by specifying it in `compatibility_flags`, we can enable it anyway. `compatibility_flags` can also be used to disable changes that became the default in the past.
+Bu örnek, [aşağıda](/workers/configuration/compatibility-flags/#formdata-parsing-supports-file) açıklanan `formdata_parser_supports_files` özel bayrağını etkinleştirir. Belirtilen tarih olan `2021-09-14` itibarıyla, bu özel bayrak henüz varsayılan olarak etkinleştirilmemişti, ancak `compatibility_flags`'de belirterek yine de etkinleştirebiliriz. `compatibility_flags` ayrıca geçmişte varsayılan hale gelen değişiklikleri devre dışı bırakmak için de kullanılabilir.
 
 <WranglerConfig>
 
 ```toml
-# Opt into backwards-incompatible changes through September 14, 2021.
+# 14 Eylül 2021'e kadar geriye dönük uyumsuz değişiklikleri seçin.
 compatibility_date = "2021-09-14"
-# Also opt into an upcoming fix to the FormData API.
+# Ayrıca FormData API'sine yaklaşan bir düzeltmeyi seçin.
 compatibility_flags = [ "formdata_parser_supports_files" ]
 ```
 
 </WranglerConfig>
 
-#### Via the Cloudflare Dashboard
+#### Cloudflare Dashboard ile
 
-Compatibility flags can be updated in the Workers settings on the [Cloudflare dashboard](https://dash.cloudflare.com/).
+Uyumluluk bayrakları [Cloudflare dashboard](https://dash.cloudflare.com/)'daki Workers ayarlarında güncellenebilir.
 
-#### Via the Cloudflare API
+#### Cloudflare API ile
 
-Compatibility flags can be set when uploading a Worker using the [Workers Script API](/api/resources/workers/subresources/scripts/methods/update/) or [Workers Versions API](/api/resources/workers/subresources/scripts/subresources/versions/methods/create/) in the request body's `metadata` field.
+Uyumluluk bayrakları, [Workers Script API](/api/resources/workers/subresources/scripts/methods/update/) veya [Workers Versions API](/api/resources/workers/subresources/scripts/subresources/versions/methods/create/) kullanarak bir Worker yüklerken istek gövdesinin `metadata` alanında ayarlanabilir.
 
-## Node.js compatibility flag
+## Node.js uyumluluk bayrağı
 
 :::note
-[The `nodejs_compat` flag](/workers/runtime-apis/nodejs/) also enables `nodejs_compat_v2` as long as your compatibility date is 2024-09-23 or later. The v2 flag improves runtime Node.js compatibility by bundling additional polyfills and globals into your Worker. However, this improvement increases bundle size.
+[`nodejs_compat` bayrağı](/workers/runtime-apis/nodejs/) ayrıca uyumluluk tarihiniz 2024-09-23 veya daha sonraysa `nodejs_compat_v2`'yi de etkinleştirir. v2 bayrağı, Worker'ınıza ek polyfill'ler ve global'ler paketleyerek runtime Node.js uyumluluğunu iyileştirir. Ancak bu iyileştirme paket boyutunu artırır.
 
-If your compatibility date is 2024-09-22 or before and you want to enable v2, add the `nodejs_compat_v2` in addition to the `nodejs_compat` flag.
-If your compatibility date is after 2024-09-23, but you want to disable v2 to avoid increasing your bundle size, add the `no_nodejs_compat_v2` in addition to the `nodejs_compat flag`.
+Uyumluluk tarihiniz 2024-09-22 veya daha önceyse ve v2'yi etkinleştirmek istiyorsanız, `nodejs_compat` bayrağına ek olarak `nodejs_compat_v2`'yi ekleyin.
+Uyumluluk tarihiniz 2024-09-23'ten sonraysa ancak paket boyutunuzu artırmamak için v2'yi devre dışı bırakmak istiyorsanız, `nodejs_compat` bayrağına ek olarak `no_nodejs_compat_v2`'yi ekleyin.
 :::
 
-A [growing subset](/workers/runtime-apis/nodejs/) of Node.js APIs are available directly as [Runtime APIs](/workers/runtime-apis/nodejs), with no need to add polyfills to your own code. To enable these APIs in your Worker, add the `nodejs_compat` compatibility flag to your [Wrangler configuration file](/workers/wrangler/configuration/):
+Node.js API'lerinin [büyüyen bir alt kümesi](/workers/runtime-apis/nodejs/) doğrudan [Runtime API'leri](/workers/runtime-apis/nodejs) olarak mevcuttur ve kendi kodunuza polyfill eklemenize gerek yoktur. Bu API'leri Worker'ınızda etkinleştirmek için [Wrangler yapılandırma dosyanıza](/workers/wrangler/configuration/) `nodejs_compat` uyumluluk bayrağını ekleyin:
 
 <Render file="nodejs_compat" product="workers" />
 
@@ -62,9 +62,9 @@ compatibility_flags = [ "nodejs_compat" ]
 
 </WranglerConfig>
 
-As additional Node.js APIs are added, they will be made available under the `nodejs_compat` compatibility flag. Unlike most other compatibility flags, we do not expect the `nodejs_compat` to become active by default at a future date.
+Ek Node.js API'leri eklendikçe, bunlar `nodejs_compat` uyumluluk bayrağı altında kullanılabilir hale gelecektir. Çoğu diğer uyumluluk bayrağının aksine, `nodejs_compat`'ın gelecekteki bir tarihte varsayılan olarak aktif hale gelmesini beklemiyoruz.
 
-The Node.js `AsyncLocalStorage` API is a particularly useful feature for Workers. To enable only the `AsyncLocalStorage` API, use the `nodejs_als` compatibility flag.
+Node.js `AsyncLocalStorage` API'si Workers için özellikle yararlı bir özelliktir. Yalnızca `AsyncLocalStorage` API'sini etkinleştirmek için `nodejs_als` uyumluluk bayrağını kullanın.
 
 <WranglerConfig>
 
@@ -74,14 +74,14 @@ compatibility_flags = [ "nodejs_als" ]
 
 </WranglerConfig>
 
-## Flags history
+## Bayrak geçmişi
 
-Newest flags are listed first.
+En yeni bayraklar önce listelenir.
 
 <CompatibilityFlags />
 
-## Experimental flags
+## Deneysel bayraklar
 
-These flags can be enabled via `compatibility_flags`, but are not yet scheduled to become default on any particular date.
+Bu bayraklar `compatibility_flags` aracılığıyla etkinleştirilebilir, ancak henüz belirli bir tarihte varsayılan hale gelmek için planlanmamıştır.
 
 <CompatibilityFlags experimental />

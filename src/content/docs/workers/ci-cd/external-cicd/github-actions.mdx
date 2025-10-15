@@ -1,54 +1,54 @@
 ---
 pcx_content_type: how-to
 title: GitHub Actions
-description: Integrate Workers development into your existing GitHub Actions workflows.
+description: Workers geliştirmesini mevcut GitHub Actions iş akışlarınıza entegre edin.
 ---
 import { DashButton } from "~/components";
 
-You can deploy Workers with [GitHub Actions](https://github.com/marketplace/actions/deploy-to-cloudflare-workers-with-wrangler). Here is how you can set up your GitHub Actions workflow.
+[GitHub Actions](https://github.com/marketplace/actions/deploy-to-cloudflare-workers-with-wrangler) ile Workers'ları dağıtabilirsiniz. GitHub Actions iş akışınızı nasıl kurabileceğiniz aşağıda verilmiştir.
 
-## 1. Authentication
+## 1. Kimlik doğrulama
 
-When running Wrangler locally, authentication to the Cloudflare API happens via the [`wrangler login`](/workers/wrangler/commands/#login) command, which initiates an interactive authentication flow. Since CI/CD environments are non-interactive, Wrangler requires a [Cloudflare API token](/fundamentals/api/get-started/create-token/) and [account ID](/fundamentals/account/find-account-and-zone-ids/) to authenticate with the Cloudflare API.
+Wrangler'ı yerel olarak çalıştırırken, Cloudflare API'sine kimlik doğrulama [`wrangler login`](/workers/wrangler/commands/#login) komutu aracılığıyla gerçekleşir ve bu da etkileşimli bir kimlik doğrulama akışını başlatır. CI/CD ortamları etkileşimli olmadığından, Wrangler Cloudflare API'si ile kimlik doğrulaması için bir [Cloudflare API token](/fundamentals/api/get-started/create-token/) ve [hesap ID](/fundamentals/account/find-account-and-zone-ids/) gerektirir.
 
-### Cloudflare account ID
+### Cloudflare hesap ID
 
-To find your Cloudflare account ID, refer to [Find account and zone IDs](/fundamentals/account/find-account-and-zone-ids/).
+Cloudflare hesap ID'nizi bulmak için [Hesap ve zone ID'lerini bulma](/fundamentals/account/find-account-and-zone-ids/)'ya bakın.
 
 ### API token
 
-To create an API token to authenticate Wrangler in your CI job:
-1. In the Cloudflare dashboard, go to the **Account API tokens** page.
+CI işinizde Wrangler'ı kimlik doğrulaması için bir API token oluşturmak için:
+1. Cloudflare dashboard'da **Account API tokens** sayfasına gidin.
 
    <DashButton url="/?to=/:account/api-tokens" />
 
-2. Select **Create Token** > find **Edit Cloudflare Workers** > select **Use Template**.
-3. Customize your token name.
-4. Scope your token.
+2. **Create Token** > **Edit Cloudflare Workers**'ı bulun > **Use Template**'i seçin.
+3. Token adınızı özelleştirin.
+4. Token'ınızı kapsamını belirleyin.
 
-You will need to choose the account and zone resources that the generated API token will have access to. We recommend scoping these down as much as possible to limit the access of your token. For example, if you have access to three different Cloudflare accounts, you should restrict the generated API token to only the account on which you will be deploying a Worker.
+Oluşturulan API token'ın erişimi olacağı hesap ve zone kaynaklarını seçmeniz gerekecek. Token'ınızın erişimini sınırlamak için bunları mümkün olduğunca daraltmanızı öneririz. Örneğin, üç farklı Cloudflare hesabına erişiminiz varsa, oluşturulan API token'ı yalnızca Worker dağıtacağınız hesaba kısıtlamalısınız.
 
-## 2. Set up CI/CD
+## 2. CI/CD kurulumu
 
-The method for running Wrangler in your CI/CD environment will depend on the specific setup for your project (whether you use GitHub Actions/Jenkins/GitLab or something else entirely).
+Wrangler'ı CI/CD ortamınızda çalıştırma yöntemi, projenizin özel kurulumuna bağlı olacaktır (GitHub Actions/Jenkins/GitLab kullanıp kullanmadığınız veya tamamen farklı bir şey kullanıp kullanmadığınız).
 
-To set up your CI/CD:
+CI/CD'nizi kurmak için:
 
-1. Go to your CI/CD platform and add the following as secrets:
+1. CI/CD platformunuza gidin ve aşağıdakileri sırlar olarak ekleyin:
 
-- `CLOUDFLARE_ACCOUNT_ID`: Set to the [Cloudflare account ID](#cloudflare-account-id) for the account on which you want to deploy your Worker.
-- `CLOUDFLARE_API_TOKEN`: Set to the [Cloudflare API token you generated](#api-token).
+- `CLOUDFLARE_ACCOUNT_ID`: Worker'ınızı dağıtmak istediğiniz hesap için [Cloudflare hesap ID](#cloudflare-account-id)'sine ayarlayın.
+- `CLOUDFLARE_API_TOKEN`: [Oluşturduğunuz Cloudflare API token](#api-token)'ına ayarlayın.
 
 :::caution
 
-Don't store the value of `CLOUDFLARE_API_TOKEN` in your repository, as it gives access to deploy Workers on your account. Instead, you should utilize your CI/CD provider's support for storing secrets.
+`CLOUDFLARE_API_TOKEN`'ın değerini deponuzda saklamayın, çünkü bu hesabınızda Workers'ları dağıtma erişimi verir. Bunun yerine, CI/CD sağlayıcınızın sırları saklama desteğini kullanmalısınız.
 :::
 
-2. Create a workflow that will be responsible for deploying the Worker. This workflow should run `wrangler deploy`. Review an example [GitHub Actions](https://docs.github.com/en/actions/using-workflows/about-workflows) workflow in the follow section.
+2. Worker'ı dağıtmaktan sorumlu olacak bir iş akışı oluşturun. Bu iş akışı `wrangler deploy` çalıştırmalıdır. Aşağıdaki bölümde örnek bir [GitHub Actions](https://docs.github.com/en/actions/using-workflows/about-workflows) iş akışını inceleyin.
 
 ### GitHub Actions
 
-Cloudflare provides [an official action](https://github.com/cloudflare/wrangler-action) for deploying Workers. Refer to the following example workflow which deploys your Worker on push to the `main` branch.
+Cloudflare, Workers'ları dağıtmak için [resmi bir action](https://github.com/cloudflare/wrangler-action) sağlar. `main` dalına push yapıldığında Worker'ınızı dağıtan aşağıdaki örnek iş akışına bakın.
 
 ```yaml
 name: Deploy Worker

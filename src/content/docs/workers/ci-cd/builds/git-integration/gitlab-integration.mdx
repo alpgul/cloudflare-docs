@@ -1,62 +1,62 @@
 ---
 pcx_content_type: reference
-title: GitLab integration
-description: Learn how to manage your GitLab integration for Workers Builds
+title: GitLab entegrasyonu
+description: Workers Builds için GitLab entegrasyonunuzu nasıl yöneteceğinizi öğrenin
 sidebar:
   order: 2
 ---
 
-Cloudflare supports connecting your GitLab repository to your Cloudflare Worker, and will automatically deploy your code every time you push a change.
+Cloudflare, GitLab deponuzu Cloudflare Worker'ınıza bağlamayı destekler ve her değişiklik push ettiğinizde kodunuzu otomatik olarak dağıtır.
 
-## Features
+## Özellikler
 
-Beyond automatic builds and deployments, the Cloudflare GitLab integration lets you monitor builds directly in GitLab, keeping you informed without leaving your workflow.
+Otomatik build'ler ve dağıtımların ötesinde, Cloudflare GitLab entegrasyonu build'leri doğrudan GitLab'da izlemenize olanak tanır, böylece iş akışınızdan ayrılmadan bilgilendirilirsiniz.
 
-### Merge request comment
+### Merge request yorumu
 
-If a commit is on a merge request, Cloudflare will automatically post a comment on the merge request with the status of the build.
+Bir commit merge request'te ise, Cloudflare otomatik olarak merge request'e build durumuyla ilgili bir yorum gönderir.
 
-![GitLab merge request comment](~/assets/images/workers/platform/ci-cd/gitlab-pull-request-comment.png)
+![GitLab merge request yorumu](~/assets/images/workers/platform/ci-cd/gitlab-pull-request-comment.png)
 
-A [preview URL](/workers/configuration/previews/) will be provided for any builds which perform `wrangler versions upload`. This is particularly useful when reviewing your pull request, as it allows you to compare the code changes alongside an updated version of your Worker.
+`wrangler versions upload` gerçekleştiren herhangi bir build için [önizleme URL'si](/workers/configuration/previews/) sağlanacaktır. Bu, pull request'inizi gözden geçirirken özellikle yararlıdır çünkü kod değişikliklerini Worker'ınızın güncellenmiş sürümüyle birlikte karşılaştırmanıza olanak tanır.
 
-:::note[Enabling GitLab Merge Request events for existing connections]
-New GitLab connections are automatically configured to receive merge request events, which enable commenting functionality. For existing connections, you'll need to manually enable `Merge request events` in the Webhooks tab of your project's settings. You can follow GitLab's documentation for guidance on [managing webhooks](https://docs.gitlab.com/user/project/integrations/webhooks/#manage-webhooks).
+:::note[Mevcut bağlantılar için GitLab Merge Request olaylarını etkinleştirme]
+Yeni GitLab bağlantıları otomatik olarak merge request olaylarını almak için yapılandırılır, bu da yorumlama işlevselliğini etkinleştirir. Mevcut bağlantılar için, projenizin ayarlarının Webhooks sekmesinde `Merge request events`'i manuel olarak etkinleştirmeniz gerekir. [Webhook'ları yönetme](https://docs.gitlab.com/user/project/integrations/webhooks/#manage-webhooks) konusunda rehberlik için GitLab'ın dokümantasyonunu takip edebilirsiniz.
 :::
 
-### Commit Status
+### Commit Durumu
 
-If you have one or multiple Workers connected to a repository (i.e. a [monorepo](/workers/ci-cd/builds/advanced-setups/#monorepos)), you can check on the status of each build within GitLab via [GitLab commit status](https://docs.gitlab.com/ee/user/project/merge_requests/status_checks.html).
+Bir veya birden fazla Worker'ı bir depoya bağladıysanız (yani [monorepo](/workers/ci-cd/builds/advanced-setups/#monorepos)), GitLab deponuz içinde [GitLab commit status](https://docs.gitlab.com/ee/user/project/merge_requests/status_checks.html) aracılığıyla her build'in durumunu kontrol edebilirsiniz.
 
-You can see the statuses by selecting the status icon next to a commit or by going to **Build** > **Pipelines** within your GitLab repository. In the example below, you can select on the green check mark to see the results of the check run.
+Commit'in yanındaki durum simgesini seçerek veya GitLab deponuz içinde **Build** > **Pipelines**'a giderek durumları görebilirsiniz. Aşağıdaki örnekte, check run'un sonuçlarını görmek için yeşil onay işaretini seçebilirsiniz.
 
-![GitLab Status](~/assets/images/workers/platform/ci-cd/gl-status-checks.png)
+![GitLab Durum](~/assets/images/workers/platform/ci-cd/gl-status-checks.png)
 
-Check runs will appear like the following in your repository. You can select one of the statuses to view the build on the Cloudflare Dashboard.
+Check run'lar deponuzda aşağıdaki gibi görünecektir. Build'i Cloudflare Dashboard'da görüntülemek için durumlardan birini seçebilirsiniz.
 
-![GitLab Commit Status](~/assets/images/workers/platform/ci-cd/gl-commit-status.png)
+![GitLab Commit Durumu](~/assets/images/workers/platform/ci-cd/gl-commit-status.png)
 
-Note that when using [build watch paths](/workers/ci-cd/builds/build-watch-paths/), only projects that trigger a build will generate a commit status.
+[Build watch paths](/workers/ci-cd/builds/build-watch-paths/) kullanırken, yalnızca build tetikleyen projelerin commit status oluşturacağını unutmayın.
 
-## Manage access
+## Erişimi yönet
 
-You can deploy projects to Cloudflare Workers from your company or side project on GitLab using the Cloudflare Pages app.
+Şirketinizden veya GitLab'daki yan projenizden Cloudflare Pages uygulamasını kullanarak projeleri Cloudflare Workers'a dağıtabilirsiniz.
 
-### Organizational access
+### Organizasyon erişimi
 
-When you authorize Cloudflare Workers to access your GitLab account, you automatically give Cloudflare Workers access to organizations, groups, and namespaces accessed by your GitLab account. Managing access to these organizations and groups is handled by GitLab.
+Cloudflare Workers'ın GitLab hesabınıza erişimini yetkilendirirken, Cloudflare Workers'a GitLab hesabınız tarafından erişilen organizasyonlara, gruplara ve namespace'lere otomatik olarak erişim verirsiniz. Bu organizasyonlara ve gruplara erişimi yönetmek GitLab tarafından yapılır.
 
-### Remove access
+### Erişimi kaldır
 
-You can remove Cloudflare Workers' access to your GitLab account by navigating to [Authorized Applications page](https://gitlab.com/-/profile/applications) on GitLab. Find the applications called Cloudflare Pages and select the **Revoke** button to revoke access.
+GitLab'da [Authorized Applications sayfasına](https://gitlab.com/-/profile/applications) giderek Cloudflare Workers'ın GitLab hesabınıza erişimini kaldırabilirsiniz. Cloudflare Pages adlı uygulamaları bulun ve erişimi iptal etmek için **Revoke** düğmesini seçin.
 
-Note that the GitLab application Cloudflare Workers is shared between Workers and Pages projects, and removing access to GitLab will disable new builds for Workers and Pages, though your previous deployments will continue to be hosted by Cloudflare Workers.
+GitLab uygulaması Cloudflare Workers'ın Workers ve Pages projeleri arasında paylaşıldığını ve GitLab'a erişimi kaldırmanın Workers ve Pages için yeni build'leri devre dışı bırakacağını, ancak önceki dağıtımlarınızın Cloudflare Workers tarafından barındırılmaya devam edeceğini unutmayın.
 
-### Reinstall the Cloudflare GitLab App
+### Cloudflare GitLab App'ini yeniden kur
 
-1. Go to your application settings page on GitLab: [https://gitlab.com/-/profile/applications](https://gitlab.com/-/profile/applications)
-2. Click the "Revoke" button on your Cloudflare Workers installation if it exists.
-3. Go back to the [**Workers & Pages** overview](https://dash.cloudflare.com) page. Select **Create application** > **Pages** > **Connect to Git**.
-4. Select the **+ Add account** button, select the GitLab account you want to add, and then select **Install & Authorize**.
-5. You should be redirected to the create project page with your GitLab account or organization in the account list.
-6. Attempt to make a new deployment with your project which was previously broken.
+1. GitLab'da uygulama ayarları sayfasına gidin: [https://gitlab.com/-/profile/applications](https://gitlab.com/-/profile/applications)
+2. Varsa Cloudflare Workers kurulumunuzda "Revoke" düğmesine tıklayın.
+3. [**Workers & Pages** genel bakış](https://dash.cloudflare.com) sayfasına geri dönün. **Create application** > **Pages** > **Connect to Git**'i seçin.
+4. **+ Add account** düğmesini seçin, eklemek istediğiniz GitLab hesabını seçin ve ardından **Install & Authorize**'u seçin.
+5. GitLab hesabınız veya organizasyonunuzun hesap listesinde olduğu proje oluşturma sayfasına yönlendirilmelisiniz.
+6. Daha önce bozuk olan projenizle yeni bir dağıtım yapmayı deneyin.

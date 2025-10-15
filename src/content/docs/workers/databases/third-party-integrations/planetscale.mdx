@@ -5,32 +5,32 @@ title: PlanetScale
 
 import { Render, PackageManagers, Tabs, TabItem } from "~/components";
 
-[PlanetScale](https://planetscale.com/) is a database platform that provides MySQL-compatible and PostgreSQL databases, making them more scalable, easier and safer to manage.
+[PlanetScale](https://planetscale.com/), MySQL uyumlu ve PostgreSQL veritabanları sağlayan, onları daha ölçeklenebilir, yönetmesi daha kolay ve güvenli hale getiren bir veritabanı platformudur.
 
 :::note
 
-You can connect to PlanetScale using [Hyperdrive](/hyperdrive) (recommended), or using the PlanetScale serverless driver, `@planetscale/database`. Both provide connection pooling and reduce the amount of round trips required to create a secure connection from Workers to your database.
+PlanetScale'a [Hyperdrive](/hyperdrive) (önerilen) kullanarak veya PlanetScale sunucusuz sürücüsü `@planetscale/database` kullanarak bağlanabilirsiniz. Her ikisi de bağlantı havuzlama sağlar ve Workers'dan veritabanınıza güvenli bir bağlantı oluşturmak için gereken gidiş-dönüş miktarını azaltır.
 
-Hyperdrive can provide lower latencies because it performs the database connection setup and connection pooling across Cloudflare's network. Hyperdrive supports native database drivers, libraries, and ORMs, and is included in all [Workers plans](/hyperdrive/platform/pricing/). Learn more about Hyperdrive in [How Hyperdrive Works](/hyperdrive/configuration/how-hyperdrive-works/).
+Hyperdrive, veritabanı bağlantı kurulumunu ve bağlantı havuzlamasını Cloudflare ağı boyunca gerçekleştirdiği için daha düşük gecikmeler sağlayabilir. Hyperdrive yerel veritabanı sürücülerini, kütüphanelerini ve ORM'leri destekler ve tüm [Workers planlarında](/hyperdrive/platform/pricing/) dahildir. [Hyperdrive'un Nasıl Çalıştığı](/hyperdrive/configuration/how-hyperdrive-works/) hakkında daha fazla bilgi edinin.
 
 :::
 
 <Tabs>
-	<TabItem label="Hyperdrive (recommended)">
+	<TabItem label="Hyperdrive (önerilen)">
 
-To connect to PlanetScale using [Hyperdrive](/hyperdrive), follow these steps:
+PlanetScale'a [Hyperdrive](/hyperdrive) kullanarak bağlanmak için şu adımları izleyin:
 
          <Render file="planetscale-partial" product="hyperdrive"/>
     </TabItem>
-    <TabItem label="PlanetScale serverless driver">
+    <TabItem label="PlanetScale sunucusuz sürücü">
 
-## Set up an integration with PlanetScale
+## PlanetScale ile entegrasyon kurma
 
-To set up an integration with PlanetScale:
+PlanetScale ile entegrasyon kurmak için:
 
-1. You need to have an existing PlanetScale database to connect to. [Create a PlanetScale database](https://planetscale.com/docs/tutorials/planetscale-quick-start-guide#create-a-database) or [import an existing database to PlanetScale](https://planetscale.com/docs/imports/database-imports#overview).
+1. Bağlanmak için mevcut bir PlanetScale veritabanına sahip olmanız gerekir. [PlanetScale veritabanı oluşturun](https://planetscale.com/docs/tutorials/planetscale-quick-start-guide#create-a-database) veya [mevcut veritabanını PlanetScale'a aktarın](https://planetscale.com/docs/imports/database-imports#overview).
 
-2. From the [PlanetScale web console](https://planetscale.com/docs/concepts/web-console#get-started), create a `products` table with the following query:
+2. [PlanetScale web konsolundan](https://planetscale.com/docs/concepts/web-console#get-started), aşağıdaki sorgu ile bir `products` tablosu oluşturun:
 
    ```sql
    CREATE TABLE products (
@@ -42,36 +42,36 @@ To set up an integration with PlanetScale:
    );
    ```
 
-3. Insert some data in your newly created table. Run the following command to add a product and category to your table:
+3. Yeni oluşturduğunuz tabloya bazı veriler ekleyin. Tablonuza bir ürün ve kategori eklemek için aşağıdaki komutu çalıştırın:
 
    ```sql
    INSERT INTO products (name, image_url, category_id)
    VALUES ('Ballpoint pen', 'https://example.com/500x500', '1');
    ```
 
-4. Configure the PlanetScale database credentials in your Worker:
+4. Worker'ınızda PlanetScale veritabanı kimlik bilgilerini yapılandırın:
 
-   You need to add your PlanetScale database credentials as secrets to your Worker. Get your connection details from the [PlanetScale Dashboard](https://app.planetscale.com) by creating a connection string, then add them as secrets using Wrangler:
+   PlanetScale veritabanı kimlik bilgilerinizi Worker'ınıza gizli anahtarlar olarak eklemeniz gerekir. Bağlantı dizisi oluşturarak [PlanetScale Dashboard](https://app.planetscale.com)'dan bağlantı detaylarınızı alın, ardından bunları Wrangler kullanarak gizli anahtarlar olarak ekleyin:
 
    ```sh
-   # Add the database host as a secret
+   # Veritabanı host'unu gizli anahtar olarak ekle
    npx wrangler secret put DATABASE_HOST
-   # When prompted, paste your PlanetScale host
+   # İstendiğinde, PlanetScale host'unuzu yapıştırın
 
-   # Add the database username as a secret
+   # Veritabanı kullanıcı adını gizli anahtar olarak ekle
    npx wrangler secret put DATABASE_USERNAME
-   # When prompted, paste your PlanetScale username
+   # İstendiğinde, PlanetScale kullanıcı adınızı yapıştırın
 
-   # Add the database password as a secret
+   # Veritabanı şifresini gizli anahtar olarak ekle
    npx wrangler secret put DATABASE_PASSWORD
-   # When prompted, paste your PlanetScale password
+   # İstendiğinde, PlanetScale şifrenizi yapıştırın
    ```
 
-5. In your Worker, install the `@planetscale/database` driver to connect to your PlanetScale database and start manipulating data:
+5. Worker'ınızda, PlanetScale veritabanınıza bağlanmak ve veri manipülasyonuna başlamak için `@planetscale/database` sürücüsünü yükleyin:
 
    <PackageManagers pkg="@planetscale/database" />
 
-6. The following example shows how to make a query to your PlanetScale database in a Worker. The credentials needed to connect to PlanetScale have been added as secrets to your Worker.
+6. Aşağıdaki örnek, Worker'da PlanetScale veritabanınıza nasıl sorgu yapılacağını gösterir. PlanetScale'a bağlanmak için gereken kimlik bilgileri Worker'ınıza gizli anahtarlar olarak eklenmiştir.
 
    ```js
    import { connect } from "@planetscale/database";
@@ -101,7 +101,7 @@ To set up an integration with PlanetScale:
    };
    ```
 
-To learn more about PlanetScale, refer to [PlanetScale's official documentation](https://docs.planetscale.com/).
+PlanetScale hakkında daha fazla bilgi için [PlanetScale'un resmi dokümantasyonuna](https://docs.planetscale.com/) bakın.
 
 </TabItem>
 </Tabs>
